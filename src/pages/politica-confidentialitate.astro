@@ -1,0 +1,101 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+
+const breadcrumbs = [{ label: 'Politica de confidențialitate' }];
+const currentYear = new Date().getFullYear();
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Politica de Confidențialitate - Meseriile.ro"
+    description="Politica de confidențialitate și protecția datelor personale conform GDPR pe Meseriile.ro."
+    canonical="/politica-confidentialitate/"
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <article class="container-narrow pb-16 sm:pb-20">
+    <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-8">
+      Politica de confidențialitate
+    </h1>
+
+    <div class="prose-custom max-w-none space-y-6">
+      <p>Ultima actualizare: {currentYear}</p>
+
+      <p>
+        Meseriile.ro respectă confidențialitatea vizitatorilor săi. Această pagină descrie ce date colectăm, cum le folosim și ce drepturi aveți conform Regulamentului General privind Protecția Datelor (GDPR - Regulamentul UE 2016/679).
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">1. Operator de date</h2>
+      <p>
+        Operatorul datelor cu caracter personal este administratorul site-ului Meseriile.ro. Pentru orice solicitări legate de datele personale, ne puteți contacta prin pagina de <a href="/contact/" class="text-link">Contact</a>.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">2. Ce date colectăm</h2>
+      <p>Meseriile.ro este un site informativ static. <strong>Nu colectăm date personale</strong> prin formulare de contact, conturi de utilizator sau sisteme de înregistrare.</p>
+      <p>Datele colectate automat prin intermediul cookie-urilor și al serviciilor terțe pot include:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Adresa IP (anonimizată, dacă se folosește Google Analytics)</li>
+        <li>Tipul de browser și dispozitiv</li>
+        <li>Paginile vizitate și durata vizitei</li>
+        <li>Sursa traficului (de unde ați ajuns pe site)</li>
+      </ul>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">3. Scopul prelucrării</h2>
+      <p>Datele colectate sunt folosite exclusiv pentru:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Analiza traficului și îmbunătățirea conținutului site-ului</li>
+        <li>Asigurarea funcționării tehnice corecte</li>
+        <li>Înțelegerea modului în care vizitatorii interacționează cu site-ul</li>
+      </ul>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">4. Temeiul legal</h2>
+      <p>
+        Prelucrarea datelor se bazează pe consimțământul dumneavoastră (Art. 6 alin. 1 lit. a GDPR), acordat prin acceptarea cookie-urilor, și pe interesul nostru legitim (Art. 6 alin. 1 lit. f GDPR) de a asigura funcționarea și securitatea site-ului.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">5. Cookie-uri</h2>
+      <p>
+        Site-ul folosește cookie-uri pentru funcționare și analiză. Detalii complete despre cookie-urile utilizate găsiți în <a href="/politica-cookies/" class="text-link">Politica de cookies</a>.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">6. Servicii terțe</h2>
+      <p>Putem utiliza următoarele servicii terțe:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>Google Analytics</strong> – pentru analiza traficului (cu IP anonimizat)</li>
+        <li><strong>Cloudflare</strong> – pentru găzduire și performanță (CDN)</li>
+      </ul>
+      <p>Aceste servicii pot prelucra date conform propriilor politici de confidențialitate.</p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">7. Drepturile dumneavoastră (GDPR)</h2>
+      <p>Conform GDPR, aveți următoarele drepturi:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>Dreptul de acces</strong> – să aflați ce date deținem despre dumneavoastră</li>
+        <li><strong>Dreptul la rectificare</strong> – să solicitați corectarea datelor inexacte</li>
+        <li><strong>Dreptul la ștergere</strong> – să solicitați ștergerea datelor personale</li>
+        <li><strong>Dreptul la restricționarea prelucrării</strong> – să limitați modul în care vă folosim datele</li>
+        <li><strong>Dreptul la portabilitatea datelor</strong> – să primiți datele într-un format structurat</li>
+        <li><strong>Dreptul de opoziție</strong> – să vă opuneți prelucrării datelor</li>
+        <li><strong>Dreptul de a retrage consimțământul</strong> – în orice moment, fără a afecta legalitatea prelucrării anterioare</li>
+      </ul>
+      <p>
+        Pentru exercitarea acestor drepturi, contactați-ne prin pagina de <a href="/contact/" class="text-link">Contact</a>.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">8. Autoritatea de supraveghere</h2>
+      <p>
+        Dacă considerați că prelucrarea datelor dumneavoastră încalcă GDPR, aveți dreptul de a depune o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP) – <a href="https://www.dataprotection.ro" class="text-link" target="_blank" rel="noopener noreferrer">www.dataprotection.ro</a>.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">9. Modificări</h2>
+      <p>
+        Ne rezervăm dreptul de a actualiza această politică. Orice modificare va fi publicată pe această pagină cu data ultimei actualizări.
+      </p>
+    </div>
+  </article>
+</Layout>

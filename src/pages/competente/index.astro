@@ -1,0 +1,70 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { competente, getMeseriiByCompetenta } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+
+const breadcrumbs = [{ label: 'Competențe profesionale' }];
+
+const categorii: Record<string, string> = {
+  tehnice: 'Competențe tehnice',
+  'soft-skills': 'Competențe transversale (soft skills)',
+  manageriale: 'Competențe manageriale',
+};
+
+const grouped = Object.entries(categorii).map(([key, label]) => ({
+  label,
+  competente: competente.filter(c => c.categorie === key),
+})).filter(g => g.competente.length > 0);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Competențe Profesionale - Abilități Cerute pe Piața Muncii din România"
+    description="Competențele cerute pe piața muncii din România: abilități tehnice, soft skills și competențe manageriale. Ce meserii le cer și de ce contează."
+    canonical="/competente/"
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema('Competențe Profesionale', 'Abilități cerute pe piața muncii din România', '/competente/'),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16 sm:pb-20">
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-3">
+        Competențe profesionale
+      </h1>
+      <p class="section-subtitle">
+        {competente.length} competențe mapate la meseriile care le necesită.
+      </p>
+    </div>
+
+    {grouped.map(group => (
+      <div class="mb-12">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-5">{group.label}</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {group.competente.map(c => {
+            const count = getMeseriiByCompetenta(c.id).length;
+            return (
+              <a href={`/competente/${c.slug}/`} class="card p-5 no-underline group block">
+                <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1.5">
+                  {c.nume}
+                </h3>
+                <p class="text-sm text-surface-600 line-clamp-2 mb-3">{c.descriere}</p>
+                <span class="text-xs font-semibold text-brand-600">
+                  {count} {count === 1 ? 'meserie' : 'meserii'} →
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    ))}
+  </section>
+</Layout>

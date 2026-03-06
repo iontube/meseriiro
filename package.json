@@ -1,0 +1,20 @@
+{
+  "name": "meseriiro.ro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/split-sitemaps.mjs",
+    "build:drip": "astro build && node scripts/split-sitemaps.mjs && node scripts/drip-sitemap-index.mjs",
+    "sitemap:drip": "node scripts/drip-sitemap-index.mjs",
+    "sitemap:all": "node scripts/drip-sitemap-index.mjs all",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "@tailwindcss/vite": "^4.2.1",
+    "astro": "^5.17.1",
+    "tailwindcss": "^4.2.1"
+  }
+}

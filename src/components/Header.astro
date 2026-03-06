@@ -1,0 +1,95 @@
+---
+import { domenii } from '../helpers/data';
+import Logo from './Logo.astro';
+
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/domenii/', label: 'Domenii' },
+  { href: '/meserii/', label: 'Meserii' },
+  { href: '/competente/', label: 'Competențe' },
+  { href: '/orase/', label: 'Orașe' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-surface-900 border-b border-surface-800">
+  <div class="container-custom">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="/" class="no-underline">
+        <Logo variant="dark" />
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1" aria-label="Navigare principală">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class:list={[
+              'px-4 py-2 rounded-button text-sm font-medium transition-all duration-200 no-underline',
+              currentPath.startsWith(link.href)
+                ? 'bg-white/10 text-white'
+                : 'text-surface-300 hover:text-white hover:bg-white/10',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="md:hidden p-2 rounded-button text-surface-300 hover:bg-white/10 hover:text-white transition-colors"
+        aria-label="Deschide meniu"
+        aria-expanded="false"
+      >
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-surface-800 bg-surface-900">
+    <nav class="container-custom py-4 flex flex-col gap-1" aria-label="Navigare mobilă">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class:list={[
+            'px-4 py-2.5 rounded-button text-sm font-medium transition-colors no-underline',
+            currentPath.startsWith(link.href)
+              ? 'bg-white/10 text-white'
+              : 'text-surface-300 hover:text-white hover:bg-white/10',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <hr class="my-2 border-surface-700" />
+      <p class="px-4 text-xs font-medium text-surface-500 uppercase tracking-wider mb-1">Domenii</p>
+      {domenii.map(d => (
+        <a
+          href={`/domenii/${d.slug}/`}
+          class="px-4 py-1.5 text-sm text-surface-400 hover:text-brand-400 hover:bg-white/5 rounded-button transition-colors no-underline"
+        >
+          {d.nume}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      const isOpen = !menu.classList.contains('hidden');
+      menu.classList.toggle('hidden');
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  }
+</script>

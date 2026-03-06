@@ -1,0 +1,60 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4361ee"/>
+      <stop offset="50%" stop-color="#3550de"/>
+      <stop offset="100%" stop-color="#2535bf"/>
+    </linearGradient>
+    <linearGradient id="bg2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a2a8f" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#6683fb" stop-opacity="0.15"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <filter id="inner-shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+      <feOffset dx="0" dy="4" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background rounded square with subtle depth -->
+  <rect width="512" height="512" rx="115" fill="url(#bg1)"/>
+  <rect width="512" height="512" rx="115" fill="url(#bg2)"/>
+
+  <!-- Subtle top highlight for 3D feel -->
+  <rect x="20" y="8" width="472" height="250" rx="105" fill="white" opacity="0.06"/>
+
+  <!-- Main M letterform - geometric, bold, modern -->
+  <g transform="translate(56, 120)">
+    <!-- Left vertical stroke -->
+    <rect x="0" y="0" width="52" height="280" rx="26" fill="white"/>
+
+    <!-- Left diagonal going up to center peak -->
+    <polygon points="26,200 174,50 200,50 52,200" fill="white"/>
+
+    <!-- Right diagonal going up from center -->
+    <polygon points="200,50 226,50 374,200 348,200" fill="white"/>
+
+    <!-- Right vertical stroke -->
+    <rect x="348" y="0" width="52" height="280" rx="26" fill="white"/>
+
+    <!-- Center V bottom fill -->
+    <polygon points="174,50 200,90 226,50" fill="white"/>
+
+    <!-- Accent peak marker - diamond -->
+    <rect x="186" y="8" width="28" height="28" rx="4" transform="rotate(45, 200, 22)" fill="url(#accent)" filter="url(#glow)"/>
+  </g>
+
+  <!-- Subtle bottom accent line -->
+  <rect x="120" y="438" width="272" height="6" rx="3" fill="url(#accent)" opacity="0.6"/>
+</svg>

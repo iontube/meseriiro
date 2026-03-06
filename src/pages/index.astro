@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import DomeniuCard from '../components/DomeniuCard.astro';
+import MeserieCard from '../components/MeserieCard.astro';
+import { domenii, meserii, competente, orase, formatSalariu } from '../helpers/data';
+import { buildWebSiteSchema, buildWebPageSchema } from '../helpers/structured-data';
+import { getTopSalaryMeserii } from '../helpers/interlinking';
+
+const popularMeserii = meserii.filter(m => m.nivelCerere === 'ridicat').slice(0, 6);
+const topSalarii = getTopSalaryMeserii(8);
+const topOrase = orase.sort((a, b) => b.populatie - a.populatie).slice(0, 6);
+
+const stats = [
+  { value: domenii.length.toString(), label: 'Domenii profesionale' },
+  { value: meserii.length.toString(), label: 'Meserii documentate' },
+  { value: competente.length.toString(), label: 'Competențe mapate' },
+  { value: orase.length.toString(), label: 'Orașe acoperite' },
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Director Meserii în România - Profesii, Salarii pe Orașe și Competențe Cerute"
+    description="Meseriile din România cu salarii pe orașe, competențe cerute și condiții de muncă. Date bazate pe coduri COR, actualizate 2026."
+    canonical="/"
+    jsonLd={[buildWebSiteSchema(), buildWebPageSchema('Director Meserii în România', 'Meseriile din România cu salarii, competențe și condiții de muncă', '/')]}
+  />
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-900 to-surface-900 py-20 sm:py-28">
+    <div class="absolute inset-0 opacity-[0.15]">
+      <div class="absolute top-0 -left-40 w-96 h-96 bg-brand-400 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 -right-40 w-96 h-96 bg-accent-400 rounded-full blur-3xl"></div>
+    </div>
+    <div class="container-custom relative z-10">
+      <div class="max-w-3xl">
+        <p class="text-brand-200 font-semibold text-sm tracking-wide uppercase mb-4">Director ocupațional România</p>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-white leading-tight mb-6">
+          Meseriile din <span class="gradient-hero-text">România</span> cu salarii, competențe și cariere
+        </h1>
+        <p class="text-lg sm:text-xl text-surface-200 leading-relaxed mb-8 max-w-2xl">
+          Ce face concret fiecare meserie, cât se câștigă pe orașe și ce studii trebuie. Date bazate pe coduri COR, actualizate 2026.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/meserii/" class="btn-primary text-base px-7 py-3.5 no-underline shadow-lg hover:shadow-xl">Vezi toate meseriile</a>
+          <a href="/domenii/" class="inline-flex items-center justify-center gap-2 rounded-button font-semibold transition-all duration-200 bg-white/15 text-white border border-white/30 px-7 py-3.5 hover:bg-white/25 hover:border-white/50 no-underline backdrop-blur-sm">Vezi domeniile</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="container-custom -mt-10 relative z-20">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {stats.map(stat => (
+        <div class="card p-5 text-center">
+          <p class="stat-value">{stat.value}</p>
+          <p class="stat-label">{stat.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Domenii -->
+  <section class="container-custom py-16 sm:py-20">
+    <div class="mb-10">
+      <h2 class="section-title">Domenii profesionale</h2>
+      <p class="section-subtitle">Principalele sectoare de activitate din România, cu meseriile aferente</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {domenii.map(d => <DomeniuCard domeniu={d} />)}
+    </div>
+    <div class="text-center mt-8">
+      <a href="/domenii/" class="btn-secondary no-underline">Toate domeniile →</a>
+    </div>
+  </section>
+
+  <!-- Meserii populare -->
+  <section class="bg-surface-100 py-16 sm:py-20">
+    <div class="container-custom">
+      <div class="mb-10">
+        <h2 class="section-title">Meserii cu cerere ridicată</h2>
+        <p class="section-subtitle">Profesiile cele mai căutate pe piața muncii din România</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {popularMeserii.map(m => <MeserieCard meserie={m} />)}
+      </div>
+      <div class="text-center mt-8">
+        <a href="/meserii/" class="btn-primary no-underline">Toate meseriile →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top salarii -->
+  <section class="container-custom py-16 sm:py-20">
+    <div class="mb-10">
+      <h2 class="section-title">Cele mai bine plătite meserii</h2>
+      <p class="section-subtitle">Top salarii nete din România, cu detalii pe fiecare oraș</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      {topSalarii.map(link => (
+        <a href={link.href} class="card p-4 no-underline group flex items-center justify-between" title={link.title}>
+          <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">{link.text}</span>
+          <svg class="w-4 h-4 text-surface-400 group-hover:text-brand-500 transition-colors shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      ))}
+    </div>
+    <div class="text-center mt-8">
+      <a href="/salariu/" class="btn-secondary no-underline">Toate salariile pe meserii →</a>
+    </div>
+  </section>
+
+  <!-- Orașe -->
+  <section class="bg-surface-100 py-16 sm:py-20">
+    <div class="container-custom">
+      <div class="mb-10">
+        <h2 class="section-title">Salarii pe orașe</h2>
+        <p class="section-subtitle">Compară salariile în cele mai importante orașe din România</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {topOrase.map(o => (
+          <a href={`/orase/${o.id}/`} class="card p-5 no-underline group" title={`Salarii și meserii în ${o.nume}`}>
+            <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">{o.nume}</h3>
+            <p class="text-sm text-surface-500">{o.populatie.toLocaleString('ro-RO')} locuitori · {o.regiune}</p>
+          </a>
+        ))}
+      </div>
+      <div class="text-center mt-8">
+        <a href="/orase/" class="btn-primary no-underline">Toate cele {orase.length} orașe →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Competențe -->
+  <section class="container-custom py-16 sm:py-20">
+    <div class="mb-10">
+      <h2 class="section-title">Competențe cerute pe piața muncii</h2>
+      <p class="section-subtitle">Ce abilități cer angajatorii și pentru ce meserii contează cel mai mult</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {competente.slice(0, 12).map(c => (
+        <a href={`/competente/${c.slug}/`} class="card p-5 no-underline group" title={`Competența: ${c.nume}`}>
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">{c.nume}</h3>
+          <p class="text-sm text-surface-500 line-clamp-2">{c.descriere}</p>
+        </a>
+      ))}
+    </div>
+    <div class="text-center mt-8">
+      <a href="/competente/" class="btn-secondary no-underline">Toate cele {competente.length} competențe →</a>
+    </div>
+  </section>
+</Layout>

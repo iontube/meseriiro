@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import MeserieCard from '../../components/MeserieCard.astro';
+import { meserii, domenii } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+
+const breadcrumbs = [{ label: 'Meserii' }];
+
+// Group by domeniu
+const meseriiByDomeniu = domenii.map(d => ({
+  domeniu: d,
+  meserii: meserii.filter(m => m.dompiuId === d.id),
+})).filter(g => g.meserii.length > 0);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Catalog Meserii România - Toate Profesiile cu Salarii și Competențe"
+    description="Toate meseriile din România grupate pe domenii: salarii pe orașe, competențe cerute, studii necesare și condiții de muncă pentru fiecare profesie."
+    canonical="/meserii/"
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema('Catalog Meserii România', 'Toate profesiile din România', '/meserii/'),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16 sm:pb-20">
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900  mb-3">
+        Catalog meserii România
+      </h1>
+      <p class="section-subtitle">
+        {meserii.length} meserii documentate cu salarii pe orașe, competențe cerute și condiții de muncă.
+      </p>
+    </div>
+
+    {meseriiByDomeniu.map(group => (
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-5">
+          <h2 class="text-xl font-heading font-bold text-surface-900 ">
+            <a href={`/domenii/${group.domeniu.slug}/`} class="text-surface-900 no-underline hover:text-brand-600 transition-colors">
+              {group.domeniu.nume}
+            </a>
+          </h2>
+          <span class="badge badge-brand">{group.meserii.length}</span>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {group.meserii.map(m => <MeserieCard meserie={m} />)}
+        </div>
+      </div>
+    ))}
+  </section>
+</Layout>

@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+
+const breadcrumbs = [{ label: 'Termeni și condiții' }];
+const currentYear = new Date().getFullYear();
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Termeni și Condiții - Meseriile.ro"
+    description="Termenii și condițiile de utilizare a site-ului Meseriile.ro."
+    canonical="/termeni-si-conditii/"
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <article class="container-narrow pb-16 sm:pb-20">
+    <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-8">
+      Termeni și condiții
+    </h1>
+
+    <div class="prose-custom max-w-none space-y-6">
+      <p>Ultima actualizare: {currentYear}</p>
+
+      <p>
+        Prin accesarea și utilizarea site-ului Meseriile.ro, acceptați prezentii termeni și condiții. Dacă nu sunteți de acord cu acești termeni, vă rugăm să nu utilizați site-ul.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">1. Descrierea site-ului</h2>
+      <p>
+        Meseriile.ro este un site informativ care prezintă date despre meserii, salarii, competențe și condiții de muncă din România. Conținutul are caracter orientativ și nu constituie consultanță profesională, juridică sau financiară.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">2. Exactitatea datelor</h2>
+      <p>
+        Datele salariale și informațiile despre meserii sunt estimări bazate pe surse publice și au caracter orientativ. Salariile reale pot varia semnificativ în funcție de angajator, experiență, locație și alți factori. Nu garantăm exactitatea, completitudinea sau actualitatea informațiilor prezentate.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">3. Proprietate intelectuală</h2>
+      <p>
+        Conținutul site-ului (texte, structură, design, grafice) este proprietatea Meseriile.ro și este protejat de legile dreptului de autor. Reproducerea, copierea sau redistribuirea conținutului fără acord scris este interzisă.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">4. Utilizarea site-ului</h2>
+      <p>Vizitatorii se obligă:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>Să utilizeze site-ul doar în scopuri legale și personale</li>
+        <li>Să nu încerce accesarea neautorizată a sistemelor</li>
+        <li>Să nu copieze automat conținutul (scraping) fără acord prealabil</li>
+      </ul>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">5. Limitarea răspunderii</h2>
+      <p>
+        Meseriile.ro nu este responsabil pentru decizii luate pe baza informațiilor de pe site. Utilizarea informațiilor se face pe propria răspundere. Nu suntem răspunzători pentru pierderi directe sau indirecte rezultate din utilizarea site-ului.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">6. Linkuri externe</h2>
+      <p>
+        Site-ul poate conține linkuri către resurse externe. Nu avem control asupra conținutului acestor site-uri și nu ne asumăm responsabilitatea pentru ele.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">7. Cookie-uri și confidențialitate</h2>
+      <p>
+        Utilizarea cookie-urilor este descrisă în <a href="/politica-cookies/" class="text-link">Politica de cookies</a>. Prelucrarea datelor personale este detaliată în <a href="/politica-confidentialitate/" class="text-link">Politica de confidențialitate</a>.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">8. Modificări</h2>
+      <p>
+        Ne rezervăm dreptul de a modifica acești termeni în orice moment. Continuarea utilizării site-ului după publicarea modificărilor constituie acceptarea noilor termeni.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">9. Legea aplicabilă</h2>
+      <p>
+        Acești termeni sunt guvernați de legislația din România. Orice dispută va fi soluționată de instanțele competente din România.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">10. Contact</h2>
+      <p>
+        Pentru întrebări legate de acești termeni, vizitați pagina de <a href="/contact/" class="text-link">Contact</a>.
+      </p>
+    </div>
+  </article>
+</Layout>

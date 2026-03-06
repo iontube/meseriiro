@@ -1,0 +1,122 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+
+const breadcrumbs = [{ label: 'Politica de cookies' }];
+const currentYear = new Date().getFullYear();
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Politica de Cookies - Meseriile.ro"
+    description="Informații despre cookie-urile utilizate pe Meseriile.ro și cum le puteți gestiona."
+    canonical="/politica-cookies/"
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <article class="container-narrow pb-16 sm:pb-20">
+    <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-8">
+      Politica de cookies
+    </h1>
+
+    <div class="prose-custom max-w-none space-y-6">
+      <p>Ultima actualizare: {currentYear}</p>
+
+      <p>
+        Această pagină explică ce sunt cookie-urile, ce tipuri de cookie-uri folosim pe Meseriile.ro și cum le puteți controla.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">1. Ce sunt cookie-urile?</h2>
+      <p>
+        Cookie-urile sunt fișiere text de mici dimensiuni stocate în browserul dumneavoastră atunci când vizitați un site web. Ele permit site-ului să funcționeze corect și să colecteze informații despre modul de utilizare.
+      </p>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">2. Tipuri de cookie-uri utilizate</h2>
+
+      <h3 class="text-lg font-heading font-semibold text-surface-800 mt-6 mb-2">Cookie-uri strict necesare</h3>
+      <p>Sunt esențiale pentru funcționarea site-ului. Nu pot fi dezactivate.</p>
+      <div class="card p-4 text-sm">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-surface-200">
+              <th class="pb-2 font-semibold text-surface-800">Cookie</th>
+              <th class="pb-2 font-semibold text-surface-800">Scop</th>
+              <th class="pb-2 font-semibold text-surface-800">Durată</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-100">
+            <tr>
+              <td class="py-2 font-mono text-xs">cookie_consent</td>
+              <td class="py-2">Stochează preferința privind cookie-urile</td>
+              <td class="py-2">365 zile</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="text-lg font-heading font-semibold text-surface-800 mt-6 mb-2">Cookie-uri de analiză</h3>
+      <p>Ne ajută să înțelegem cum este utilizat site-ul. Se activează doar cu consimțământul dumneavoastră.</p>
+      <div class="card p-4 text-sm">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-surface-200">
+              <th class="pb-2 font-semibold text-surface-800">Cookie</th>
+              <th class="pb-2 font-semibold text-surface-800">Scop</th>
+              <th class="pb-2 font-semibold text-surface-800">Durată</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-100">
+            <tr>
+              <td class="py-2 font-mono text-xs">_ga</td>
+              <td class="py-2">Google Analytics – identificare vizitator</td>
+              <td class="py-2">2 ani</td>
+            </tr>
+            <tr>
+              <td class="py-2 font-mono text-xs">_ga_*</td>
+              <td class="py-2">Google Analytics – stare sesiune</td>
+              <td class="py-2">2 ani</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="text-lg font-heading font-semibold text-surface-800 mt-6 mb-2">Cookie-uri Cloudflare</h3>
+      <p>Setate automat de serviciul de găzduire pentru securitate și performanță.</p>
+      <div class="card p-4 text-sm">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="border-b border-surface-200">
+              <th class="pb-2 font-semibold text-surface-800">Cookie</th>
+              <th class="pb-2 font-semibold text-surface-800">Scop</th>
+              <th class="pb-2 font-semibold text-surface-800">Durată</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-100">
+            <tr>
+              <td class="py-2 font-mono text-xs">__cf_bm</td>
+              <td class="py-2">Protecție anti-bot Cloudflare</td>
+              <td class="py-2">30 minute</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">3. Cum puteți controla cookie-urile</h2>
+      <p>Aveți mai multe opțiuni:</p>
+      <ul class="list-disc pl-6 space-y-1">
+        <li><strong>Banner-ul de cookie-uri</strong> – la prima vizită puteți accepta sau refuza cookie-urile de analiză</li>
+        <li><strong>Setările browserului</strong> – puteți configura browserul să blocheze sau să șteargă cookie-urile. Consultați documentația browserului dumneavoastră</li>
+      </ul>
+
+      <h2 class="text-xl font-heading font-bold text-surface-900 mt-8 mb-3">4. Mai multe informații</h2>
+      <p>
+        Pentru detalii despre protecția datelor, consultați <a href="/politica-confidentialitate/" class="text-link">Politica de confidențialitate</a>. Pentru întrebări, vizitați pagina de <a href="/contact/" class="text-link">Contact</a>.
+      </p>
+    </div>
+  </article>
+</Layout>

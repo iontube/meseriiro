@@ -1,0 +1,202 @@
+[
+  {
+    "id": "it-comunicatii",
+    "nume": "IT & Comunicații",
+    "slug": "it-comunicatii",
+    "descriere": "Domeniul IT & Comunicații acoperă dezvoltarea software, administrarea rețelelor, securitate cibernetică, analiză de date și telecomunicații. Salariile sunt printre cele mai mari din economie, iar cererea de specialiști depășește constant oferta.",
+    "icon": "monitor",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în IT & Comunicații - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din IT & Comunicații în România: salarii, competențe necesare, cerere pe piața muncii și trasee de carieră pentru fiecare rol."
+  },
+  {
+    "id": "constructii",
+    "nume": "Construcții",
+    "slug": "constructii",
+    "descriere": "Domeniul construcțiilor cuprinde activități de edificare, renovare și întreținere a clădirilor rezidențiale, comerciale și industriale. Include meserii tradiționale și specializări moderne în materiale și tehnologii de construcție.",
+    "icon": "building",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Construcții - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din construcții în România: salarii pe orașe, calificări necesare, condiții de muncă și cerere pe piață pentru fiecare meserie."
+  },
+  {
+    "id": "sanatate",
+    "nume": "Sănătate",
+    "slug": "sanatate",
+    "descriere": "Domeniul sănătății include profesii medicale, paramedicale și de asistență sanitară. De la medici specialiști la asistenți medicali și tehnicieni, sectorul oferă locuri de muncă stabile și deficit cronic de personal.",
+    "icon": "heart-pulse",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Sănătate - Cariere Medicale, Salarii și Competențe",
+    "metaDescription": "Cariere medicale în România: salarii actualizate, studii necesare, competențe cerute și cerere pe piața muncii pentru fiecare profesie."
+  },
+  {
+    "id": "educatie",
+    "nume": "Educație",
+    "slug": "educatie",
+    "descriere": "Domeniul educației cuprinde profesii legate de predare, formare profesională și dezvoltare a competențelor. Include cadre didactice din învățământul preuniversitar și universitar, formatori și specialiști în dezvoltare curriculară.",
+    "icon": "graduation-cap",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Educație - Cariere Didactice, Salarii și Competențe",
+    "metaDescription": "Cariere didactice în România: salarii profesori, competențe pedagogice, cerințe de studii și grade, evoluție profesională."
+  },
+  {
+    "id": "industrie-productie",
+    "nume": "Industrie & Producție",
+    "slug": "industrie-productie",
+    "descriere": "Domeniul industriei și producției acoperă fabricarea, asamblarea și prelucrarea bunurilor materiale. Include meserii din industria auto, alimentară, chimică, metalurgică și electronică.",
+    "icon": "factory",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Industrie & Producție - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din industrie și producție în România: salarii pe orașe, calificări necesare, condiții de muncă și cerere de personal."
+  },
+  {
+    "id": "transport-logistica",
+    "nume": "Transport & Logistică",
+    "slug": "transport-logistica",
+    "descriere": "Transportul și logistica asigură deplasarea mărfurilor și persoanelor pe cale rutieră, feroviară, navală și aeriană. Sectorul include șoferi profesioniști, logisticieni, piloți și operatori de depozit.",
+    "icon": "truck",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Transport & Logistică - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din transport și logistică în România: salarii șoferi, logisticieni, piloți, cerințe și condiții de muncă."
+  },
+  {
+    "id": "agricultura",
+    "nume": "Agricultură & Silvicultură",
+    "slug": "agricultura",
+    "descriere": "Agricultura și silvicultura cuprind cultivarea plantelor, creșterea animalelor și exploatarea durabilă a pădurilor. Sectorul se modernizează rapid cu tehnologii de precizie și practici sustenabile.",
+    "icon": "leaf",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Agricultură - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din agricultură și silvicultură în România: salarii, calificări, condiții de muncă și cerere pe piața forței de muncă."
+  },
+  {
+    "id": "horeca",
+    "nume": "HoReCa",
+    "slug": "horeca",
+    "descriere": "Sectorul HoReCa (hoteluri, restaurante, catering) oferă servicii de cazare, alimentație publică și organizare de evenimente. Este un angajator major, cu cerere sezonieră ridicată și posibilități de avansare rapidă.",
+    "icon": "utensils",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în HoReCa - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din HoReCa în România: salarii bucătari, ospătari, barmani, manageri hotel, cerințe și trasee de carieră."
+  },
+  {
+    "id": "comert-vanzari",
+    "nume": "Comerț & Vânzări",
+    "slug": "comert-vanzari",
+    "descriere": "Comerțul și vânzările acoperă activități de distribuție, retail și business-to-business. Include roluri de la casier și vânzător la key account manager și director comercial.",
+    "icon": "shopping-bag",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Comerț & Vânzări - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din comerț și vânzări în România: salarii, competențe de vânzare, cerere pe piață și trasee de carieră."
+  },
+  {
+    "id": "finante-banci",
+    "nume": "Finanțe & Bănci",
+    "slug": "finante-banci",
+    "descriere": "Sectorul financiar-bancar include contabilitate, audit, analiză financiară, servicii bancare și asigurări. Oferă stabilitate, salarii competitive și oportunități de dezvoltare profesională prin certificări internaționale.",
+    "icon": "banknote",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Finanțe & Bănci - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din finanțe și bănci în România: salarii contabili, auditori, analiști, cerințe de studii și certificări profesionale."
+  },
+  {
+    "id": "juridic",
+    "nume": "Juridic & Consultanță",
+    "slug": "juridic",
+    "descriere": "Domeniul juridic și de consultanță cuprinde profesii liberale și de consiliere: avocatură, notariat, consultanță în management și resurse umane. Necesită pregătire solidă și, adesea, examene de admitere în profesie.",
+    "icon": "scale",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Juridic & Consultanță - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din juridic și consultanță în România: salarii avocați, notari, consultanți, cerințe de studii și acces în profesie."
+  },
+  {
+    "id": "administratie-publica",
+    "nume": "Administrație Publică",
+    "slug": "administratie-publica",
+    "descriere": "Administrația publică include funcționari, inspectori, polițiști, pompieri și alți angajați ai statului. Oferă stabilitate, beneficii sociale și posibilități de avansare pe grade profesionale.",
+    "icon": "landmark",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Administrație Publică - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din administrația publică în România: salarii funcționari, polițiști, pompieri, condiții de angajare și avansare."
+  },
+  {
+    "id": "arte-cultura",
+    "nume": "Arte & Cultură",
+    "slug": "arte-cultura",
+    "descriere": "Domeniul artelor și culturii reunește creatori, performeri și specialiști în patrimoniu. Include actorie, regie, arte vizuale, design și conservare-restaurare, cu venituri variabile și satisfacție profesională ridicată.",
+    "icon": "palette",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Arte & Cultură - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din arte și cultură în România: salarii artiști, designeri, fotografi, cerințe de formare și oportunități profesionale."
+  },
+  {
+    "id": "media-comunicare",
+    "nume": "Media & Comunicare",
+    "slug": "media-comunicare",
+    "descriere": "Media și comunicarea acoperă jurnalism, relații publice, marketing digital și producție media. Sectorul se transformă rapid prin digitalizare, creând roluri noi în social media, SEO și content marketing.",
+    "icon": "megaphone",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Media & Comunicare - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din media și comunicare în România: salarii jurnaliști, specialiști marketing, PR, cerințe și trasee de carieră."
+  },
+  {
+    "id": "energie-utilitati",
+    "nume": "Energie & Utilități",
+    "slug": "energie-utilitati",
+    "descriere": "Sectorul energiei și utilităților include producerea, transportul și distribuția energiei electrice, gazelor naturale și apei. Tranziția energetică creează cerere pentru specialiști în surse regenerabile.",
+    "icon": "zap",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Energie & Utilități - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din energie și utilități în România: salarii ingineri, tehnicieni, operatori, cerințe de studii și oportunități în energie verde."
+  },
+  {
+    "id": "imobiliare",
+    "nume": "Imobiliare",
+    "slug": "imobiliare",
+    "descriere": "Domeniul imobiliar cuprinde tranzacții, evaluări, administrare proprietăți, arhitectură și urbanism. Piața imobiliară din România oferă oportunități variate, de la agenți la dezvoltatori și consultanți.",
+    "icon": "home",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Imobiliare - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din imobiliare în România: salarii agenți, evaluatori, arhitecți, cerințe profesionale și oportunități pe piață."
+  },
+  {
+    "id": "auto-reparatii",
+    "nume": "Auto & Reparații",
+    "slug": "auto-reparatii",
+    "descriere": "Sectorul auto și reparații include diagnosticarea, repararea și întreținerea vehiculelor. Odată cu electrificarea și digitalizarea automobilelor, crește cererea pentru tehnicieni cu competențe moderne.",
+    "icon": "wrench",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Auto & Reparații - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din auto și reparații în România: salarii mecanici, electricieni auto, cerințe de calificare și oportunități profesionale."
+  },
+  {
+    "id": "securitate",
+    "nume": "Securitate & Pază",
+    "slug": "securitate",
+    "descriere": "Securitatea și paza asigură protecția persoanelor, bunurilor și informațiilor. Include agenți de pază, specialiști SSM, consultanți securitate și tehnicieni de sisteme de alarmă și supraveghere.",
+    "icon": "shield",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Securitate & Pază - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din securitate și pază în România: salarii agenți, specialiști SSM, cerințe de atestare și condiții de muncă."
+  },
+  {
+    "id": "curatenie-mentenanta",
+    "nume": "Curățenie & Mentenanță",
+    "slug": "curatenie-mentenanta",
+    "descriere": "Curățenia și mentenanța asigură funcționarea și igiena clădirilor, echipamentelor și spațiilor verzi. Sectorul oferă locuri de muncă accesibile, cu cerere constantă în mediul urban.",
+    "icon": "sparkles",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Curățenie & Mentenanță - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din curățenie și mentenanță în România: salarii, cerințe de calificare, condiții de muncă și oportunități de angajare."
+  },
+  {
+    "id": "sport-fitness",
+    "nume": "Sport & Fitness",
+    "slug": "sport-fitness",
+    "descriere": "Domeniul sport și fitness include antrenori, instructori, kinetoterapeuți sportivi și manageri de facilități sportive. Piața crește odată cu interesul populației pentru un stil de viață sănătos.",
+    "icon": "dumbbell",
+    "meseriiCount": 20,
+    "metaTitle": "Meserii în Sport & Fitness - Cariere, Salarii și Competențe",
+    "metaDescription": "Meseriile din sport și fitness în România: salarii antrenori, instructori, cerințe de certificare și oportunități profesionale."
+  }
+]

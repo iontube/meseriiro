@@ -1,0 +1,69 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { meserii, domenii, formatSalariu, getMeseriiByDomeniu } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+
+const breadcrumbs = [{ label: 'Salarii' }];
+
+const meseriiByDomeniu = domenii.map(d => ({
+  domeniu: d,
+  meserii: getMeseriiByDomeniu(d.id).sort((a, b) => b.salpiuNational.mediu - a.salpiuNational.mediu),
+})).filter(g => g.meserii.length > 0);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Salarii pe Meserii în România 2026 - Comparație pe Orașe"
+    description={`Salarii nete pentru ${meserii.length} meserii din România, comparate pe 41 de orașe. Date actualizate cu minim, mediu și maxim pe fiecare profesie.`}
+    canonical="/salariu/"
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema('Salarii pe Meserii în România', 'Salarii nete pentru toate meseriile din România, comparate pe orașe', '/salariu/'),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16 sm:pb-20">
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        Salarii pe meserii în România
+      </h1>
+      <p class="prose-custom max-w-3xl text-lg">
+        Compară salariile nete pentru {meserii.length} de meserii din {domenii.length} domenii profesionale. Fiecare pagină de salariu include date pe 41 de orașe din România.
+      </p>
+    </div>
+
+    {meseriiByDomeniu.map(({ domeniu, meserii: meseriiList }) => (
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-4">
+          <h2 class="text-xl font-heading font-bold text-surface-900">{domeniu.nume}</h2>
+          <a href={`/domenii/${domeniu.slug}/`} class="text-xs text-brand-600 hover:text-brand-700 no-underline font-medium">
+            Vezi domeniul →
+          </a>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {meseriiList.map(m => (
+            <a
+              href={`/salariu/${m.slug}/`}
+              class="card p-4 no-underline group flex items-center justify-between"
+              title={`Salariu ${m.nume} pe orașe`}
+            >
+              <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+                {m.nume}
+              </span>
+              <span class="text-sm font-bold text-brand-700 tabular-nums shrink-0 ml-3">
+                {formatSalariu(m.salpiuNational.mediu)}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</Layout>

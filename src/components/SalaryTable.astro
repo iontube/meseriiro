@@ -1,0 +1,62 @@
+---
+import type { Meserie } from '../helpers/types';
+import { getOraseWithSalariu, formatSalariu } from '../helpers/data';
+
+interface Props {
+  meserie: Meserie;
+}
+
+const { meserie } = Astro.props;
+const oraseData = getOraseWithSalariu(meserie);
+---
+
+<div class="relative">
+  <!-- Scroll hint on mobile -->
+  <div class="sm:hidden flex items-center gap-1.5 text-xs text-surface-400 mb-2">
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+    </svg>
+    <span>Glisează pentru toate coloanele</span>
+  </div>
+  <div class="overflow-x-auto -mx-5 px-5 scrollbar-thin">
+    <table class="w-full text-left text-sm" style="min-width: 480px;">
+      <thead>
+        <tr class="border-b-2 border-surface-200">
+          <th class="pb-3 font-heading font-semibold text-surface-800">Locație</th>
+          <th class="pb-3 font-heading font-semibold text-surface-800 text-right">Minim</th>
+          <th class="pb-3 font-heading font-semibold text-surface-800 text-right">Mediu</th>
+          <th class="pb-3 font-heading font-semibold text-surface-800 text-right">Maxim</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-surface-100">
+        <tr class="bg-brand-50/60">
+          <td class="py-3.5 font-medium text-surface-900">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              România (național)
+            </span>
+          </td>
+          <td class="py-3.5 text-right text-surface-700 tabular-nums">{formatSalariu(meserie.salpiuNational.min)}</td>
+          <td class="py-3.5 text-right font-bold text-brand-700 tabular-nums">{formatSalariu(meserie.salpiuNational.mediu)}</td>
+          <td class="py-3.5 text-right text-surface-700 tabular-nums">{formatSalariu(meserie.salpiuNational.max)}</td>
+        </tr>
+        {oraseData.map(oras => (
+          <tr class="hover:bg-surface-50 transition-colors">
+            <td class="py-3">
+              <a href={`/salariu/${meserie.slug}/${oras.id}/`} class="text-surface-800 hover:text-brand-600 no-underline font-medium transition-colors">
+                {oras.nume}
+              </a>
+            </td>
+            <td class="py-3 text-right text-surface-600 tabular-nums">{formatSalariu(oras.salariu.min)}</td>
+            <td class="py-3 text-right font-semibold text-surface-900 tabular-nums">{formatSalariu(oras.salariu.mediu)}</td>
+            <td class="py-3 text-right text-surface-600 tabular-nums">{formatSalariu(oras.salariu.max)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <!-- Fade edge hint on right -->
+  <div class="sm:hidden pointer-events-none absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-white to-transparent"></div>
+</div>

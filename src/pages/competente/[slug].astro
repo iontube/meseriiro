@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import MeserieCard from '../../components/MeserieCard.astro';
+import { competente, getMeseriiByCompetenta } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+import { getTopSalaryForCompetenta } from '../../helpers/interlinking';
+import type { Competenta } from '../../helpers/types';
+
+export function getStaticPaths() {
+  return competente.map(c => ({
+    params: { slug: c.slug },
+    props: { competenta: c },
+  }));
+}
+
+interface Props {
+  competenta: Competenta;
+}
+
+const { competenta } = Astro.props;
+const meseriiRelevante = getMeseriiByCompetenta(competenta.id);
+const topSalarii = getTopSalaryForCompetenta(competenta.id, 5);
+
+const breadcrumbs = [
+  { label: 'Competențe', href: '/competente/' },
+  { label: competenta.nume },
+];
+
+const categoriiLabels: Record<string, string> = {
+  tehnice: 'Competență tehnică',
+  'soft-skills': 'Competență transversală',
+  manageriale: 'Competență managerială',
+};
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={competenta.metaTitle}
+    description={competenta.metaDescription}
+    canonical={`/competente/${competenta.slug}/`}
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema(competenta.metaTitle, competenta.metaDescription, `/competente/${competenta.slug}/`),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16 sm:pb-20">
+    <header class="mb-10">
+      <span class="badge badge-brand mb-3">{categoriiLabels[competenta.categorie] || competenta.categorie}</span>
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        {competenta.nume}
+      </h1>
+      <p class="text-lg text-surface-700 leading-relaxed max-w-3xl">
+        {competenta.descriere}
+      </p>
+    </header>
+
+    {meseriiRelevante.length > 0 && (
+      <div>
+        <h2 class="section-title mb-6">
+          Meserii care necesită {competenta.nume.toLowerCase()}
+        </h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {meseriiRelevante.map(m => <MeserieCard meserie={m} />)}
+        </div>
+      </div>
+    )}
+
+    <!-- Cross-SILO: Top salarii pentru competență -->
+    {topSalarii.length > 0 && (
+      <section class="mt-10">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">
+          Top salarii cu {competenta.nume.toLowerCase()}
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {topSalarii.map(link => (
+            <a href={link.href} class="card p-4 no-underline group flex items-center justify-between" title={link.title}>
+              <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">{link.text}</span>
+              <svg class="w-4 h-4 text-surface-400 group-hover:text-brand-500 transition-colors shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Back to all competences -->
+    <div class="mt-10">
+      <a href="/competente/" class="btn-secondary no-underline">← Toate competențele</a>
+    </div>
+  </section>
+</Layout>

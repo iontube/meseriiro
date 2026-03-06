@@ -1,0 +1,248 @@
+[
+  {
+    "id": "bucuresti",
+    "nume": "București",
+    "populatie": 1794590,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "cluj-napoca",
+    "nume": "Cluj-Napoca",
+    "populatie": 324576,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "timisoara",
+    "nume": "Timișoara",
+    "populatie": 319279,
+    "regiune": "Banat"
+  },
+  {
+    "id": "iasi",
+    "nume": "Iași",
+    "populatie": 290422,
+    "regiune": "Moldova"
+  },
+  {
+    "id": "brasov",
+    "nume": "Brașov",
+    "populatie": 253200,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "constanta",
+    "nume": "Constanța",
+    "populatie": 283872,
+    "regiune": "Dobrogea"
+  },
+  {
+    "id": "craiova",
+    "nume": "Craiova",
+    "populatie": 269506,
+    "regiune": "Oltenia"
+  },
+  {
+    "id": "galati",
+    "nume": "Galați",
+    "populatie": 249432,
+    "regiune": "Moldova"
+  },
+  {
+    "id": "oradea",
+    "nume": "Oradea",
+    "populatie": 196367,
+    "regiune": "Crișana"
+  },
+  {
+    "id": "sibiu",
+    "nume": "Sibiu",
+    "populatie": 169611,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "ploiesti",
+    "nume": "Ploiești",
+    "populatie": 209945,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "arad",
+    "nume": "Arad",
+    "populatie": 159074,
+    "regiune": "Crișana"
+  },
+  {
+    "id": "pitesti",
+    "nume": "Pitești",
+    "populatie": 155383,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "baia-mare",
+    "nume": "Baia Mare",
+    "populatie": 123738,
+    "regiune": "Maramureș"
+  },
+  {
+    "id": "buzau",
+    "nume": "Buzău",
+    "populatie": 115494,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "satu-mare",
+    "nume": "Satu Mare",
+    "populatie": 102411,
+    "regiune": "Maramureș"
+  },
+  {
+    "id": "botosani",
+    "nume": "Botoșani",
+    "populatie": 106847,
+    "regiune": "Moldova"
+  },
+  {
+    "id": "suceava",
+    "nume": "Suceava",
+    "populatie": 92121,
+    "regiune": "Bucovina"
+  },
+  {
+    "id": "ramnicu-valcea",
+    "nume": "Râmnicu Vâlcea",
+    "populatie": 98776,
+    "regiune": "Oltenia"
+  },
+  {
+    "id": "drobeta-turnu-severin",
+    "nume": "Drobeta-Turnu Severin",
+    "populatie": 92617,
+    "regiune": "Oltenia"
+  },
+  {
+    "id": "targu-mures",
+    "nume": "Târgu Mureș",
+    "populatie": 134290,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "bistrita",
+    "nume": "Bistrița",
+    "populatie": 75076,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "focsani",
+    "nume": "Focșani",
+    "populatie": 73868,
+    "regiune": "Moldova"
+  },
+  {
+    "id": "resita",
+    "nume": "Reșița",
+    "populatie": 73282,
+    "regiune": "Banat"
+  },
+  {
+    "id": "tulcea",
+    "nume": "Tulcea",
+    "populatie": 63399,
+    "regiune": "Dobrogea"
+  },
+  {
+    "id": "slatina",
+    "nume": "Slatina",
+    "populatie": 70293,
+    "regiune": "Oltenia"
+  },
+  {
+    "id": "calarasi",
+    "nume": "Călărași",
+    "populatie": 65181,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "giurgiu",
+    "nume": "Giurgiu",
+    "populatie": 61353,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "zalau",
+    "nume": "Zalău",
+    "populatie": 56202,
+    "regiune": "Crișana"
+  },
+  {
+    "id": "deva",
+    "nume": "Deva",
+    "populatie": 61123,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "alba-iulia",
+    "nume": "Alba Iulia",
+    "populatie": 63536,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "sfantu-gheorghe",
+    "nume": "Sfântu Gheorghe",
+    "populatie": 56006,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "vaslui",
+    "nume": "Vaslui",
+    "populatie": 55407,
+    "regiune": "Moldova"
+  },
+  {
+    "id": "targoviste",
+    "nume": "Târgoviște",
+    "populatie": 79610,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "miercurea-ciuc",
+    "nume": "Miercurea Ciuc",
+    "populatie": 37980,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "piatra-neamt",
+    "nume": "Piatra Neamț",
+    "populatie": 85055,
+    "regiune": "Moldova"
+  },
+  {
+    "id": "slobozia",
+    "nume": "Slobozia",
+    "populatie": 45891,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "alexandria",
+    "nume": "Alexandria",
+    "populatie": 45434,
+    "regiune": "Muntenia"
+  },
+  {
+    "id": "hunedoara",
+    "nume": "Hunedoara",
+    "populatie": 60525,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "medias",
+    "nume": "Mediaș",
+    "populatie": 46006,
+    "regiune": "Transilvania"
+  },
+  {
+    "id": "petrosani",
+    "nume": "Petroșani",
+    "populatie": 34331,
+    "regiune": "Transilvania"
+  }
+]

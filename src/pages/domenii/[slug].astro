@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import MeserieCard from '../../components/MeserieCard.astro';
+import { domenii, getMeseriiByDomeniu } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+import { getRelatedDomenii, getTopSalaryInDomeniu, getCompetenteInDomeniu } from '../../helpers/interlinking';
+import type { Domeniu } from '../../helpers/types';
+
+export function getStaticPaths() {
+  return domenii.map(d => ({
+    params: { slug: d.slug },
+    props: { domeniu: d },
+  }));
+}
+
+interface Props {
+  domeniu: Domeniu;
+}
+
+const { domeniu } = Astro.props;
+const meseriiDomeniu = getMeseriiByDomeniu(domeniu.id);
+const relatedDomenii = getRelatedDomenii(domeniu.id, 4);
+const topSalarii = getTopSalaryInDomeniu(domeniu.id, 5);
+const competenteDomeniu = getCompetenteInDomeniu(domeniu.id);
+
+const breadcrumbs = [
+  { label: 'Domenii', href: '/domenii/' },
+  { label: domeniu.nume },
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={domeniu.metaTitle}
+    description={domeniu.metaDescription}
+    canonical={`/domenii/${domeniu.slug}/`}
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema(domeniu.metaTitle, domeniu.metaDescription, `/domenii/${domeniu.slug}/`),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16">
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        Meserii în domeniul {domeniu.nume}
+      </h1>
+      <p class="prose-custom max-w-3xl text-lg">{domeniu.descriere}</p>
+    </div>
+
+    {meseriiDomeniu.length > 0 ? (
+      <>
+        <h2 class="section-title mb-6">
+          {meseriiDomeniu.length} {meseriiDomeniu.length === 1 ? 'meserie' : 'meserii'} în {domeniu.nume}
+        </h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {meseriiDomeniu.map(m => <MeserieCard meserie={m} />)}
+        </div>
+      </>
+    ) : (
+      <div class="card p-8 text-center">
+        <p class="text-surface-600">Meseriile din acest domeniu vor fi adăugate în curând.</p>
+      </div>
+    )}
+  </section>
+
+  <!-- Cross-SILO: Top salarii în domeniu -->
+  {topSalarii.length > 0 && (
+    <section class="container-custom pb-12">
+      <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">Top salarii în {domeniu.nume}</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        {topSalarii.map(link => (
+          <a href={link.href} class="card p-4 no-underline group flex items-center justify-between" title={link.title}>
+            <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">{link.text}</span>
+            <svg class="w-4 h-4 text-surface-400 group-hover:text-brand-500 transition-colors shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Cross-SILO: Competențe în domeniu -->
+  {competenteDomeniu.length > 0 && (
+    <section class="container-custom pb-12">
+      <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">Competențe cerute în {domeniu.nume}</h2>
+      <div class="flex flex-wrap gap-2">
+        {competenteDomeniu.map(link => (
+          <a href={link.href} class="badge badge-brand no-underline hover:bg-brand-200 transition-colors text-sm px-3 py-1" title={link.title}>
+            {link.text}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Related domains (SILO: lateral linking between silos) -->
+  {relatedDomenii.length > 0 && (
+    <section class="bg-surface-100 py-12">
+      <div class="container-custom">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-6">Alte domenii profesionale</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {relatedDomenii.map(link => (
+            <a href={link.href} class="card p-4 no-underline group block" title={link.title}>
+              <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">{link.text}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>

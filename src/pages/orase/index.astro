@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { orase } from '../../helpers/data';
+import { getOraseByRegiune } from '../../helpers/interlinking';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+
+const breadcrumbs = [{ label: 'Orașe' }];
+const oraseByRegiune = getOraseByRegiune();
+const regiuni = Object.keys(oraseByRegiune).sort();
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Salarii pe Orașe în România - Comparație și Top Meserii"
+    description={`Compară salariile pe ${orase.length} orașe din România. Top meserii, salarii medii și cerere pe piața muncii în fiecare localitate.`}
+    canonical="/orase/"
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema('Salarii pe Orașe în România', 'Compară salariile pe orașe din România', '/orase/'),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16 sm:pb-20">
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        Salarii pe orașe în România
+      </h1>
+      <p class="prose-custom max-w-3xl text-lg">
+        Compară salariile din {orase.length} orașe din România. Selectează un oraș pentru a vedea top meseriile plătite, salarii medii și cerere pe piața muncii.
+      </p>
+    </div>
+
+    {regiuni.map(regiune => (
+      <div class="mb-10">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">{regiune}</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {oraseByRegiune[regiune].sort((a, b) => b.populatie - a.populatie).map(oras => (
+            <a
+              href={`/orase/${oras.id}/`}
+              class="card p-4 no-underline group flex items-center justify-between"
+              title={`Salarii și meserii în ${oras.nume}`}
+            >
+              <div>
+                <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+                  {oras.nume}
+                </span>
+                <span class="block text-xs text-surface-500 mt-0.5">
+                  {oras.populatie.toLocaleString('ro-RO')} loc.
+                </span>
+              </div>
+              <svg class="w-4 h-4 text-surface-400 group-hover:text-brand-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</Layout>

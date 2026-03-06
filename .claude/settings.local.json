@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install @astrojs/sitemap 2>&1)",
+      "Bash(curl:*)",
+      "Bash(npx astro:*)"
+    ]
+  }
+}

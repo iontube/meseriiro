@@ -1,0 +1,89 @@
+<!-- Cookie consent banner - GDPR compliant -->
+<div
+  id="cookie-banner"
+  class="fixed bottom-0 inset-x-0 z-50 p-4 sm:p-6 transition-transform duration-300 translate-y-full"
+  role="dialog"
+  aria-label="Consimțământ cookie-uri"
+>
+  <div class="container-custom">
+    <div class="card p-5 sm:p-6 shadow-elevated border-surface-300 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      <div class="flex-1">
+        <p class="text-surface-800 text-sm font-medium mb-1">Acest site folosește cookie-uri</p>
+        <p class="text-surface-600 text-sm leading-relaxed">
+          Folosim cookie-uri pentru a analiza traficul și a îmbunătăți experiența. Cookie-urile de analiză se activează doar cu acordul tău.
+          <a href="/politica-cookies/" class="text-link">Detalii</a>
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <button
+          id="cookie-reject"
+          type="button"
+          class="btn-secondary text-sm px-4 py-2"
+        >
+          Doar necesare
+        </button>
+        <button
+          id="cookie-accept"
+          type="button"
+          class="btn-primary text-sm px-4 py-2"
+        >
+          Accept toate
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const COOKIE_KEY = 'cookie_consent';
+
+  function getCookieConsent(): string | null {
+    try {
+      return localStorage.getItem(COOKIE_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  function setCookieConsent(value: string): void {
+    try {
+      localStorage.setItem(COOKIE_KEY, value);
+    } catch {
+      // silently fail
+    }
+  }
+
+  function hideBanner(): void {
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+      banner.classList.add('translate-y-full');
+      setTimeout(() => { banner.style.display = 'none'; }, 300);
+    }
+  }
+
+  function showBanner(): void {
+    const banner = document.getElementById('cookie-banner');
+    if (banner) {
+      banner.style.display = '';
+      requestAnimationFrame(() => {
+        banner.classList.remove('translate-y-full');
+      });
+    }
+  }
+
+  // Check consent on load
+  const consent = getCookieConsent();
+  if (!consent) {
+    showBanner();
+  }
+
+  document.getElementById('cookie-accept')?.addEventListener('click', () => {
+    setCookieConsent('all');
+    hideBanner();
+  });
+
+  document.getElementById('cookie-reject')?.addEventListener('click', () => {
+    setCookieConsent('necessary');
+    hideBanner();
+  });
+</script>

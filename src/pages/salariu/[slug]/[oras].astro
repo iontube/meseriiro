@@ -1,0 +1,337 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SEOHead from '../../../components/SEOHead.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import FAQSection from '../../../components/FAQSection.astro';
+import { meserii, orase, getDomeniuForMeserie, getMeseriiByDomeniu, formatSalariu } from '../../../helpers/data';
+import { buildBreadcrumbSchema, buildSalaryPageSchema } from '../../../helpers/structured-data';
+import { getSiblingCityLinks, getTopCitiesForMeserie, getDomeniuAverageSalary } from '../../../helpers/interlinking';
+import type { Meserie, Oras } from '../../../helpers/types';
+
+export function getStaticPaths() {
+  const paths: Array<{ params: { slug: string; oras: string }; props: { meserie: Meserie; oras: Oras } }> = [];
+
+  for (const meserie of meserii) {
+    for (const oras of orase) {
+      if (meserie.salpiuOrase[oras.id]) {
+        paths.push({
+          params: { slug: meserie.slug, oras: oras.id },
+          props: { meserie, oras },
+        });
+      }
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  meserie: Meserie;
+  oras: Oras;
+}
+
+const { meserie, oras } = Astro.props;
+const domeniu = getDomeniuForMeserie(meserie);
+const salariu = meserie.salpiuOrase[oras.id];
+const siblingCities = getSiblingCityLinks(meserie.slug, oras.id, 6);
+const topCities = getTopCitiesForMeserie(meserie.slug, 3);
+const domeniuAvg = domeniu ? getDomeniuAverageSalary(domeniu.id) : 0;
+
+const diff = salariu.mediu - meserie.salpiuNational.mediu;
+const diffPercent = Math.round((diff / meserie.salpiuNational.mediu) * 100);
+const diffDomeniu = domeniuAvg > 0 ? salariu.mediu - domeniuAvg : 0;
+const diffDomeniuPercent = domeniuAvg > 0 ? Math.round((diffDomeniu / domeniuAvg) * 100) : 0;
+
+// Experience level salaries (junior/mid/senior)
+const salariuJunior = { min: salariu.min, max: Math.round(salariu.min + (salariu.mediu - salariu.min) * 0.6) };
+const salariuMid = { min: Math.round(salariu.mediu * 0.9), max: Math.round(salariu.mediu * 1.1) };
+const salariuSenior = { min: Math.round(salariu.mediu + (salariu.max - salariu.mediu) * 0.4), max: salariu.max };
+
+// City characteristics for unique descriptions
+const isBigCity = oras.populatie > 250000;
+const isMediumCity = oras.populatie > 100000 && oras.populatie <= 250000;
+const isCapitala = oras.id === 'bucuresti';
+const cityRank = topCities.findIndex(tc => tc.oras.id === oras.id);
+const isTopCity = cityRank >= 0;
+const aboveAvg = diff > 0;
+const cerereLabel = meserie.nivelCerere === 'ridicat' ? 'ridicată' : meserie.nivelCerere === 'mediu' ? 'medie' : 'scăzută';
+
+// Unique descriptive paragraph
+const descParts: string[] = [];
+
+if (isCapitala) {
+  descParts.push(`București, capitala și cel mai mare centru economic al României, oferă un salariu mediu net de ${formatSalariu(salariu.mediu)} pentru meseria de ${meserie.nume.toLowerCase()}.`);
+} else if (isBigCity) {
+  descParts.push(`${oras.nume}, unul dintre cele mai importante centre urbane din ${oras.regiune}, oferă un salariu mediu net de ${formatSalariu(salariu.mediu)} pentru meseria de ${meserie.nume.toLowerCase()}.`);
+} else if (isMediumCity) {
+  descParts.push(`În ${oras.nume}, oraș cu potențial economic în creștere din ${oras.regiune}, salariul mediu net pentru un ${meserie.nume.toLowerCase()} este de ${formatSalariu(salariu.mediu)}.`);
+} else {
+  descParts.push(`${oras.nume} (${oras.regiune}) oferă un salariu mediu net de ${formatSalariu(salariu.mediu)} pentru meseria de ${meserie.nume.toLowerCase()}.`);
+}
+
+if (aboveAvg) {
+  descParts.push(`Acest salariu este cu ${diffPercent}% peste media națională de ${formatSalariu(meserie.salpiuNational.mediu)}, ceea ce plasează ${oras.nume} printre orașele avantajoase pentru această profesie.`);
+} else if (diff < 0) {
+  descParts.push(`Salariul local este cu ${Math.abs(diffPercent)}% sub media națională de ${formatSalariu(meserie.salpiuNational.mediu)}, însă costul de viață mai redus din ${oras.nume} poate compensa diferența.`);
+} else {
+  descParts.push(`Salariul local este la nivelul mediei naționale de ${formatSalariu(meserie.salpiuNational.mediu)}.`);
+}
+
+if (meserie.nivelCerere === 'ridicat') {
+  descParts.push(`Cererea pentru această meserie este ridicată la nivel național, ceea ce înseamnă oportunități bune de angajare.`);
+}
+
+const uniqueDescription = descParts.join(' ');
+
+// Breadcrumbs
+const breadcrumbs = [
+  { label: 'Meserii', href: '/meserii/' },
+  { label: meserie.nume, href: `/meserii/${meserie.slug}/` },
+  { label: `Salariu`, href: `/salariu/${meserie.slug}/` },
+  { label: oras.nume },
+];
+
+// Extended FAQ (4-5 questions)
+const faqItems = [
+  {
+    intrebare: `Cât câștigă un ${meserie.nume.toLowerCase()} în ${oras.nume}?`,
+    raspuns: `Salariul mediu net pentru un ${meserie.nume.toLowerCase()} în ${oras.nume} este de ${formatSalariu(salariu.mediu)} pe lună. Intervalul variază între ${formatSalariu(salariu.min)} (nivel începător) și ${formatSalariu(salariu.max)} (nivel senior), în funcție de experiență, angajator și specificul proiectelor.`,
+  },
+  {
+    intrebare: `Cum se compară salariul de ${meserie.nume.toLowerCase()} din ${oras.nume} cu alte orașe?`,
+    raspuns: isTopCity
+      ? `${oras.nume} se numără printre primele ${cityRank + 1} orașe ca nivel salarial pentru această meserie. ${topCities[0].oras.id !== oras.id ? `Cel mai bun salariu se oferă în ${topCities[0].oras.nume} (${formatSalariu(topCities[0].salariu.mediu)}).` : 'Este orașul cu cel mai mare salariu mediu pentru această meserie.'}`
+      : `Salariul din ${oras.nume} (${formatSalariu(salariu.mediu)}) ${aboveAvg ? 'depășește' : 'este sub'} media națională. Cele mai bune salarii pentru această meserie se oferă în ${topCities.map(tc => tc.oras.nume).join(', ')}.`,
+  },
+  {
+    intrebare: `Ce studii trebuie pentru a lucra ca ${meserie.nume.toLowerCase()}?`,
+    raspuns: meserie.studiiNecesare,
+  },
+  {
+    intrebare: `Cât câștigă un ${meserie.nume.toLowerCase()} începător în ${oras.nume}?`,
+    raspuns: `Un ${meserie.nume.toLowerCase()} la început de carieră în ${oras.nume} poate câștiga între ${formatSalariu(salariuJunior.min)} și ${formatSalariu(salariuJunior.max)} net pe lună. Salariul crește cu experiența, ajungând la ${formatSalariu(salariuSenior.min)} – ${formatSalariu(salariuSenior.max)} pentru specialiștii cu peste 5 ani de experiență.`,
+  },
+  {
+    intrebare: `Merită să lucrezi ca ${meserie.nume.toLowerCase()} în ${oras.nume}?`,
+    raspuns: aboveAvg
+      ? `${oras.nume} oferă un salariu cu ${diffPercent}% peste media națională pentru această meserie, ceea ce îl face un oraș avantajos. ${meserie.nivelCerere === 'ridicat' ? 'Cererea ridicată pe piața muncii înseamnă și oportunități bune de angajare.' : ''} Condițiile de muncă: ${meserie.conditiiMunca.toLowerCase()}.`
+      : `Deși salariul din ${oras.nume} este ${diff === 0 ? 'la media națională' : `cu ${Math.abs(diffPercent)}% sub media națională`}, costul de viață mai redus poate face diferența. ${meserie.nivelCerere === 'ridicat' ? 'Cererea pentru această meserie este ridicată la nivel național.' : ''} Condițiile de muncă: ${meserie.conditiiMunca.toLowerCase()}.`,
+  },
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={`Salariu ${meserie.nume} în ${oras.nume} ${new Date().getFullYear()} - Date Actualizate`}
+    description={`Salariu ${meserie.nume} în ${oras.nume}: mediu ${formatSalariu(salariu.mediu)}/lună. Compară cu media națională și alte orașe din România.`}
+    canonical={`/salariu/${meserie.slug}/${oras.id}/`}
+    ogType="article"
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildSalaryPageSchema(meserie, oras.nume),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <article class="container-narrow pb-16 sm:pb-20">
+    <header class="mb-10">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        {domeniu && (
+          <a href={`/domenii/${domeniu.slug}/`} class="badge badge-brand no-underline hover:bg-brand-200 transition-colors">{domeniu.nume}</a>
+        )}
+        <span class="badge bg-surface-100 text-surface-700">{oras.regiune}</span>
+        <span class={`badge ${meserie.nivelCerere === 'ridicat' ? 'badge-success' : meserie.nivelCerere === 'mediu' ? 'bg-blue-100 text-blue-700' : 'badge-warning'}`}>
+          Cerere {cerereLabel}
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        Salariu {meserie.nume} în {oras.nume}
+      </h1>
+      <p class="text-lg text-surface-700 leading-relaxed">
+        {uniqueDescription}
+      </p>
+    </header>
+
+    <!-- City salary card -->
+    <div class="card p-8 mb-8 text-center">
+      <p class="text-sm text-surface-600 font-medium mb-2">Salariu mediu net/lună în {oras.nume}</p>
+      <p class="text-5xl font-heading font-extrabold text-brand-700 mb-3">
+        {formatSalariu(salariu.mediu)}
+      </p>
+      <div class="flex justify-center gap-8 text-sm text-surface-600">
+        <div>
+          <span class="block font-semibold text-surface-800">{formatSalariu(salariu.min)}</span>
+          <span>Minim</span>
+        </div>
+        <div class="w-px bg-surface-200"></div>
+        <div>
+          <span class="block font-semibold text-surface-800">{formatSalariu(salariu.max)}</span>
+          <span>Maxim</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salary by experience level -->
+    <div class="card p-5 mb-8">
+      <h2 class="text-lg font-heading font-bold text-surface-900 mb-4">
+        Salariu pe nivel de experiență
+      </h2>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="p-4 bg-surface-50 rounded-lg border border-surface-200 text-center">
+          <p class="text-xs text-surface-500 font-medium uppercase tracking-wide mb-2">Junior</p>
+          <p class="text-lg font-heading font-bold text-surface-800 tabular-nums">{formatSalariu(salariuJunior.min)}</p>
+          <p class="text-xs text-surface-400">– {formatSalariu(salariuJunior.max)}</p>
+          <p class="text-xs text-surface-500 mt-1">0-2 ani</p>
+        </div>
+        <div class="p-4 bg-brand-50 rounded-lg border border-brand-100 text-center">
+          <p class="text-xs text-brand-600 font-medium uppercase tracking-wide mb-2">Mid-level</p>
+          <p class="text-lg font-heading font-bold text-brand-700 tabular-nums">{formatSalariu(salariuMid.min)}</p>
+          <p class="text-xs text-brand-400">– {formatSalariu(salariuMid.max)}</p>
+          <p class="text-xs text-surface-500 mt-1">2-5 ani</p>
+        </div>
+        <div class="p-4 bg-surface-50 rounded-lg border border-surface-200 text-center">
+          <p class="text-xs text-surface-500 font-medium uppercase tracking-wide mb-2">Senior</p>
+          <p class="text-lg font-heading font-bold text-surface-800 tabular-nums">{formatSalariu(salariuSenior.min)}</p>
+          <p class="text-xs text-surface-400">– {formatSalariu(salariuSenior.max)}</p>
+          <p class="text-xs text-surface-500 mt-1">5+ ani</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extended comparison -->
+    <div class="card p-5 mb-8">
+      <h2 class="text-lg font-heading font-bold text-surface-900 mb-4">
+        Comparație salarială
+      </h2>
+      <div class="space-y-3">
+        <!-- Current city -->
+        <div class="flex items-center justify-between p-3 bg-brand-50 rounded-lg border border-brand-100">
+          <span class="text-sm font-medium text-surface-800">{oras.nume}</span>
+          <span class="font-heading font-bold text-brand-700 tabular-nums">{formatSalariu(salariu.mediu)}</span>
+        </div>
+        <!-- National average -->
+        <div class="flex items-center justify-between p-3 bg-surface-50 rounded-lg border border-surface-200">
+          <span class="text-sm font-medium text-surface-600">Media națională</span>
+          <span class="font-heading font-bold text-surface-800 tabular-nums">{formatSalariu(meserie.salpiuNational.mediu)}</span>
+        </div>
+        <!-- Domain average -->
+        {domeniuAvg > 0 && (
+          <div class="flex items-center justify-between p-3 bg-surface-50 rounded-lg border border-surface-200">
+            <span class="text-sm font-medium text-surface-600">Media domeniu {domeniu?.nume}</span>
+            <span class="font-heading font-bold text-surface-800 tabular-nums">{formatSalariu(domeniuAvg)}</span>
+          </div>
+        )}
+        <!-- Top 3 cities -->
+        {topCities.filter(tc => tc.oras.id !== oras.id).slice(0, 3).map(tc => (
+          <a href={`/salariu/${meserie.slug}/${tc.oras.id}/`} class="flex items-center justify-between p-3 rounded-lg border border-surface-200 no-underline hover:bg-surface-50 transition-colors group">
+            <span class="text-sm font-medium text-surface-600 group-hover:text-brand-600 transition-colors">{tc.oras.nume}</span>
+            <span class="font-heading font-bold text-surface-800 tabular-nums">{formatSalariu(tc.salariu.mediu)}</span>
+          </a>
+        ))}
+      </div>
+      <div class="mt-4 text-sm text-surface-600 space-y-1">
+        <p>
+          {diff > 0
+            ? `Salariul în ${oras.nume} este cu ${formatSalariu(diff)} (+${diffPercent}%) mai mare decât media națională.`
+            : diff < 0
+            ? `Salariul în ${oras.nume} este cu ${formatSalariu(Math.abs(diff))} (${diffPercent}%) mai mic decât media națională.`
+            : `Salariul în ${oras.nume} este la nivelul mediei naționale.`}
+        </p>
+        {domeniuAvg > 0 && (
+          <p>
+            {diffDomeniu > 0
+              ? `Față de media domeniului ${domeniu?.nume} (${formatSalariu(domeniuAvg)}), salariul este cu ${diffDomeniuPercent}% mai mare.`
+              : diffDomeniu < 0
+              ? `Față de media domeniului ${domeniu?.nume} (${formatSalariu(domeniuAvg)}), salariul este cu ${Math.abs(diffDomeniuPercent)}% mai mic.`
+              : `Salariul este la nivelul mediei domeniului ${domeniu?.nume}.`}
+          </p>
+        )}
+      </div>
+    </div>
+
+    <!-- About the profession (cross-SILO) -->
+    <div class="card p-5 mb-8">
+      <h2 class="text-lg font-heading font-bold text-surface-900 mb-3">
+        Despre meseria de {meserie.nume.toLowerCase()}
+      </h2>
+      <p class="text-surface-700 text-sm leading-relaxed mb-3">
+        {meserie.ceFaceConcret}
+      </p>
+      <div class="mb-3">
+        <p class="text-xs font-semibold text-surface-500 uppercase tracking-wide mb-2">Responsabilități principale:</p>
+        <ul class="text-sm text-surface-700 space-y-1">
+          {meserie.responsabilitati.slice(0, 4).map(r => (
+            <li class="flex items-start gap-2">
+              <span class="text-brand-500 mt-1 shrink-0">·</span>
+              <span>{r}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="flex flex-wrap gap-3 pt-2 border-t border-surface-100">
+        <a href={`/meserii/${meserie.slug}/`} class="text-sm text-brand-600 hover:text-brand-800 font-medium no-underline transition-colors">
+          Descriere completă {meserie.nume} →
+        </a>
+        {domeniu && (
+          <a href={`/domenii/${domeniu.slug}/`} class="text-sm text-brand-600 hover:text-brand-800 font-medium no-underline transition-colors">
+            Toate meseriile din {domeniu.nume} →
+          </a>
+        )}
+      </div>
+    </div>
+
+    <!-- Navigation links (SILO) -->
+    <div class="grid sm:grid-cols-3 gap-3 mb-8">
+      <a href={`/salariu/${meserie.slug}/`} class="card p-4 no-underline group flex items-center gap-3">
+        <svg class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+        </svg>
+        <span class="text-sm font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+          Salariu {meserie.nume} – toate orașele
+        </span>
+      </a>
+      <a href={`/meserii/${meserie.slug}/`} class="card p-4 no-underline group flex items-center gap-3">
+        <svg class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span class="text-sm font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+          Descriere completă: {meserie.nume}
+        </span>
+      </a>
+      <a href={`/orase/${oras.id}/`} class="card p-4 no-underline group flex items-center gap-3">
+        <svg class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="text-sm font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+          Toate meseriile în {oras.nume}
+        </span>
+      </a>
+    </div>
+
+    <!-- Sibling city links -->
+    {siblingCities.length > 0 && (
+      <section class="mb-8">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">
+          Compară salariu {meserie.nume} cu alte orașe
+        </h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {siblingCities.map(link => (
+            <a href={link.href} class="card p-4 no-underline group flex items-center justify-between" title={link.title}>
+              <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">{link.text}</span>
+              <svg class="w-4 h-4 text-surface-400 group-hover:text-brand-500 transition-colors shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <FAQSection items={faqItems} />
+  </article>
+</Layout>

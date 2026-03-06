@@ -1,0 +1,212 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import SalaryTable from '../../components/SalaryTable.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import { meserii, getDomeniuForMeserie, getCompetentePentruMeserie, formatSalariu, getNivelCerereLabel } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildFAQSchema, buildOccupationSchema } from '../../helpers/structured-data';
+import { getMeserieSiloLinks } from '../../helpers/interlinking';
+import type { Meserie } from '../../helpers/types';
+
+export function getStaticPaths() {
+  return meserii.map(m => ({
+    params: { slug: m.slug },
+    props: { meserie: m },
+  }));
+}
+
+interface Props {
+  meserie: Meserie;
+}
+
+const { meserie } = Astro.props;
+const domeniu = getDomeniuForMeserie(meserie);
+const competenteMeserie = getCompetentePentruMeserie(meserie);
+const siloLinks = getMeserieSiloLinks(meserie);
+
+const breadcrumbs = [
+  { label: 'Meserii', href: '/meserii/' },
+  ...(domeniu ? [{ label: domeniu.nume, href: `/domenii/${domeniu.slug}/` }] : []),
+  { label: meserie.nume },
+];
+
+const cerereColors: Record<string, string> = {
+  scazut: 'badge-warning',
+  mediu: 'badge-brand',
+  ridicat: 'badge-success',
+};
+
+const jsonLd = [
+  buildBreadcrumbSchema(breadcrumbs),
+  buildOccupationSchema(meserie, domeniu?.nume || ''),
+  ...(meserie.fpiIntrebari.length > 0 ? [buildFAQSchema(meserie.fpiIntrebari)] : []),
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={meserie.metaTitle}
+    description={meserie.metaDescription}
+    canonical={`/meserii/${meserie.slug}/`}
+    ogType="article"
+    jsonLd={jsonLd}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <article class="container-narrow pb-16 sm:pb-20">
+    <!-- Header -->
+    <header class="mb-10">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        {domeniu && (
+          <a href={`/domenii/${domeniu.slug}/`} class="badge badge-brand no-underline hover:bg-brand-200 transition-colors">
+            {domeniu.nume}
+          </a>
+        )}
+        <span class="badge bg-surface-100 text-surface-700">
+          COR: {meserie.codCOR}
+        </span>
+        <span class:list={['badge', cerereColors[meserie.nivelCerere]]}>
+          Cerere: {getNivelCerereLabel(meserie.nivelCerere)}
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        {meserie.nume}
+      </h1>
+      <p class="text-lg text-surface-700 leading-relaxed">{meserie.descriere}</p>
+    </header>
+
+    <!-- Quick salary card -->
+    <div class="card p-6 mb-10 bg-gradient-to-br from-brand-50 via-white to-surface-50 border-brand-100">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p class="text-sm text-surface-600 font-medium mb-1">Salariu mediu național</p>
+          <p class="text-3xl font-heading font-bold text-brand-700">
+            {formatSalariu(meserie.salpiuNational.mediu)}
+            <span class="text-sm font-normal text-surface-500"> / lună</span>
+          </p>
+          <p class="text-sm text-surface-600 mt-1">
+            Interval: {formatSalariu(meserie.salpiuNational.min)} – {formatSalariu(meserie.salpiuNational.max)}
+          </p>
+        </div>
+        <a href={`/salariu/${meserie.slug}/`} class="btn-primary no-underline">
+          Vezi salariul detaliat →
+        </a>
+      </div>
+    </div>
+
+    <div class="space-y-10">
+      <!-- Ce face concret -->
+      <section>
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">
+          Ce face un {meserie.nume.toLowerCase()}?
+        </h2>
+        <p class="prose-custom">{meserie.ceFaceConcret}</p>
+      </section>
+
+      <!-- Responsabilități -->
+      <section>
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Responsabilități principale</h2>
+        <ul class="space-y-2.5">
+          {meserie.responsabilitati.map(r => (
+            <li class="flex items-start gap-3 text-surface-700">
+              <svg class="w-5 h-5 text-accent-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{r}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Competențe -->
+      {competenteMeserie.length > 0 && (
+        <section>
+          <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Competențe necesare</h2>
+          <div class="flex flex-wrap gap-2">
+            {competenteMeserie.map(c => (
+              <a
+                href={`/competente/${c.slug}/`}
+                class="badge badge-brand no-underline hover:bg-brand-200 transition-colors px-3 py-1.5 text-sm"
+                title={`Competența: ${c.nume}`}
+              >
+                {c.nume}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Studii -->
+      <section>
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Studii necesare</h2>
+        <p class="prose-custom">{meserie.studiiNecesare}</p>
+      </section>
+
+      <!-- Condiții -->
+      <section>
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Condiții de muncă</h2>
+        <p class="prose-custom">{meserie.conditiiMunca}</p>
+      </section>
+
+      <!-- Evoluție -->
+      <section>
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Evoluție în carieră</h2>
+        <p class="prose-custom">{meserie.evolutieCariera}</p>
+      </section>
+
+      <!-- Salary Table -->
+      <section>
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">
+          Salariu {meserie.nume} pe orașe
+        </h2>
+        <div class="card p-5">
+          <SalaryTable meserie={meserie} />
+        </div>
+        <p class="text-xs text-surface-500 mt-3">
+          * Salariile sunt estimative, exprimate în lei net/lună. Pot varia semnificativ în funcție de experiență, angajator și specificul postului.
+        </p>
+      </section>
+
+      <!-- Meserii similare -->
+      {siloLinks.meseriiSimilare.length > 0 && (
+        <section>
+          <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">Meserii similare</h2>
+          <div class="grid sm:grid-cols-2 gap-3">
+            {siloLinks.meseriiSimilare.map(link => (
+              <a href={link.href} class="card p-4 no-underline group flex items-center gap-3" title={link.title}>
+                <svg class="w-5 h-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+                <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+                  {link.text}
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- FAQ -->
+      <FAQSection items={[
+        ...meserie.fpiIntrebari,
+        {
+          intrebare: `Ce condiții de muncă are un ${meserie.nume.toLowerCase()}?`,
+          raspuns: meserie.conditiiMunca,
+        },
+        {
+          intrebare: `Cum poate evolua în carieră un ${meserie.nume.toLowerCase()}?`,
+          raspuns: meserie.evolutieCariera,
+        },
+        ...(competenteMeserie.length > 0 ? [{
+          intrebare: `Ce competențe sunt necesare pentru meseria de ${meserie.nume.toLowerCase()}?`,
+          raspuns: `Principalele competențe cerute sunt: ${competenteMeserie.map(c => c.nume.toLowerCase()).join(', ')}. Aceste abilități sunt evaluate de angajatori atât la interviu, cât și pe parcursul activității profesionale.`,
+        }] : []),
+      ]} />
+    </div>
+  </article>
+</Layout>

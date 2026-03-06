@@ -1,0 +1,16 @@
+---
+interface Props {
+  variant?: 'light' | 'dark';
+}
+
+const { variant = 'light' } = Astro.props;
+const src = variant === 'dark' ? '/logo-wide-dark.png' : '/logo-wide.png';
+---
+
+<img
+  src={src}
+  alt="Meseriile.ro - Director Profesional de Meserii"
+  class="h-14 w-auto"
+  height="56"
+  loading="eager"
+/>

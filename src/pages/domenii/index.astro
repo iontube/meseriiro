@@ -1,0 +1,41 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import DomeniuCard from '../../components/DomeniuCard.astro';
+import { domenii } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+
+const breadcrumbs = [{ label: 'Domenii profesionale' }];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Domenii Profesionale în România - Toate Sectoarele Ocupaționale"
+    description="Toate domeniile profesionale din România: IT, Construcții, Sănătate, Educație, Industrie. Meseriile, salariile și competențele din fiecare sector."
+    canonical="/domenii/"
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema('Domenii Profesionale', 'Toate sectoarele ocupaționale din România', '/domenii/'),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16 sm:pb-20">
+    <div class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-3">
+        Domenii profesionale
+      </h1>
+      <p class="section-subtitle">
+        Principalele sectoare de activitate din România, cu meseriile și salariile din fiecare.
+      </p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {domenii.map(d => <DomeniuCard domeniu={d} />)}
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,48 @@
+<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wbg" x1="0" y1="0" x2="160" y2="160" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#f07550"/>
+        <stop offset="50%" stop-color="#dc5436"/>
+        <stop offset="100%" stop-color="#a33219"/>
+      </linearGradient>
+      <linearGradient id="wmg" x1="20" y1="28" x2="130" y2="120" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#fde3dc"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Icon -->
+    <g transform="translate(16, 20)">
+      <rect width="172" height="172" rx="38" fill="url(#wbg)"/>
+      <path d="M 32 133 L 32 50 L 50 50 L 86 95.5 L 122 50 L 140 50 L 140 133 L 120 133 L 120 80 L 91 117 Q 86 123 81 117 L 52 80 L 52 133 Z" fill="url(#wmg)"/>
+      <circle cx="86" cy="43" r="4.8" fill="#fb923c"/>
+    </g>
+
+    <!-- Main text -->
+    <text x="212" y="112"
+      font-family="'Plus Jakarta Sans','Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif"
+      font-weight="800"
+      font-size="90"
+      fill="#1c1917"
+      letter-spacing="-2"
+      dominant-baseline="middle"
+    >Meseriile</text>
+
+    <text x="655" y="112"
+      font-family="'Plus Jakarta Sans','Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif"
+      font-weight="800"
+      font-size="90"
+      fill="#dc5436"
+      letter-spacing="-2"
+      dominant-baseline="middle"
+    >.ro</text>
+
+    <!-- Tagline -->
+    <text x="214" y="168"
+      font-family="'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif"
+      font-weight="600"
+      font-size="22"
+      fill="#78716c"
+      letter-spacing="4"
+    >DIRECTOR PROFESIONAL DE MESERII</text>
+  </svg>

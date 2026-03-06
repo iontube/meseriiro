@@ -1,0 +1,100 @@
+---
+import { domenii, orase } from '../helpers/data';
+import { getPopularMeserii } from '../helpers/interlinking';
+import Logo from './Logo.astro';
+
+const popularMeserii = getPopularMeserii(6);
+const topOrase = orase.sort((a, b) => b.populatie - a.populatie).slice(0, 6);
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-surface-900 dark:bg-surface-950 border-t border-surface-800 mt-20">
+  <div class="container-custom py-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <!-- Brand -->
+      <div>
+        <a href="/" class="no-underline mb-4 inline-block">
+          <Logo variant="dark" />
+        </a>
+        <p class="text-surface-300 text-sm leading-relaxed">
+          Director de meserii din România cu salarii pe orașe, competențe cerute și condiții de muncă.
+        </p>
+      </div>
+
+      <!-- Domenii -->
+      <div>
+        <h3 class="text-white font-heading font-semibold text-sm uppercase tracking-wider mb-4">Domenii</h3>
+        <ul class="space-y-2">
+          {domenii.slice(0, 6).map(d => (
+            <li>
+              <a href={`/domenii/${d.slug}/`} class="text-surface-300 hover:text-white text-sm transition-colors no-underline">
+                {d.nume}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href="/domenii/" class="text-brand-400 hover:text-brand-300 text-sm font-medium transition-colors no-underline">
+              Toate domeniile →
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Meserii populare -->
+      <div>
+        <h3 class="text-white font-heading font-semibold text-sm uppercase tracking-wider mb-4">Meserii căutate</h3>
+        <ul class="space-y-2">
+          {popularMeserii.map(link => (
+            <li>
+              <a href={link.href} class="text-surface-300 hover:text-white text-sm transition-colors no-underline">
+                {link.text}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href="/meserii/" class="text-brand-400 hover:text-brand-300 text-sm font-medium transition-colors no-underline">
+              Toate meseriile →
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Orașe -->
+      <div>
+        <h3 class="text-white font-heading font-semibold text-sm uppercase tracking-wider mb-4">Orașe</h3>
+        <ul class="space-y-2">
+          {topOrase.map(o => (
+            <li>
+              <a href={`/orase/${o.id}/`} class="text-surface-300 hover:text-white text-sm transition-colors no-underline">
+                {o.nume}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href="/orase/" class="text-brand-400 hover:text-brand-300 text-sm font-medium transition-colors no-underline">
+              Toate orașele →
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-12 pt-8 border-t border-surface-800">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+        <p class="text-surface-400 text-sm">
+          © {currentYear} Director Meserii în România. Toate drepturile rezervate.
+        </p>
+        <nav class="flex flex-wrap items-center gap-4" aria-label="Pagini legale">
+          <a href="/contact/" class="text-surface-400 hover:text-white text-sm transition-colors no-underline">Contact</a>
+          <a href="/politica-confidentialitate/" class="text-surface-400 hover:text-white text-sm transition-colors no-underline">Confidențialitate</a>
+          <a href="/politica-cookies/" class="text-surface-400 hover:text-white text-sm transition-colors no-underline">Cookies</a>
+          <a href="/termeni-si-conditii/" class="text-surface-400 hover:text-white text-sm transition-colors no-underline">Termeni</a>
+        </nav>
+      </div>
+      <p class="text-surface-500 text-xs text-center sm:text-left">
+        Date orientative. Salariile pot varia în funcție de experiență, angajator și locație.
+      </p>
+    </div>
+  </div>
+</footer>
