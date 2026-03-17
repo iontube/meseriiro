@@ -1,5 +1,4 @@
 ---
-import { domenii } from '../helpers/data';
 import Logo from './Logo.astro';
 
 const currentPath = Astro.url.pathname;
@@ -69,15 +68,17 @@ const navLinks = [
         </a>
       ))}
       <hr class="my-2 border-surface-700" />
-      <p class="px-4 text-xs font-medium text-surface-500 uppercase tracking-wider mb-1">Domenii</p>
-      {domenii.map(d => (
-        <a
-          href={`/domenii/${d.slug}/`}
-          class="px-4 py-1.5 text-sm text-surface-400 hover:text-brand-400 hover:bg-white/5 rounded-button transition-colors no-underline"
-        >
-          {d.nume}
-        </a>
-      ))}
+      <a
+        href="/salariu/"
+        class:list={[
+          'px-4 py-2.5 rounded-button text-sm font-medium transition-colors no-underline',
+          currentPath.startsWith('/salariu/')
+            ? 'bg-white/10 text-white'
+            : 'text-surface-300 hover:text-white hover:bg-white/10',
+        ]}
+      >
+        Salarii
+      </a>
     </nav>
   </div>
 </header>

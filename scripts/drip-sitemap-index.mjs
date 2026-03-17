@@ -16,7 +16,7 @@ const distDir = resolve(__dirname, '../dist');
 const SITE_URL = 'https://meseriile.ro';
 
 // Start date: first deploy
-const START_DATE = '2026-03-06';
+const START_DATE = '2026-03-17';
 
 // Read metadata
 const metaPath = resolve(distDir, 'sitemaps/meta.json');
@@ -47,11 +47,11 @@ count = Math.max(1, count);
 console.log(`Including ${count}/${meta.totalSitemaps} sitemaps (${count * meta.urlsPerSitemap} URLs max)`);
 
 // Generate sitemap-index.xml
-const now = new Date().toISOString();
+const lastmod = meta.generatedAt;
 const entries = [];
 for (let i = 1; i <= count; i++) {
   const num = String(i).padStart(3, '0');
-  entries.push(`<sitemap><loc>${SITE_URL}/sitemaps/sitemap-${num}.xml</loc><lastmod>${now}</lastmod></sitemap>`);
+  entries.push(`<sitemap><loc>${SITE_URL}/sitemaps/sitemap-${num}.xml</loc><lastmod>${lastmod}</lastmod></sitemap>`);
 }
 
 const indexXml = `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.join('')}</sitemapindex>`;

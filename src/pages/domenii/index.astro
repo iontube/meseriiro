@@ -3,21 +3,65 @@ import Layout from '../../layouts/Layout.astro';
 import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import DomeniuCard from '../../components/DomeniuCard.astro';
-import { domenii } from '../../helpers/data';
-import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+import FAQSection from '../../components/FAQSection.astro';
+import { domenii, meserii, formatSalariu, getMeseriiByDomeniu } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema, buildFAQSchema, buildItemListSchema } from '../../helpers/structured-data';
+import { getDomeniuAverageSalary, getTopSalaryMeserii, getCompetenteInDomeniu } from '../../helpers/interlinking';
+
+const currentMonth = new Date().toISOString().slice(0, 10);
+const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
 const breadcrumbs = [{ label: 'Domenii profesionale' }];
+
+// Compute per-domain stats
+const domeniiStats = domenii.map(d => {
+  const meseriiDom = getMeseriiByDomeniu(d.id);
+  const avgSalary = getDomeniuAverageSalary(d.id);
+  const cerereRidicata = meseriiDom.filter(m => m.nivelCerere === 'ridicat').length;
+  const topMeserie = meseriiDom.sort((a, b) => b.salpiuNational.mediu - a.salpiuNational.mediu)[0];
+  return { domeniu: d, meseriiCount: meseriiDom.length, avgSalary, cerereRidicata, topMeserie };
+}).sort((a, b) => b.avgSalary - a.avgSalary);
+
+const totalMeserii = meserii.length;
+const totalCerereRidicata = meserii.filter(m => m.nivelCerere === 'ridicat').length;
+const topDomeniuSalariu = domeniiStats[0];
+const avgSalariuGlobal = Math.round(meserii.reduce((s, m) => s + m.salpiuNational.mediu, 0) / meserii.length);
+
+const faqItems = [
+  {
+    intrebare: 'Câte domenii profesionale sunt acoperite?',
+    raspuns: `Directorul include ${domenii.length} domenii profesionale cu ${totalMeserii} de meserii documentate. Fiecare domeniu conține între 15 și 25 de meserii cu date despre salarii, competențe cerute și condiții de muncă.`,
+  },
+  {
+    intrebare: 'Care este domeniul cu cele mai mari salarii din România?',
+    raspuns: `${topDomeniuSalariu.domeniu.nume} are cel mai mare salariu mediu: ${formatSalariu(topDomeniuSalariu.avgSalary)}/lună. Cel mai bine plătit rol din domeniu este ${topDomeniuSalariu.topMeserie?.nume}, cu un salariu mediu de ${formatSalariu(topDomeniuSalariu.topMeserie?.salpiuNational.mediu || 0)}/lună.`,
+  },
+  {
+    intrebare: 'Cum sunt calculate salariile afișate?',
+    raspuns: `Salariile sunt estimări nete lunare bazate pe date publice, oferte de muncă și rapoarte salariale din România. Reprezintă intervale (minim, mediu, maxim) și pot varia în funcție de experiență, angajator, oraș și specificul postului.`,
+  },
+  {
+    intrebare: 'Ce înseamnă nivelul de cerere al unei meserii?',
+    raspuns: 'Nivelul de cerere (scăzut, mediu, ridicat) reflectă volumul de oferte de muncă și dificultatea angajatorilor de a ocupa pozițiile. O cerere ridicată înseamnă mai multe oportunități de angajare și, de regulă, salarii mai competitive.',
+  },
+  {
+    intrebare: 'Cum aleg domeniul profesional potrivit?',
+    raspuns: 'Compară salariile medii, nivelul de cerere și competențele cerute din fiecare domeniu. Verifică meseriile individuale pentru detalii despre condiții de muncă, studii necesare și evoluție în carieră. Datele de pe fiecare pagină de meserie te ajută să compari concret.',
+  },
+];
 ---
 
 <Layout>
   <SEOHead
     slot="head"
-    title="Domenii Profesionale în România - Toate Sectoarele Ocupaționale"
-    description="Toate domeniile profesionale din România: IT, Construcții, Sănătate, Educație, Industrie. Meseriile, salariile și competențele din fiecare sector."
+    title="Domenii Profesionale în România - Toate Sectoarele cu Salarii și Meserii"
+    description={`${domenii.length} domenii profesionale din România cu ${totalMeserii} meserii, salarii pe orașe și competențe cerute. Compară sectoarele după salariu mediu, cerere pe piață și oportunități de carieră.`}
     canonical="/domenii/"
     jsonLd={[
       buildBreadcrumbSchema(breadcrumbs),
-      buildWebPageSchema('Domenii Profesionale', 'Toate sectoarele ocupaționale din România', '/domenii/'),
+      buildWebPageSchema('Domenii Profesionale în România', `Toate cele ${domenii.length} sectoare ocupaționale din România`, '/domenii/', { type: 'CollectionPage', dateModified: currentMonth }),
+      buildItemListSchema(domeniiStats.map((ds, i) => ({ name: ds.domeniu.nume, url: `/domenii/${ds.domeniu.slug}/`, position: i + 1 }))),
+      buildFAQSchema(faqItems),
     ]}
   />
 
@@ -25,17 +69,207 @@ const breadcrumbs = [{ label: 'Domenii profesionale' }];
     <Breadcrumb items={breadcrumbs} />
   </div>
 
-  <section class="container-custom pb-16 sm:pb-20">
-    <div class="mb-10">
-      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-3">
-        Domenii profesionale
+  <!-- Header + Intro -->
+  <section class="container-custom pb-10">
+    <div class="max-w-3xl">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        Domenii profesionale în România
       </h1>
-      <p class="section-subtitle">
-        Principalele sectoare de activitate din România, cu meseriile și salariile din fiecare.
+      <p class="prose-custom text-lg mb-4">
+        Piața muncii din România are {domenii.length} domenii profesionale distincte, cu {totalMeserii} de meserii documentate pe acest site. Salariul mediu net la nivel național este {formatSalariu(avgSalariuGlobal)}/lună, cu diferențe mari între sectoare — de la {formatSalariu(domeniiStats[domeniiStats.length - 1].avgSalary)} în {domeniiStats[domeniiStats.length - 1].domeniu.nume} la {formatSalariu(topDomeniuSalariu.avgSalary)} în {topDomeniuSalariu.domeniu.nume}.
+      </p>
+      <p class="prose-custom text-lg">
+        {totalCerereRidicata} din {totalMeserii} meserii au cerere ridicată pe piață. Mai jos, fiecare domeniu cu salariu mediu, număr de meserii și cel mai bine plătit rol.
+      </p>
+      <p class="text-sm text-surface-500 mt-4">
+        Actualizat: {displayDate} · Estimări bazate pe oferte de muncă de pe platforme de recrutare, date INS și rapoarte salariale publice.
       </p>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      {domenii.map(d => <DomeniuCard domeniu={d} />)}
+  </section>
+
+  <!-- Stats bar -->
+  <section class="container-custom pb-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="card p-5 text-center">
+        <p class="stat-value">{domenii.length}</p>
+        <p class="stat-label">Domenii profesionale</p>
+      </div>
+      <div class="card p-5 text-center">
+        <p class="stat-value">{totalMeserii}</p>
+        <p class="stat-label">Meserii documentate</p>
+      </div>
+      <div class="card p-5 text-center">
+        <p class="stat-value">{formatSalariu(avgSalariuGlobal)}</p>
+        <p class="stat-label">Salariu mediu net / lună</p>
+      </div>
+      <div class="card p-5 text-center">
+        <p class="stat-value">{totalCerereRidicata}</p>
+        <p class="stat-label">Meserii cu cerere ridicată</p>
+      </div>
     </div>
+  </section>
+
+  <!-- Table of Contents -->
+  <section class="container-custom pb-10">
+    <nav class="card p-6">
+      <h2 class="text-lg font-heading font-bold text-surface-900 mb-4">Cuprins — toate domeniile</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
+        {domeniiStats.map((ds, i) => (
+          <a href={`#${ds.domeniu.slug}`} class="flex items-center justify-between py-1.5 text-sm no-underline group border-b border-surface-100 last:border-0">
+            <span class="text-surface-700 group-hover:text-brand-600 transition-colors font-medium">
+              {ds.domeniu.nume}
+            </span>
+            <span class="text-xs text-surface-500 tabular-nums ml-2 shrink-0">
+              {formatSalariu(ds.avgSalary)}
+            </span>
+          </a>
+        ))}
+      </div>
+    </nav>
+  </section>
+
+  <!-- Top domenii by salary -->
+  <section class="bg-surface-100 py-12">
+    <div class="container-custom">
+      <h2 class="section-title mb-6">Domenii ordonate după salariu mediu</h2>
+      <div class="space-y-3">
+        {domeniiStats.map((ds, i) => {
+          const maxSalary = topDomeniuSalariu.avgSalary;
+          const barWidth = Math.max(20, Math.round((ds.avgSalary / maxSalary) * 100));
+          return (
+            <a href={`#${ds.domeniu.slug}`} class="card p-4 no-underline group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+                  {ds.domeniu.nume}
+                </span>
+                <span class="text-sm font-bold text-brand-700 tabular-nums shrink-0 ml-3">
+                  {formatSalariu(ds.avgSalary)}/lună
+                </span>
+              </div>
+              <div class="w-full bg-surface-100 rounded-full h-2">
+                <div class="bg-brand-500 h-2 rounded-full transition-all" style={`width: ${barWidth}%`}></div>
+              </div>
+              <div class="flex items-center gap-4 mt-2 text-xs text-surface-500">
+                <span>{ds.meseriiCount} meserii</span>
+                {ds.cerereRidicata > 0 && <span>{ds.cerereRidicata} cu cerere ridicată</span>}
+                {ds.topMeserie && <span>Top: {ds.topMeserie.nume} ({formatSalariu(ds.topMeserie.salpiuNational.mediu)})</span>}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- All domains - detailed cards -->
+  <section class="container-custom py-16 sm:py-20">
+    <h2 class="section-title mb-10">Toate domeniile profesionale</h2>
+
+    {domeniiStats.map(ds => {
+      const competenteDom = getCompetenteInDomeniu(ds.domeniu.id);
+      const topMeseriiDom = getMeseriiByDomeniu(ds.domeniu.id)
+        .sort((a, b) => b.salpiuNational.mediu - a.salpiuNational.mediu)
+        .slice(0, 5);
+
+      return (
+        <div id={ds.domeniu.slug} class="mb-14 scroll-mt-8">
+          <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+            <div>
+              <h3 class="text-2xl font-heading font-bold text-surface-900">
+                <a href={`/domenii/${ds.domeniu.slug}/`} class="text-surface-900 no-underline hover:text-brand-600 transition-colors">
+                  {ds.domeniu.nume}
+                </a>
+              </h3>
+              <p class="prose-custom mt-2 max-w-2xl">{ds.domeniu.descriere}</p>
+            </div>
+            <div class="flex gap-3">
+              <div class="card px-4 py-2 text-center">
+                <p class="text-lg font-bold text-brand-700 tabular-nums">{formatSalariu(ds.avgSalary)}</p>
+                <p class="text-xs text-surface-500">salariu mediu</p>
+              </div>
+              <div class="card px-4 py-2 text-center">
+                <p class="text-lg font-bold text-surface-800">{ds.meseriiCount}</p>
+                <p class="text-xs text-surface-500">meserii</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Top 5 meserii by salary */}
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+            {topMeseriiDom.map(m => (
+              <a href={`/meserii/${m.slug}/`} class="card p-4 no-underline group flex items-center justify-between">
+                <div>
+                  <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors text-sm">
+                    {m.nume}
+                  </span>
+                  <span class="block text-xs text-surface-500 mt-0.5">
+                    Cerere: {m.nivelCerere === 'ridicat' ? 'ridicată' : m.nivelCerere === 'mediu' ? 'medie' : 'scăzută'}
+                  </span>
+                </div>
+                <span class="text-sm font-bold text-brand-700 tabular-nums shrink-0 ml-3">
+                  {formatSalariu(m.salpiuNational.mediu)}
+                </span>
+              </a>
+            ))}
+          </div>
+
+          {/* Competences for this domain */}
+          {competenteDom.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="text-xs font-semibold text-surface-500 uppercase tracking-wide self-center mr-1">Competențe:</span>
+              {competenteDom.slice(0, 6).map(link => (
+                <a href={link.href} class="badge badge-brand no-underline hover:bg-brand-200 transition-colors text-xs" title={link.title}>
+                  {link.text}
+                </a>
+              ))}
+            </div>
+          )}
+
+          <div class="flex gap-3">
+            <a href={`/domenii/${ds.domeniu.slug}/`} class="text-sm font-semibold text-brand-600 hover:text-brand-700 no-underline">
+              Toate meseriile din {ds.domeniu.nume} →
+            </a>
+          </div>
+        </div>
+      );
+    })}
+  </section>
+
+  <!-- Cross-silo links -->
+  <section class="bg-surface-100 py-12">
+    <div class="container-custom">
+      <h2 class="section-title mb-6">Continuă pe alte secțiuni</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="/meserii/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Catalog meserii
+          </h3>
+          <p class="text-sm text-surface-600">{totalMeserii} profesii cu descriere, responsabilități și studii necesare.</p>
+        </a>
+        <a href="/salariu/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Salarii pe meserii
+          </h3>
+          <p class="text-sm text-surface-600">Salarii nete pe 41 de orașe, cu minim, mediu și maxim per profesie.</p>
+        </a>
+        <a href="/competente/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Competențe cerute
+          </h3>
+          <p class="text-sm text-surface-600">Ce abilități cer angajatorii și pentru ce meserii contează.</p>
+        </a>
+        <a href="/orase/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Salarii pe orașe
+          </h3>
+          <p class="text-sm text-surface-600">Compară salariile din 41 de orașe, grupate pe regiuni.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="container-custom py-16">
+    <FAQSection items={faqItems} />
   </section>
 </Layout>

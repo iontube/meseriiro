@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+/* --- Self-hosted fonts --- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url('/fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+}
+
 @theme {
   /* --- Colors: Warm Dark + Coral --- */
   --color-brand-50: #fef3f0;

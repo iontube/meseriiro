@@ -4,12 +4,23 @@ import SEOHead from '../components/SEOHead.astro';
 import DomeniuCard from '../components/DomeniuCard.astro';
 import MeserieCard from '../components/MeserieCard.astro';
 import { domenii, meserii, competente, orase, formatSalariu } from '../helpers/data';
-import { buildWebSiteSchema, buildWebPageSchema } from '../helpers/structured-data';
+import { buildWebSiteSchema, buildWebPageSchema, buildItemListSchema } from '../helpers/structured-data';
 import { getTopSalaryMeserii } from '../helpers/interlinking';
+
+const currentMonth = new Date().toISOString().slice(0, 10);
+const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
 const popularMeserii = meserii.filter(m => m.nivelCerere === 'ridicat').slice(0, 6);
 const topSalarii = getTopSalaryMeserii(8);
 const topOrase = orase.sort((a, b) => b.populatie - a.populatie).slice(0, 6);
+
+const pillarPages = [
+  { name: 'Domenii profesionale', url: '/domenii/' },
+  { name: 'Catalog meserii România', url: '/meserii/' },
+  { name: 'Salarii pe meserii', url: '/salariu/' },
+  { name: 'Salarii pe orașe', url: '/orase/' },
+  { name: 'Competențe profesionale', url: '/competente/' },
+];
 
 const stats = [
   { value: domenii.length.toString(), label: 'Domenii profesionale' },
@@ -25,7 +36,11 @@ const stats = [
     title="Director Meserii în România - Profesii, Salarii pe Orașe și Competențe Cerute"
     description="Meseriile din România cu salarii pe orașe, competențe cerute și condiții de muncă. Date bazate pe coduri COR, actualizate 2026."
     canonical="/"
-    jsonLd={[buildWebSiteSchema(), buildWebPageSchema('Director Meserii în România', 'Meseriile din România cu salarii, competențe și condiții de muncă', '/')]}
+    jsonLd={[
+      buildWebSiteSchema(),
+      buildWebPageSchema('Director Meserii în România', 'Meseriile din România cu salarii, competențe și condiții de muncă', '/', { dateModified: currentMonth }),
+      buildItemListSchema(pillarPages.map((p, i) => ({ name: p.name, url: p.url, position: i + 1 }))),
+    ]}
   />
 
   <!-- Hero -->
@@ -41,7 +56,7 @@ const stats = [
           Meseriile din <span class="gradient-hero-text">România</span> cu salarii, competențe și cariere
         </h1>
         <p class="text-lg sm:text-xl text-surface-200 leading-relaxed mb-8 max-w-2xl">
-          Ce face concret fiecare meserie, cât se câștigă pe orașe și ce studii trebuie. Date bazate pe coduri COR, actualizate 2026.
+          Ce face concret fiecare meserie, cât se câștigă pe orașe și ce studii trebuie. Date bazate pe coduri COR, actualizate {displayDate}.
         </p>
         <div class="flex flex-wrap gap-3">
           <a href="/meserii/" class="btn-primary text-base px-7 py-3.5 no-underline shadow-lg hover:shadow-xl">Vezi toate meseriile</a>

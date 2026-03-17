@@ -93,10 +93,10 @@ export function buildSalaryPageSchema(meserie: Meserie, orasNume?: string): stri
   return JSON.stringify(schema);
 }
 
-export function buildWebPageSchema(title: string, description: string, url: string): string {
-  const schema = {
+export function buildWebPageSchema(title: string, description: string, url: string, options?: { type?: string; dateModified?: string }): string {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
+    '@type': options?.type || 'WebPage',
     name: title,
     description,
     url: SITE_URL + url,
@@ -106,6 +106,23 @@ export function buildWebPageSchema(title: string, description: string, url: stri
       url: SITE_URL,
     },
     inLanguage: 'ro-RO',
+  };
+  if (options?.dateModified) {
+    schema.dateModified = options.dateModified;
+  }
+  return JSON.stringify(schema);
+}
+
+export function buildItemListSchema(items: Array<{ name: string; url: string; position?: number }>): string {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: item.position ?? index + 1,
+      name: item.name,
+      url: SITE_URL + item.url,
+    })),
   };
   return JSON.stringify(schema);
 }

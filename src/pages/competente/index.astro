@@ -2,8 +2,13 @@
 import Layout from '../../layouts/Layout.astro';
 import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import { competente, getMeseriiByCompetenta } from '../../helpers/data';
-import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
+import FAQSection from '../../components/FAQSection.astro';
+import { competente, meserii, domenii, orase, formatSalariu, getMeseriiByCompetenta } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildWebPageSchema, buildFAQSchema, buildItemListSchema } from '../../helpers/structured-data';
+import { getTopSalaryForCompetenta } from '../../helpers/interlinking';
+
+const currentMonth = new Date().toISOString().slice(0, 10);
+const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
 const breadcrumbs = [{ label: 'Competențe profesionale' }];
 
@@ -13,21 +18,70 @@ const categorii: Record<string, string> = {
   manageriale: 'Competențe manageriale',
 };
 
-const grouped = Object.entries(categorii).map(([key, label]) => ({
-  label,
-  competente: competente.filter(c => c.categorie === key),
-})).filter(g => g.competente.length > 0);
+// Compute per-competency stats
+const competenteStats = competente.map(c => {
+  const meseriiComp = getMeseriiByCompetenta(c.id);
+  const topSalary = meseriiComp.length > 0
+    ? Math.max(...meseriiComp.map(m => m.salpiuNational.mediu))
+    : 0;
+  return { competenta: c, meseriiCount: meseriiComp.length, topSalary };
+});
+
+// Grouped by category
+const grouped = Object.entries(categorii).map(([key, label]) => {
+  const items = competenteStats.filter(cs => cs.competenta.categorie === key)
+    .sort((a, b) => b.meseriiCount - a.meseriiCount);
+  return { key, label, items };
+}).filter(g => g.items.length > 0);
+
+// Category counts
+const totalCompetente = competente.length;
+const countTehnice = competente.filter(c => c.categorie === 'tehnice').length;
+const countSoft = competente.filter(c => c.categorie === 'soft-skills').length;
+const countManageriale = competente.filter(c => c.categorie === 'manageriale').length;
+
+// Top competențe by number of meserii
+const topCompetente = [...competenteStats]
+  .sort((a, b) => b.meseriiCount - a.meseriiCount)
+  .slice(0, 15);
+
+const maxMeseriiCount = topCompetente[0]?.meseriiCount || 1;
+
+const faqItems = [
+  {
+    intrebare: 'Câte competențe profesionale sunt documentate?',
+    raspuns: `Directorul include ${totalCompetente} competențe profesionale: ${countTehnice} tehnice, ${countSoft} transversale (soft skills) și ${countManageriale} manageriale. Fiecare competență este mapată la meseriile care o cer.`,
+  },
+  {
+    intrebare: 'Care sunt cele mai cerute competențe pe piața muncii din România?',
+    raspuns: `Cele mai cerute competențe, după numărul de meserii care le solicită, sunt ${topCompetente.slice(0, 3).map(tc => tc.competenta.nume).join(', ')}. Acestea apar în cele mai multe descrieri de posturi din baza de date.`,
+  },
+  {
+    intrebare: 'Care e diferența dintre competențe tehnice și soft skills?',
+    raspuns: 'Competențele tehnice sunt abilități specifice unui domeniu sau unei meserii (ex: programare, sudură, contabilitate). Soft skills sunt abilități transversale aplicabile în orice profesie (ex: comunicare, lucru în echipă, gestionarea timpului).',
+  },
+  {
+    intrebare: 'Cum sunt asociate competențele la meserii?',
+    raspuns: 'Fiecare meserie din director are un set de competențe cerute, extras din oferte de muncă și descrieri ocupaționale. O competență apare la o meserie dacă angajatorii o menționează frecvent în anunțurile pentru acea profesie.',
+  },
+  {
+    intrebare: 'Competențele manageriale sunt necesare doar pentru manageri?',
+    raspuns: 'Nu. Competențe precum leadership, luarea deciziilor sau planificare strategică apar și la roluri de specialist senior, coordonator de proiect sau profesii liberale. Nu sunt exclusive funcțiilor de conducere.',
+  },
+];
 ---
 
 <Layout>
   <SEOHead
     slot="head"
-    title="Competențe Profesionale - Abilități Cerute pe Piața Muncii din România"
-    description="Competențele cerute pe piața muncii din România: abilități tehnice, soft skills și competențe manageriale. Ce meserii le cer și de ce contează."
+    title="Competențe Profesionale în România - Abilități Tehnice, Soft Skills și Manageriale"
+    description={`${totalCompetente} competențe profesionale cerute pe piața muncii din România: ${countTehnice} tehnice, ${countSoft} soft skills, ${countManageriale} manageriale. Află ce meserii le cer și ce salarii oferă.`}
     canonical="/competente/"
     jsonLd={[
       buildBreadcrumbSchema(breadcrumbs),
-      buildWebPageSchema('Competențe Profesionale', 'Abilități cerute pe piața muncii din România', '/competente/'),
+      buildWebPageSchema('Competențe Profesionale în România', `Toate cele ${totalCompetente} competențe cerute pe piața muncii`, '/competente/', { type: 'CollectionPage', dateModified: currentMonth }),
+      buildItemListSchema(competenteStats.sort((a, b) => b.meseriiCount - a.meseriiCount).map((cs, i) => ({ name: cs.competenta.nume, url: `/competente/${cs.competenta.slug}/`, position: i + 1 }))),
+      buildFAQSchema(faqItems),
     ]}
   />
 
@@ -35,36 +89,207 @@ const grouped = Object.entries(categorii).map(([key, label]) => ({
     <Breadcrumb items={breadcrumbs} />
   </div>
 
-  <section class="container-custom pb-16 sm:pb-20">
-    <div class="mb-10">
-      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-3">
-        Competențe profesionale
+  <!-- Header + Intro -->
+  <section class="container-custom pb-10">
+    <div class="max-w-3xl">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        Competențe profesionale în România
       </h1>
-      <p class="section-subtitle">
-        {competente.length} competențe mapate la meseriile care le necesită.
+      <p class="prose-custom text-lg mb-4">
+        Piața muncii din România cere {totalCompetente} competențe profesionale distincte, distribuite în trei categorii: {countTehnice} tehnice, {countSoft} transversale (soft skills) și {countManageriale} manageriale. Aceste competențe sunt mapate la {meserii.length} de meserii din {domenii.length} domenii profesionale.
+      </p>
+      <p class="prose-custom text-lg">
+        Cea mai cerută competență este {topCompetente[0]?.competenta.nume}, solicitată de {topCompetente[0]?.meseriiCount} meserii. Mai jos, fiecare competență cu numărul de meserii care o cer și cel mai mare salariu asociat.
+      </p>
+      <p class="text-sm text-surface-500 mt-4">
+        Actualizat: {displayDate} · Estimări bazate pe oferte de muncă de pe platforme de recrutare, date INS și rapoarte salariale publice.
       </p>
     </div>
+  </section>
 
-    {grouped.map(group => (
-      <div class="mb-12">
-        <h2 class="text-xl font-heading font-bold text-surface-900 mb-5">{group.label}</h2>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {group.competente.map(c => {
-            const count = getMeseriiByCompetenta(c.id).length;
-            return (
-              <a href={`/competente/${c.slug}/`} class="card p-5 no-underline group block">
-                <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1.5">
-                  {c.nume}
-                </h3>
-                <p class="text-sm text-surface-600 line-clamp-2 mb-3">{c.descriere}</p>
-                <span class="text-xs font-semibold text-brand-600">
-                  {count} {count === 1 ? 'meserie' : 'meserii'} →
+  <!-- Stats bar -->
+  <section class="container-custom pb-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="card p-5 text-center">
+        <p class="stat-value">{totalCompetente}</p>
+        <p class="stat-label">Competențe totale</p>
+      </div>
+      <div class="card p-5 text-center">
+        <p class="stat-value">{countTehnice}</p>
+        <p class="stat-label">Competențe tehnice</p>
+      </div>
+      <div class="card p-5 text-center">
+        <p class="stat-value">{countSoft}</p>
+        <p class="stat-label">Soft skills</p>
+      </div>
+      <div class="card p-5 text-center">
+        <p class="stat-value">{countManageriale}</p>
+        <p class="stat-label">Competențe manageriale</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table of Contents -->
+  <section class="container-custom pb-10">
+    <nav class="card p-6">
+      <h2 class="text-lg font-heading font-bold text-surface-900 mb-4">Cuprins — toate competențele pe categorii</h2>
+      {grouped.map(group => (
+        <div class="mb-4 last:mb-0">
+          <h3 class="text-sm font-semibold text-surface-500 uppercase tracking-wide mb-2">{group.label}</h3>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
+            {group.items.map(cs => (
+              <a href={`#${cs.competenta.slug}`} class="flex items-center justify-between py-1.5 text-sm no-underline group border-b border-surface-100 last:border-0">
+                <span class="text-surface-700 group-hover:text-brand-600 transition-colors font-medium">
+                  {cs.competenta.nume}
+                </span>
+                <span class="text-xs text-surface-500 tabular-nums ml-2 shrink-0">
+                  {cs.meseriiCount} {cs.meseriiCount === 1 ? 'meserie' : 'meserii'}
                 </span>
               </a>
-            );
-          })}
+            ))}
+          </div>
         </div>
+      ))}
+    </nav>
+  </section>
+
+  <!-- Top competențe by number of meserii -->
+  <section class="bg-surface-100 py-12">
+    <div class="container-custom">
+      <h2 class="section-title mb-6">Cele mai cerute competențe</h2>
+      <p class="prose-custom mb-6">Top {topCompetente.length} competențe ordonate după numărul de meserii care le solicită.</p>
+      <div class="space-y-3">
+        {topCompetente.map(cs => {
+          const barWidth = Math.max(20, Math.round((cs.meseriiCount / maxMeseriiCount) * 100));
+          const categLabel = categorii[cs.competenta.categorie] || cs.competenta.categorie;
+          return (
+            <a href={`#${cs.competenta.slug}`} class="card p-4 no-underline group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
+                  {cs.competenta.nume}
+                </span>
+                <span class="text-sm font-bold text-brand-700 tabular-nums shrink-0 ml-3">
+                  {cs.meseriiCount} meserii
+                </span>
+              </div>
+              <div class="w-full bg-surface-100 rounded-full h-2">
+                <div class="bg-brand-500 h-2 rounded-full transition-all" style={`width: ${barWidth}%`}></div>
+              </div>
+              <div class="flex items-center gap-4 mt-2 text-xs text-surface-500">
+                <span>{categLabel}</span>
+                {cs.topSalary > 0 && <span>Top salariu: {formatSalariu(cs.topSalary)}/lună</span>}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- All competencies - detailed, grouped by category -->
+  <section class="container-custom py-16 sm:py-20">
+    <h2 class="section-title mb-10">Toate competențele profesionale</h2>
+
+    {grouped.map(group => (
+      <div class="mb-14">
+        <h3 class="text-2xl font-heading font-bold text-surface-900 mb-6">{group.label}</h3>
+
+        {group.items.map(cs => {
+          const topMeseriiComp = getMeseriiByCompetenta(cs.competenta.id)
+            .sort((a, b) => b.salpiuNational.mediu - a.salpiuNational.mediu)
+            .slice(0, 5);
+
+          return (
+            <div id={cs.competenta.slug} class="mb-10 scroll-mt-8">
+              <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+                <div>
+                  <h4 class="text-xl font-heading font-bold text-surface-900">
+                    <a href={`/competente/${cs.competenta.slug}/`} class="text-surface-900 no-underline hover:text-brand-600 transition-colors">
+                      {cs.competenta.nume}
+                    </a>
+                  </h4>
+                  <p class="prose-custom mt-2 max-w-2xl">{cs.competenta.descriere}</p>
+                </div>
+                <div class="flex gap-3">
+                  <div class="card px-4 py-2 text-center">
+                    <p class="text-lg font-bold text-brand-700 tabular-nums">{cs.meseriiCount}</p>
+                    <p class="text-xs text-surface-500">meserii</p>
+                  </div>
+                  {cs.topSalary > 0 && (
+                    <div class="card px-4 py-2 text-center">
+                      <p class="text-lg font-bold text-surface-800 tabular-nums">{formatSalariu(cs.topSalary)}</p>
+                      <p class="text-xs text-surface-500">top salariu</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Top meserii for this competency */}
+              {topMeseriiComp.length > 0 && (
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                  {topMeseriiComp.map(m => (
+                    <a href={`/meserii/${m.slug}/`} class="card p-4 no-underline group flex items-center justify-between">
+                      <div>
+                        <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors text-sm">
+                          {m.nume}
+                        </span>
+                        <span class="block text-xs text-surface-500 mt-0.5">
+                          Cerere: {m.nivelCerere === 'ridicat' ? 'ridicată' : m.nivelCerere === 'mediu' ? 'medie' : 'scăzută'}
+                        </span>
+                      </div>
+                      <span class="text-sm font-bold text-brand-700 tabular-nums shrink-0 ml-3">
+                        {formatSalariu(m.salpiuNational.mediu)}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              <a href={`/competente/${cs.competenta.slug}/`} class="text-sm font-semibold text-brand-600 hover:text-brand-700 no-underline">
+                Toate meseriile cu {cs.competenta.nume} →
+              </a>
+            </div>
+          );
+        })}
       </div>
     ))}
+  </section>
+
+  <!-- Cross-silo links -->
+  <section class="bg-surface-100 py-12">
+    <div class="container-custom">
+      <h2 class="section-title mb-6">Continuă pe alte secțiuni</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="/domenii/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Domenii profesionale
+          </h3>
+          <p class="text-sm text-surface-600">{domenii.length} sectoare cu salarii medii și meserii grupate pe industrii.</p>
+        </a>
+        <a href="/meserii/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Catalog meserii
+          </h3>
+          <p class="text-sm text-surface-600">{meserii.length} profesii cu descriere, responsabilități și studii necesare.</p>
+        </a>
+        <a href="/salariu/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Salarii pe meserii
+          </h3>
+          <p class="text-sm text-surface-600">Salarii nete pe {orase.length} orașe, cu minim, mediu și maxim per profesie.</p>
+        </a>
+        <a href="/orase/" class="card p-5 no-underline group block">
+          <h3 class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors mb-1">
+            Salarii pe orașe
+          </h3>
+          <p class="text-sm text-surface-600">Compară salariile din {orase.length} orașe, grupate pe regiuni.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="container-custom py-16">
+    <FAQSection items={faqItems} />
   </section>
 </Layout>
