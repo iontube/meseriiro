@@ -10,7 +10,7 @@ import { getDomeniuAverageSalary, getTopSalaryMeserii } from '../../helpers/inte
 const currentMonth = new Date().toISOString().slice(0, 10);
 const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
-const breadcrumbs = [{ label: 'Salarii' }];
+const breadcrumbs = [{ label: 'Acasă', href: '/' }, { label: 'Salarii' }];
 
 // Global stats
 const meseriiCuSalariu = meserii.filter(m => m.salpiuNational.mediu > 0);
@@ -75,7 +75,8 @@ const itemListEntries = top10Best.map((m, i) => ({
 <Layout>
   <SEOHead
     slot="head"
-    title="Salarii pe Meserii în România 2026 — Comparație pe Domenii și Orașe"
+    title="Salarii pe Meserii în România 2026 - Comparație pe Orașe"
+    ogType="article"
     description={`Salarii nete pentru ${totalMeseriiSalariu} meserii din ${domenii.length} domenii, comparate pe ${orase.length} orașe. Salariul mediu național: ${formatSalariu(avgSalariuGlobal)}/lună. Date actualizate cu minim, mediu și maxim.`}
     canonical="/salariu/"
     jsonLd={[

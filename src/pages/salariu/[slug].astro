@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import SalaryTable from '../../components/SalaryTable.astro';
 import FAQSection from '../../components/FAQSection.astro';
 import { meserii, getDomeniuForMeserie, formatSalariu, getNivelCerereLabel, getOraseWithSalariu } from '../../helpers/data';
-import { buildBreadcrumbSchema, buildSalaryPageSchema } from '../../helpers/structured-data';
+import { buildBreadcrumbSchema, buildSalaryPageSchema, buildFAQSchema } from '../../helpers/structured-data';
 import { getDomeniuAverageSalary } from '../../helpers/interlinking';
 import type { Meserie } from '../../helpers/types';
 
@@ -75,6 +75,7 @@ const salariuFaq = [
     jsonLd={[
       buildBreadcrumbSchema(breadcrumbs),
       buildSalaryPageSchema(meserie),
+      buildFAQSchema(salariuFaq),
     ]}
   />
 
@@ -154,7 +155,7 @@ const salariuFaq = [
 
     <!-- Back link (SILO: salary links back to meserie) -->
     <div class="card p-5 mb-10 flex items-center gap-3">
-      <svg class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <svg aria-hidden="true" class="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
       </svg>
       <a href={`/meserii/${meserie.slug}/`} class="font-medium text-surface-800 no-underline hover:text-brand-600 transition-colors">

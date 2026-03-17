@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Pagina nu a fost găsită"
+    description="Pagina căutată nu există sau a fost mutată."
+    noindex={true}
+  />
+
+  <section class="container-custom py-20 sm:py-28 text-center">
+    <p class="text-7xl font-heading font-extrabold text-brand-500 mb-4">404</p>
+    <h1 class="text-2xl sm:text-3xl font-heading font-bold text-surface-900 mb-3">
+      Pagina nu a fost găsită
+    </h1>
+    <p class="text-surface-600 mb-10 max-w-md mx-auto">
+      Adresa accesată nu există sau conținutul a fost mutat. Folosește linkurile de mai jos pentru a naviga.
+    </p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-2xl mx-auto">
+      <a href="/" class="card p-5 no-underline group block">
+        <span class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors">Pagina principală</span>
+      </a>
+      <a href="/domenii/" class="card p-5 no-underline group block">
+        <span class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors">Domenii profesionale</span>
+      </a>
+      <a href="/meserii/" class="card p-5 no-underline group block">
+        <span class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors">Catalog meserii</span>
+      </a>
+      <a href="/salariu/" class="card p-5 no-underline group block">
+        <span class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors">Salarii pe meserii</span>
+      </a>
+      <a href="/orase/" class="card p-5 no-underline group block">
+        <span class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors">Salarii pe orașe</span>
+      </a>
+      <a href="/competente/" class="card p-5 no-underline group block">
+        <span class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors">Competențe profesionale</span>
+      </a>
+    </div>
+  </section>
+</Layout>

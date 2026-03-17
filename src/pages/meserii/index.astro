@@ -11,7 +11,7 @@ import { getDomeniuAverageSalary } from '../../helpers/interlinking';
 const currentMonth = new Date().toISOString().slice(0, 10);
 const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
-const breadcrumbs = [{ label: 'Meserii' }];
+const breadcrumbs = [{ label: 'Acasă', href: '/' }, { label: 'Meserii' }];
 
 // Global stats
 const totalMeserii = meserii.length;
@@ -73,7 +73,8 @@ const faqItems = [
 <Layout>
   <SEOHead
     slot="head"
-    title="Catalog Meserii România - Toate Profesiile cu Salarii și Competențe"
+    title="Catalog Meserii România - Profesii cu Salarii și Competențe"
+    ogType="article"
     description={`${totalMeserii} meserii din România grupate pe ${domenii.length} domenii: salarii nete pe 41 de orașe, competențe cerute, studii necesare. Salariu mediu net: ${formatSalariu(avgSalariuGlobal)}/lună.`}
     canonical="/meserii/"
     jsonLd={[

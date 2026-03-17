@@ -10,7 +10,7 @@ import { getOraseByRegiune, getTopSalaryMeseriiInOras } from '../../helpers/inte
 const currentMonth = new Date().toISOString().slice(0, 10);
 const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
-const breadcrumbs = [{ label: 'Orașe' }];
+const breadcrumbs = [{ label: 'Acasă', href: '/' }, { label: 'Orașe' }];
 const oraseByRegiune = getOraseByRegiune();
 const regiuni = Object.keys(oraseByRegiune).sort();
 
@@ -67,7 +67,8 @@ const faqItems = [
 <Layout>
   <SEOHead
     slot="head"
-    title="Salarii pe Orașe în România - Comparație pe 41 Orașe și Regiuni"
+    title="Salarii pe Orașe în România - Comparație și Top Meserii"
+    ogType="article"
     description={`Compară salariile din ${orase.length} orașe din România, grupate pe ${regiuni.length} regiuni. Top 10 orașe după salariu mediu, de la ${formatSalariu(bottomOras?.avgSalary || 0)} la ${formatSalariu(topOras.avgSalary)}/lună.`}
     canonical="/orase/"
     jsonLd={[
@@ -217,7 +218,7 @@ const faqItems = [
                     <span class="font-medium text-surface-800 group-hover:text-brand-600 transition-colors">
                       {oras.nume}
                     </span>
-                    <svg class="w-4 h-4 text-surface-400 group-hover:text-brand-500 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg aria-hidden="true" class="w-4 h-4 text-surface-400 group-hover:text-brand-500 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </div>

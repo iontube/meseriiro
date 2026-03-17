@@ -21,7 +21,7 @@ const {
 
 const siteUrl = 'https://meseriile.ro';
 const fullCanonical = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
-const fullTitle = title.includes('Director Meserii') ? title : `${title} | Director Meserii în România`;
+const fullTitle = title.length > 50 || title.includes('Director Meserii') ? title : `${title} | Director Meserii în România`;
 const fullOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/og-default.png`;
 ---
 
@@ -29,7 +29,7 @@ const fullOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/og-default.pn
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={fullCanonical} />
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+{noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow" />}
 
 <!-- Open Graph -->
 <meta property="og:type" content={ogType} />

@@ -11,7 +11,7 @@ import { getDomeniuAverageSalary, getTopSalaryMeserii, getCompetenteInDomeniu } 
 const currentMonth = new Date().toISOString().slice(0, 10);
 const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
-const breadcrumbs = [{ label: 'Domenii profesionale' }];
+const breadcrumbs = [{ label: 'Acasă', href: '/' }, { label: 'Domenii profesionale' }];
 
 // Compute per-domain stats
 const domeniiStats = domenii.map(d => {
@@ -54,7 +54,8 @@ const faqItems = [
 <Layout>
   <SEOHead
     slot="head"
-    title="Domenii Profesionale în România - Toate Sectoarele cu Salarii și Meserii"
+    title="Domenii Profesionale România - Salarii și Meserii pe Sectoare"
+    ogType="article"
     description={`${domenii.length} domenii profesionale din România cu ${totalMeserii} meserii, salarii pe orașe și competențe cerute. Compară sectoarele după salariu mediu, cerere pe piață și oportunități de carieră.`}
     canonical="/domenii/"
     jsonLd={[

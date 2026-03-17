@@ -68,8 +68,14 @@ export function getCompetentaSiloLinks(competenta: Competenta): InternalLink[] {
 }
 
 export function getRelatedDomenii(currentDomeniuId: string, limit = 4): InternalLink[] {
-  return domenii
-    .filter(d => d.id !== currentDomeniuId)
+  const others = domenii.filter(d => d.id !== currentDomeniuId);
+  let hash = 0;
+  for (let i = 0; i < currentDomeniuId.length; i++) {
+    hash = ((hash << 5) - hash + currentDomeniuId.charCodeAt(i)) | 0;
+  }
+  const offset = ((hash % others.length) + others.length) % others.length;
+  const shuffled = [...others.slice(offset), ...others.slice(0, offset)];
+  return shuffled
     .slice(0, limit)
     .map(d => ({
       href: `/domenii/${d.slug}/`,

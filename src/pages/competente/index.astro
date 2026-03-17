@@ -10,7 +10,7 @@ import { getTopSalaryForCompetenta } from '../../helpers/interlinking';
 const currentMonth = new Date().toISOString().slice(0, 10);
 const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
-const breadcrumbs = [{ label: 'Competențe profesionale' }];
+const breadcrumbs = [{ label: 'Acasă', href: '/' }, { label: 'Competențe profesionale' }];
 
 const categorii: Record<string, string> = {
   tehnice: 'Competențe tehnice',
@@ -74,7 +74,8 @@ const faqItems = [
 <Layout>
   <SEOHead
     slot="head"
-    title="Competențe Profesionale în România - Abilități Tehnice, Soft Skills și Manageriale"
+    title="Competențe Profesionale România - Abilități Cerute pe Piață"
+    ogType="article"
     description={`${totalCompetente} competențe profesionale cerute pe piața muncii din România: ${countTehnice} tehnice, ${countSoft} soft skills, ${countManageriale} manageriale. Află ce meserii le cer și ce salarii oferă.`}
     canonical="/competente/"
     jsonLd={[
