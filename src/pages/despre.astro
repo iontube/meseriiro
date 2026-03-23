@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+
+const breadcrumbs = [{ label: 'Despre' }];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Despre Meseriile.ro"
+    description="Despre echipa Meseriile.ro - cine suntem, misiunea noastră și de ce am creat acest director de meserii."
+    canonical="/despre/"
+  />
+
+  <div class="container-narrow py-8">
+    <Breadcrumb items={breadcrumbs} />
+
+    <h1 class="text-3xl font-heading font-bold text-surface-900 mb-6">Despre Meseriile.ro</h1>
+
+    <div class="prose-custom">
+      <h2>Cine suntem</h2>
+      <p>Meseriile.ro este un director profesional de meserii din România, creat pentru a oferi informații actualizate despre profesii, salarii și competențe cerute pe piața muncii.</p>
+
+      <h2>Misiunea noastră</h2>
+      <p>Ajutăm românii să ia decizii informate despre carieră. Fiecare meserie este documentată cu descrierea activității, salariul pe orașe, competențele necesare, studiile cerute și condițiile de muncă.</p>
+
+      <h2>Ce acoperim</h2>
+      <p>Directorul conține peste 400 de meserii organizate pe 20 de domenii profesionale, cu date salariale pentru 41 de orașe din România. Informațiile sunt bazate pe coduri COR și actualizate periodic.</p>
+
+      <h2>Sursa datelor</h2>
+      <p>Datele salariale sunt estimări bazate pe informații publice și medii de piață. Salariile reale pot varia în funcție de experiență, angajator, locație și negociere individuală. Recomandăm folosirea acestor date ca referință orientativă.</p>
+
+      <h2>Contact</h2>
+      <p>Pentru întrebări, sugestii sau colaborări: <strong>contact@meseriile.ro</strong>.</p>
+    </div>
+  </div>
+</Layout>
