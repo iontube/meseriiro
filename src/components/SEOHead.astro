@@ -23,6 +23,7 @@ const siteUrl = 'https://meseriile.ro';
 const fullCanonical = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
 const fullTitle = title.length > 50 || title.includes('Director Meserii') ? title : `${title} | Director Meserii în România`;
 const fullOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/og-default.png`;
+const now = new Date().toISOString();
 ---
 
 <!-- Primary Meta -->
@@ -33,6 +34,7 @@ const fullOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/og-default.pn
 
 <!-- Open Graph -->
 <meta property="og:type" content={ogType} />
+<meta property="article:modified_time" content={now} />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={fullCanonical} />
