@@ -4,6 +4,7 @@ import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Pagination from '../../components/Pagination.astro';
 import { getArticolePublicate, getCategoriiCuArticole, getCategoryMeta, splitId, imgUrl } from '../../helpers/articole';
+import { buildBreadcrumbSchema } from '../../helpers/structured-data';
 
 export async function getStaticPaths({ paginate }) {
   const posts = await getArticolePublicate();
@@ -32,6 +33,13 @@ const jsonLd = JSON.stringify({
   description,
   url: `${SITE}${pageUrl(page.currentPage)}`,
 });
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { label: 'Acasă', href: '/' },
+  ...(page.currentPage > 1
+    ? [{ label: 'Articole', href: base }, { label: `Pagina ${page.currentPage}` }]
+    : [{ label: 'Articole', href: base }]),
+]);
 ---
 
 <Layout>
@@ -43,7 +51,7 @@ const jsonLd = JSON.stringify({
     appendSite={false}
     relPrev={page.currentPage > 1 ? SITE + pageUrl(page.currentPage - 1) : undefined}
     relNext={page.currentPage < page.lastPage ? SITE + pageUrl(page.currentPage + 1) : undefined}
-    jsonLd={[jsonLd]}
+    jsonLd={[jsonLd, breadcrumbSchema]}
   />
 
   <div class="container-custom py-6">

@@ -5,6 +5,7 @@ import Breadcrumb from '../../../components/Breadcrumb.astro';
 import Pagination from '../../../components/Pagination.astro';
 import { getMeseriiByDomeniu, formatSalariu } from '../../../helpers/data';
 import { getCategoriiCuArticole, getArticoleByCategorie, imgUrl } from '../../../helpers/articole';
+import { buildBreadcrumbSchema } from '../../../helpers/structured-data';
 
 export async function getStaticPaths({ paginate }) {
   const cats = await getCategoriiCuArticole();
@@ -44,6 +45,14 @@ const jsonLd = JSON.stringify({
   description: cat.descriere,
   url: `${SITE}${pageUrl(page.currentPage)}`,
 });
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { label: 'Acasă', href: '/' },
+  { label: 'Articole', href: '/articole/' },
+  ...(page.currentPage > 1
+    ? [{ label: cat.nume, href: base }, { label: `Pagina ${page.currentPage}` }]
+    : [{ label: cat.nume, href: base }]),
+]);
 ---
 
 <Layout>
@@ -55,7 +64,7 @@ const jsonLd = JSON.stringify({
     appendSite={false}
     relPrev={page.currentPage > 1 ? SITE + pageUrl(page.currentPage - 1) : undefined}
     relNext={page.currentPage < page.lastPage ? SITE + pageUrl(page.currentPage + 1) : undefined}
-    jsonLd={[jsonLd]}
+    jsonLd={[jsonLd, breadcrumbSchema]}
   />
 
   <div class="container-custom py-6">

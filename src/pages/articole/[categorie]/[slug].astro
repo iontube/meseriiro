@@ -4,6 +4,7 @@ import Layout from '../../../layouts/Layout.astro';
 import SEOHead from '../../../components/SEOHead.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import { getMeserieBySlug, formatSalariu } from '../../../helpers/data';
+import { buildBreadcrumbSchema } from '../../../helpers/structured-data';
 import {
   getArticolePublicate,
   getArticoleSimilare,
@@ -56,6 +57,13 @@ const jsonLd = JSON.stringify({
   ...(cat ? { articleSection: cat.nume } : {}),
 });
 
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { label: 'Acasă', href: '/' },
+  { label: 'Articole', href: '/articole/' },
+  ...(cat ? [{ label: cat.nume, href: `/articole/${cat.slug}/` }] : []),
+  { label: post.data.title },
+]);
+
 const faqJsonLd =
   post.data.faq.length > 0
     ? JSON.stringify({
@@ -69,7 +77,7 @@ const faqJsonLd =
       })
     : null;
 
-const schemas = [jsonLd, faqJsonLd].filter((s): s is string => Boolean(s));
+const schemas = [jsonLd, faqJsonLd, breadcrumbSchema].filter((s): s is string => Boolean(s));
 ---
 
 <Layout>
