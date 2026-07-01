@@ -1,0 +1,121 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getArticolePublicate, getCategoriiCuArticole, getCategoryMeta, splitId, imgUrl } from '../../helpers/articole';
+
+export async function getStaticPaths({ paginate }) {
+  const posts = await getArticolePublicate();
+  return paginate(posts, { pageSize: 12 });
+}
+
+const { page } = Astro.props;
+const categorii = await getCategoriiCuArticole();
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const SITE = 'https://meseriile.ro';
+const base = '/articole/';
+const pageUrl = (n: number) => (n <= 1 ? base : `${base}${n}/`);
+
+const baseTitle = 'Articole despre meserii, salarii și carieră';
+const title = page.currentPage > 1 ? `${baseTitle} · Pagina ${page.currentPage}` : baseTitle;
+const description =
+  'Cât câștigi, cum devii și ce trebuie să știi despre meseriile din România. Articole practice bazate pe date, actualizate 2026.';
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: baseTitle,
+  description,
+  url: `${SITE}${pageUrl(page.currentPage)}`,
+});
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={title}
+    description={description}
+    canonical={pageUrl(page.currentPage)}
+    appendSite={false}
+    relPrev={page.currentPage > 1 ? SITE + pageUrl(page.currentPage - 1) : undefined}
+    relNext={page.currentPage < page.lastPage ? SITE + pageUrl(page.currentPage + 1) : undefined}
+    jsonLd={[jsonLd]}
+  />
+
+  <div class="container-custom py-6">
+    <Breadcrumb items={page.currentPage > 1 ? [{ label: 'Articole', href: base }, { label: `Pagina ${page.currentPage}` }] : [{ label: 'Articole' }]} />
+  </div>
+
+  <header class="container-custom pb-8">
+    <h1 class="text-3xl sm:text-4xl font-heading font-bold text-surface-900 mb-3">Articole</h1>
+    <p class="section-subtitle">{description}</p>
+  </header>
+
+  <div class="container-custom pb-16">
+    {page.data.length === 0 ? (
+      <p class="text-surface-500">Curând primele articole.</p>
+    ) : (
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {page.data.map((post) => {
+          const cat = getCategoryMeta(splitId(post.id).categorie);
+          const img = imgUrl(post.data.heroImage);
+          return (
+            <article class="card overflow-hidden flex flex-col">
+              <a href={`/articole/${post.id}/`} class="block no-underline group">
+                {img ? (
+                  <img src={img} alt={post.data.heroAlt ?? post.data.title} width="1200" height="675" loading="lazy" class="aspect-video w-full object-cover bg-surface-100" />
+                ) : (
+                  <div class="aspect-video w-full bg-gradient-to-br from-surface-100 to-surface-200"></div>
+                )}
+              </a>
+              <div class="p-6 flex flex-col flex-1">
+                <div class="flex items-center gap-2 mb-3 text-xs text-surface-500">
+                  {cat && <span class="badge badge-brand">{cat.nume}</span>}
+                  <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+                </div>
+                <h2 class="font-heading font-bold text-lg text-surface-900 mb-2 leading-snug">
+                  <a href={`/articole/${post.id}/`} class="no-underline hover:text-brand-600 transition-colors">
+                    {post.data.title}
+                  </a>
+                </h2>
+                <p class="text-surface-600 text-sm leading-relaxed flex-1">{post.data.description}</p>
+                <a href={`/articole/${post.id}/`} class="text-brand-600 hover:text-brand-800 text-sm font-medium mt-4 no-underline">
+                  Citește →
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    )}
+
+    <Pagination base={base} current={page.currentPage} last={page.lastPage} />
+  </div>
+
+  {page.currentPage === 1 && categorii.length > 0 && (
+    <section class="bg-surface-100 py-16 sm:py-20">
+      <div class="container-custom">
+        <div class="mb-8">
+          <h2 class="section-title">Explorează pe domenii</h2>
+          <p class="section-subtitle">Articolele sunt grupate pe domeniile din directorul de meserii.</p>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categorii.map((c) => (
+            <a href={`/articole/${c.slug}/`} class="card p-5 flex items-start justify-between gap-4 no-underline group">
+              <div class="min-w-0">
+                <span class="font-heading font-semibold text-surface-900 group-hover:text-brand-600 transition-colors">{c.nume}</span>
+                <p class="text-surface-500 text-sm mt-1 line-clamp-2">{c.descriere}</p>
+                <span class="text-brand-600 text-xs font-semibold mt-2 inline-block">{c.count} articol{c.count === 1 ? '' : 'e'}</span>
+              </div>
+              <svg class="w-5 h-5 text-surface-300 shrink-0 mt-1 group-hover:text-brand-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>

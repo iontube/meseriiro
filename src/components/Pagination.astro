@@ -1,0 +1,44 @@
+---
+// Paginare crawlabilă (Google): linkuri <a> reale, URL-uri curate.
+// Pagina 1 = baseUrl, pagina N = baseUrl + N + "/".
+interface Props {
+  base: string;        // ex "/articole/" sau "/articole/constructii/"
+  current: number;
+  last: number;
+}
+const { base, current, last } = Astro.props;
+if (last <= 1) return Astro.slots.render('default'); // nimic de afișat pt o singură pagină
+
+const pageUrl = (n: number) => (n <= 1 ? base : `${base}${n}/`);
+
+// fereastră compactă: 1 … c-1 c c+1 … last
+const nums = new Set<number>([1, last, current, current - 1, current + 1]);
+const pages = [...nums].filter((n) => n >= 1 && n <= last).sort((a, b) => a - b);
+const withGaps: (number | '…')[] = [];
+pages.forEach((n, i) => {
+  if (i > 0 && n - pages[i - 1] > 1) withGaps.push('…');
+  withGaps.push(n);
+});
+---
+
+<nav class="flex items-center justify-center gap-1.5 mt-12" aria-label="Paginare">
+  {current > 1 && (
+    <a href={pageUrl(current - 1)} rel="prev" class="px-3 py-2 rounded-button text-sm font-medium text-surface-700 border border-surface-300 hover:border-brand-400 hover:text-brand-600 no-underline transition-colors" aria-label="Pagina anterioară">
+      ←
+    </a>
+  )}
+  {withGaps.map((n) =>
+    n === '…' ? (
+      <span class="px-2 text-surface-400">…</span>
+    ) : n === current ? (
+      <span class="px-3.5 py-2 rounded-button text-sm font-semibold bg-brand-600 text-white" aria-current="page">{n}</span>
+    ) : (
+      <a href={pageUrl(n)} class="px-3.5 py-2 rounded-button text-sm font-medium text-surface-700 border border-surface-300 hover:border-brand-400 hover:text-brand-600 no-underline transition-colors">{n}</a>
+    )
+  )}
+  {current < last && (
+    <a href={pageUrl(current + 1)} rel="next" class="px-3 py-2 rounded-button text-sm font-medium text-surface-700 border border-surface-300 hover:border-brand-400 hover:text-brand-600 no-underline transition-colors" aria-label="Pagina următoare">
+      →
+    </a>
+  )}
+</nav>

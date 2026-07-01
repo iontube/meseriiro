@@ -1,0 +1,137 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SEOHead from '../../../components/SEOHead.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getMeseriiByDomeniu, formatSalariu } from '../../../helpers/data';
+import { getCategoriiCuArticole, getArticoleByCategorie, imgUrl } from '../../../helpers/articole';
+
+export async function getStaticPaths({ paginate }) {
+  const cats = await getCategoriiCuArticole();
+  const paths = [];
+  for (const cat of cats) {
+    const posts = await getArticoleByCategorie(cat.slug);
+    paths.push(
+      ...paginate(posts, { params: { categorie: cat.slug }, props: { cat }, pageSize: 12 })
+    );
+  }
+  return paths;
+}
+
+const { page, cat } = Astro.props;
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const SITE = 'https://meseriile.ro';
+const base = `/articole/${cat.slug}/`;
+const pageUrl = (n: number) => (n <= 1 ? base : `${base}${n}/`);
+
+const topSalarii =
+  cat.tip === 'domeniu'
+    ? getMeseriiByDomeniu(cat.slug)
+        .sort((a, b) => b.salpiuNational.mediu - a.salpiuNational.mediu)
+        .slice(0, 6)
+    : [];
+
+const baseTitle = `Articole despre ${cat.nume}`;
+const title = page.currentPage > 1 ? `${baseTitle} · Pagina ${page.currentPage}` : baseTitle;
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: baseTitle,
+  description: cat.descriere,
+  url: `${SITE}${pageUrl(page.currentPage)}`,
+});
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={title}
+    description={cat.descriere}
+    canonical={pageUrl(page.currentPage)}
+    appendSite={false}
+    relPrev={page.currentPage > 1 ? SITE + pageUrl(page.currentPage - 1) : undefined}
+    relNext={page.currentPage < page.lastPage ? SITE + pageUrl(page.currentPage + 1) : undefined}
+    jsonLd={[jsonLd]}
+  />
+
+  <div class="container-custom py-6">
+    <Breadcrumb
+      items={[
+        { label: 'Articole', href: '/articole/' },
+        ...(page.currentPage > 1
+          ? [{ label: cat.nume, href: base }, { label: `Pagina ${page.currentPage}` }]
+          : [{ label: cat.nume }]),
+      ]}
+    />
+  </div>
+
+  <header class="container-custom pb-8">
+    <span class="badge badge-brand mb-3">{cat.nume}</span>
+    <h1 class="text-3xl sm:text-4xl font-heading font-bold text-surface-900 mb-3">{baseTitle}</h1>
+    <p class="section-subtitle">{cat.descriere}</p>
+    {cat.directorHref && (
+      <a href={cat.directorHref} class="inline-block mt-4 text-brand-600 hover:text-brand-800 text-sm font-medium no-underline">
+        Vezi meseriile din {cat.nume} în director →
+      </a>
+    )}
+  </header>
+
+  <div class="container-custom pb-16 grid lg:grid-cols-3 gap-10">
+    <div class="lg:col-span-2 content-start">
+      <div class="grid gap-5 sm:grid-cols-2">
+        {page.data.map((post) => {
+          const img = imgUrl(post.data.heroImage);
+          return (
+          <article class="card overflow-hidden flex flex-col">
+            <a href={`/articole/${post.id}/`} class="block no-underline">
+              {img ? (
+                <img src={img} alt={post.data.heroAlt ?? post.data.title} width="1200" height="675" loading="lazy" class="aspect-video w-full object-cover bg-surface-100" />
+              ) : (
+                <div class="aspect-video w-full bg-gradient-to-br from-surface-100 to-surface-200"></div>
+              )}
+            </a>
+            <div class="p-6 flex flex-col flex-1">
+              <time class="text-xs text-surface-500 mb-2" datetime={post.data.pubDate.toISOString()}>
+                {fmtDate(post.data.pubDate)}
+              </time>
+              <h2 class="font-heading font-bold text-lg text-surface-900 mb-2 leading-snug">
+                <a href={`/articole/${post.id}/`} class="no-underline hover:text-brand-600 transition-colors">
+                  {post.data.title}
+                </a>
+              </h2>
+              <p class="text-surface-600 text-sm leading-relaxed flex-1">{post.data.description}</p>
+              <a href={`/articole/${post.id}/`} class="text-brand-600 hover:text-brand-800 text-sm font-medium mt-4 no-underline">
+                Citește →
+              </a>
+            </div>
+          </article>
+          );
+        })}
+      </div>
+
+      <Pagination base={base} current={page.currentPage} last={page.lastPage} />
+    </div>
+
+    {topSalarii.length > 0 && (
+      <aside class="lg:col-span-1">
+        <div class="card p-6 sticky top-24">
+          <h2 class="font-heading font-bold text-base text-surface-900 mb-4">Cele mai plătite din {cat.nume}</h2>
+          <ul class="space-y-2">
+            {topSalarii.map((m) => (
+              <li>
+                <a href={`/salariu/${m.slug}/`} class="flex items-center justify-between gap-2 text-sm no-underline group">
+                  <span class="text-surface-700 group-hover:text-brand-600 transition-colors">{m.nume}</span>
+                  <span class="text-brand-600 font-semibold whitespace-nowrap">{formatSalariu(m.salpiuNational.mediu)}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+    )}
+  </div>
+</Layout>

@@ -42,7 +42,10 @@ const nsMatch = xml.match(/<urlset([^>]*)>/);
 const namespaces = nsMatch ? nsMatch[1] : ' xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"';
 
 // Write each chunk
-const now = new Date().toISOString();
+// lastmod DETERMINIST: extras din <lastmod>-urile URL-urilor (setat fix în astro.config),
+// NU ora build-ului — ca sitemap-urile nemodificate să-și păstreze data.
+const urlLastmods = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]).sort();
+const now = urlLastmods.length ? urlLastmods[urlLastmods.length - 1] : new Date().toISOString();
 for (let i = 0; i < chunks.length; i++) {
   const num = String(i + 1).padStart(3, '0');
   const filename = `sitemap-${num}.xml`;

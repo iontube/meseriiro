@@ -3,10 +3,35 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
+// Înfășoară fiecare <table> din markdown într-un <div class="table-scroll"> (scroll orizontal pe mobil).
+function rehypeTableWrap() {
+  return (tree) => {
+    const walk = (node) => {
+      if (!node.children) return;
+      node.children = node.children.map((child) => {
+        if (child.type === 'element' && child.tagName === 'table') {
+          return {
+            type: 'element',
+            tagName: 'div',
+            properties: { className: ['table-scroll'] },
+            children: [child],
+          };
+        }
+        walk(child);
+        return child;
+      });
+    };
+    walk(tree);
+  };
+}
+
 export default defineConfig({
   site: 'https://meseriile.ro',
   output: 'static',
   trailingSlash: 'always',
+  markdown: {
+    rehypePlugins: [rehypeTableWrap],
+  },
   build: {
     format: 'directory',
     inlineStylesheets: 'always',
@@ -14,7 +39,12 @@ export default defineConfig({
   integrations: [
     sitemap({
       changefreq: 'weekly',
-      lastmod: new Date(),
+      // lastmod DETERMINIST = când s-a schimbat ultima dată conținutul directorului.
+      // NU new Date() (altfel sitemap-urile nemodificate primesc data build-ului la fiecare rulare).
+      // Bump-uiește DOAR când chiar actualizezi datele meseriilor.
+      lastmod: new Date('2026-05-30T08:19:37.021Z'),
+      // /articole/* au sitemap dedicat (cu imagini) generat de scripts/sitemap-articole.mjs
+      filter: (page) => !page.includes('/articole/'),
       serialize(item) {
         const url = item.url;
         if (url === 'https://meseriile.ro/') {

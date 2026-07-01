@@ -6,6 +6,10 @@ import MeserieCard from '../components/MeserieCard.astro';
 import { domenii, meserii, competente, orase, formatSalariu } from '../helpers/data';
 import { buildWebSiteSchema, buildWebPageSchema, buildItemListSchema } from '../helpers/structured-data';
 import { getTopSalaryMeserii } from '../helpers/interlinking';
+import { getArticolePublicate, getCategoryMeta, splitId, imgUrl } from '../helpers/articole';
+
+const ultimeleArticole = (await getArticolePublicate()).slice(0, 6);
+const fmtArtDate = (d: Date) => d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const currentMonth = new Date().toISOString().slice(0, 10);
 const displayDate = new Date().toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
@@ -77,6 +81,49 @@ const stats = [
       ))}
     </div>
   </section>
+
+  <!-- Articole -->
+  {ultimeleArticole.length > 0 && (
+    <section class="container-custom py-16 sm:py-20">
+      <div class="flex items-end justify-between gap-4 mb-10">
+        <div>
+          <h2 class="section-title">Articole despre salarii și carieră</h2>
+          <p class="section-subtitle">Cât câștigi și cum crești în meseriile din România, explicat pe date.</p>
+        </div>
+        <a href="/articole/" class="btn-secondary no-underline shrink-0 hidden sm:inline-flex">Toate articolele →</a>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {ultimeleArticole.map((post) => {
+          const cat = getCategoryMeta(splitId(post.id).categorie);
+          const img = imgUrl(post.data.heroImage);
+          return (
+            <article class="card overflow-hidden flex flex-col">
+              <a href={`/articole/${post.id}/`} class="block no-underline">
+                {img ? (
+                  <img src={img} alt={post.data.heroAlt ?? post.data.title} width="1200" height="675" loading="lazy" class="aspect-video w-full object-cover bg-surface-100" />
+                ) : (
+                  <div class="aspect-video w-full bg-gradient-to-br from-surface-100 to-surface-200"></div>
+                )}
+              </a>
+              <div class="p-5 flex flex-col flex-1">
+                <div class="flex items-center gap-2 mb-2 text-xs text-surface-500">
+                  {cat && <span class="badge badge-brand">{cat.nume}</span>}
+                  <time datetime={post.data.pubDate.toISOString()}>{fmtArtDate(post.data.pubDate)}</time>
+                </div>
+                <h3 class="font-heading font-bold text-lg text-surface-900 mb-2 leading-snug">
+                  <a href={`/articole/${post.id}/`} class="no-underline hover:text-brand-600 transition-colors">{post.data.title}</a>
+                </h3>
+                <p class="text-surface-600 text-sm leading-relaxed line-clamp-2 flex-1">{post.data.description}</p>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+      <div class="text-center mt-8 sm:hidden">
+        <a href="/articole/" class="btn-secondary no-underline">Toate articolele →</a>
+      </div>
+    </section>
+  )}
 
   <!-- Domenii -->
   <section class="container-custom py-16 sm:py-20">

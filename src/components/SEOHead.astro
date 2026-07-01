@@ -7,6 +7,14 @@ interface Props {
   ogImage?: string;
   noindex?: boolean;
   jsonLd?: string[];
+  /** false => titlul rămâne exact cum e dat (fără sufix de brand). Pt articole. */
+  appendSite?: boolean;
+  /** paginare: URL-uri absolute către pagina anterioară/următoare (pt Bing; Google le ignoră). */
+  relPrev?: string;
+  relNext?: string;
+  /** pt articole (Discover + rich): datele de publicare/modificare ISO. */
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
 const {
@@ -17,12 +25,22 @@ const {
   ogImage,
   noindex = false,
   jsonLd = [],
+  appendSite = true,
+  relPrev,
+  relNext,
+  publishedTime,
+  modifiedTime,
 } = Astro.props;
 
 const siteUrl = 'https://meseriile.ro';
 const fullCanonical = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
-const fullTitle = title.length > 50 || title.includes('Director Meserii') ? title : `${title} | Director Meserii în România`;
-const fullOgImage = ogImage ? `${siteUrl}${ogImage}` : `${siteUrl}/og-default.png`;
+const fullTitle = !appendSite || title.length > 50 || title.includes('Director Meserii')
+  ? title
+  : `${title} | Director Meserii în România`;
+// ogImage poate fi URL absolut (hero pe R2) sau cale relativă pe meseriile.ro
+const fullOgImage = ogImage
+  ? (ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`)
+  : `${siteUrl}/og-default.png`;
 const now = new Date().toISOString();
 ---
 
@@ -30,11 +48,16 @@ const now = new Date().toISOString();
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={fullCanonical} />
-{noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow" />}
+{relPrev && <link rel="prev" href={relPrev} />}
+{relNext && <link rel="next" href={relNext} />}
+{noindex
+  ? <meta name="robots" content="noindex, nofollow" />
+  : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
 
 <!-- Open Graph -->
 <meta property="og:type" content={ogType} />
-<meta property="article:modified_time" content={now} />
+<meta property="article:modified_time" content={modifiedTime ?? now} />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={fullCanonical} />

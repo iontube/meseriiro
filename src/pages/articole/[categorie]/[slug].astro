@@ -1,0 +1,231 @@
+---
+import { render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import SEOHead from '../../../components/SEOHead.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { getMeserieBySlug, formatSalariu } from '../../../helpers/data';
+import {
+  getArticolePublicate,
+  getArticoleSimilare,
+  getPrevNext,
+  getCategoryMeta,
+  splitId,
+  imgUrl,
+} from '../../../helpers/articole';
+
+export async function getStaticPaths() {
+  const posts = await getArticolePublicate();
+  return posts.map((post) => {
+    const { categorie, slug } = splitId(post.id);
+    return { params: { categorie, slug }, props: { post } };
+  });
+}
+
+const { post } = Astro.props;
+const { categorie } = splitId(post.id);
+const cat = getCategoryMeta(categorie);
+const { Content } = await render(post);
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const related = post.data.relatedMeserii
+  .map((s) => getMeserieBySlug(s))
+  .filter((m): m is NonNullable<typeof m> => Boolean(m));
+
+const hero = imgUrl(post.data.heroImage);
+const similare = await getArticoleSimilare(post, 6);
+const { prev, next } = await getPrevNext(post);
+const canonical = `/articole/${post.id}/`;
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+  ...(hero ? { image: [hero] } : {}),
+  author: { '@type': 'Organization', name: 'Meseriile.ro' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Meseriile.ro',
+    logo: { '@type': 'ImageObject', url: 'https://meseriile.ro/logo-wide.png' },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': `https://meseriile.ro${canonical}` },
+  ...(cat ? { articleSection: cat.nume } : {}),
+});
+
+const faqJsonLd =
+  post.data.faq.length > 0
+    ? JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: post.data.faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      })
+    : null;
+
+const schemas = [jsonLd, faqJsonLd].filter((s): s is string => Boolean(s));
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={post.data.title}
+    description={post.data.description}
+    canonical={canonical}
+    ogType="article"
+    ogImage={hero}
+    appendSite={false}
+    publishedTime={post.data.pubDate.toISOString()}
+    modifiedTime={(post.data.updatedDate ?? post.data.pubDate).toISOString()}
+    jsonLd={schemas}
+  />
+
+  <div class="mx-auto w-full max-w-[46rem] px-4 sm:px-6 lg:px-8 py-6">
+    <Breadcrumb
+      items={[
+        { label: 'Articole', href: '/articole/' },
+        ...(cat ? [{ label: cat.nume, href: `/articole/${cat.slug}/` }] : []),
+        { label: post.data.title },
+      ]}
+    />
+  </div>
+
+  <article class="mx-auto w-full max-w-[46rem] px-4 sm:px-6 lg:px-8 pb-16">
+    <header class="mb-8">
+      <div class="flex items-center gap-2 mb-4 text-sm text-surface-500">
+        {cat && <a href={`/articole/${cat.slug}/`} class="badge badge-brand no-underline">{cat.nume}</a>}
+        <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+        {post.data.updatedDate && (
+          <span class="text-surface-400">· actualizat {fmtDate(post.data.updatedDate)}</span>
+        )}
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-heading font-bold text-surface-900 leading-tight mb-4">
+        {post.data.title}
+      </h1>
+      <p class="text-lg text-surface-600 leading-relaxed">{post.data.description}</p>
+    </header>
+
+    {hero && (
+      <img
+        src={hero}
+        alt={post.data.heroAlt ?? post.data.title}
+        width="1600"
+        height="900"
+        class="w-full rounded-card mb-10 aspect-video object-cover bg-surface-100"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )}
+
+    <div class="article-content">
+      <Content />
+    </div>
+
+    {related.length > 0 && (
+      <aside class="mt-12 card p-6 bg-surface-50/60">
+        <h2 class="font-heading font-bold text-lg text-surface-900 mb-1">Salariile actualizate</h2>
+        <p class="text-surface-600 text-sm mb-4">Date pe orașe și niveluri de experiență din directorul Meseriile.ro:</p>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {related.map((m) => (
+            <a
+              href={`/salariu/${m.slug}/`}
+              class="flex items-center justify-between gap-3 rounded-button border border-surface-200 bg-white px-4 py-3 no-underline hover:border-brand-300 hover:shadow-card transition-all"
+            >
+              <span class="font-medium text-surface-800">{m.nume}</span>
+              <span class="text-brand-600 text-sm font-semibold whitespace-nowrap">
+                {formatSalariu(m.salpiuNational.mediu)}/lună →
+              </span>
+            </a>
+          ))}
+        </div>
+      </aside>
+    )}
+
+    {post.data.faq.length > 0 && (
+      <section class="mt-14">
+        <h2 class="font-heading font-bold text-xl text-surface-900 mb-5">Întrebări frecvente</h2>
+        <div class="space-y-3">
+          {post.data.faq.map((f) => (
+            <details class="faq-item group">
+              <summary>
+                <span>{f.q}</span>
+                <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="faq-answer"><p>{f.a}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {(prev || next) && (
+      <nav class="mt-14 grid grid-cols-2 gap-3 sm:gap-4" aria-label="Navigare între articole">
+        {prev && (
+          <a href={`/articole/${prev.id}/`} class:list={["card p-4 sm:p-5 flex flex-col no-underline group", { "col-span-2": !next }]}>
+            <span class="flex items-center gap-1.5 text-xs font-medium text-surface-500 mb-1.5">
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+              Precedent
+            </span>
+            <span class="font-heading font-semibold text-sm sm:text-base text-surface-900 leading-snug line-clamp-2 group-hover:text-brand-600 transition-colors">{prev.data.title}</span>
+          </a>
+        )}
+        {next && (
+          <a href={`/articole/${next.id}/`} class:list={["card p-4 sm:p-5 flex flex-col no-underline group items-end text-right", { "col-span-2": !prev }]}>
+            <span class="flex items-center gap-1.5 text-xs font-medium text-surface-500 mb-1.5">
+              Următor
+              <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </span>
+            <span class="font-heading font-semibold text-sm sm:text-base text-surface-900 leading-snug line-clamp-2 group-hover:text-brand-600 transition-colors">{next.data.title}</span>
+          </a>
+        )}
+      </nav>
+    )}
+
+    {similare.length > 0 && (
+      <section class="mt-14">
+        <h2 class="font-heading font-bold text-xl text-surface-900 mb-5">
+          Articole similare {cat && <span class="text-surface-400 font-normal">din {cat.nume}</span>}
+        </h2>
+        <div class="grid gap-5 grid-cols-1 sm:grid-cols-2">
+          {similare.map((s) => {
+            const sImg = imgUrl(s.data.heroImage);
+            return (
+              <a href={`/articole/${s.id}/`} class="card overflow-hidden flex flex-col no-underline group">
+                {sImg ? (
+                  <img src={sImg} alt={s.data.heroAlt ?? s.data.title} width="1200" height="675" loading="lazy" class="aspect-video w-full object-cover bg-surface-100" />
+                ) : (
+                  <div class="aspect-video w-full bg-gradient-to-br from-surface-100 to-surface-200"></div>
+                )}
+                <div class="p-5 flex flex-col flex-1">
+                  <time class="text-xs text-surface-500 mb-2" datetime={s.data.pubDate.toISOString()}>
+                    {fmtDate(s.data.pubDate)}
+                  </time>
+                  <span class="font-heading font-semibold text-base sm:text-lg text-surface-900 leading-snug line-clamp-2 group-hover:text-brand-600 transition-colors">
+                    {s.data.title}
+                  </span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    <div class="mt-10 pt-6 border-t border-surface-200 flex flex-wrap gap-x-6 gap-y-2">
+      {cat && (
+        <a href={`/articole/${cat.slug}/`} class="text-brand-600 hover:text-brand-800 text-sm font-medium no-underline">
+          ← Mai multe din {cat.nume}
+        </a>
+      )}
+      <a href="/articole/" class="text-surface-500 hover:text-surface-800 text-sm font-medium no-underline">
+        Toate articolele
+      </a>
+    </div>
+  </article>
+</Layout>

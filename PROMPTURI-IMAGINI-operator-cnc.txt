@@ -1,0 +1,16 @@
+=== IMAGINEA 1 — HERO (16:9, 1600x900) ===
+salveaza ca: operator-cnc-masina-frezat-atelier.webp
+
+Photorealistic editorial photojournalism photograph, shot on a 35mm lens at f/2.8, of a focused Romanian machine operator in his 30s working at a modern CNC milling machine in a clean industrial workshop, three-quarter angle, one hand on the machine control panel, a metal workpiece and cutting tool visible inside the machine, fine metal chips around, wearing safety glasses and industrial work clothes, cool workshop lighting with a warm highlight on his face, shallow depth of field, high detail, natural colors, 16:9 aspect ratio. Realistic human anatomy, correct hands with five fingers, correctly shaped CNC machine and tools, physically plausible chips and reflections. No text, no letters, no logos, no watermarks, no extra fingers, no fused or distorted hands, no floating or melted tools, no duplicated limbs, no warped machinery, no gibberish text.
+
+
+=== IMAGINEA 2 — INLINE panou comanda (3:2, 1200x800) ===
+salveaza ca: operator-cnc-panou-comanda.webp
+
+Photorealistic close-up, shot on a 50mm lens, of a CNC machine operator's hand operating the industrial control panel of a CNC machine, realistic physical buttons and a screen showing abstract non-text graphics, blurred workshop background, natural light, documentary editorial style, sharp focus on the panel and hand, 3:2 aspect ratio. Realistic human anatomy, correct hand with five fingers, correctly shaped control panel buttons. No text, no letters, no logos, no watermarks, no extra fingers, no distorted hands, no gibberish text on the screen or buttons.
+
+
+=== IMAGINEA 3 — INLINE piese precizie (3:2, 1200x800) ===
+salveaza ca: operator-cnc-piese-metalice-precizie.webp
+
+Photorealistic macro close-up of freshly machined precision metal parts on a CNC machine bed, shiny aluminum and steel components with clean surfaces and fine tolerances, a few metal chips around, cool industrial lighting, shallow depth of field, documentary editorial realism, 3:2 aspect ratio. Physically plausible metal surfaces and reflections. No text, no letters, no logos, no watermarks, no warped or melted shapes, no gibberish text.
