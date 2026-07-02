@@ -1,0 +1,78 @@
+========================================================================
+PROMPTURI IMAGINI — articol "Cât câștigă un polițist" (administratie-publica)
+========================================================================
+3 imagini. Fotorealiste, editorial, sa arate ca POLITIA ROMANA reala.
+Flux: generezi -> pui PNG/JPG in /sites/meseriile-img-work/_incoming/
+-> eu comprim WebP + urc pe img.meseriile.ro.
+
+Denumeste fisierele EXACT cu numele-cheie de mai jos:
+  1. salariu-politist-uniforma-strada        (HERO, 16:9)
+  2. politist-rutier-control-trafic           (inline, 3:2)
+  3. politist-patrula-oras                     (inline, 3:2)
+
+IMPORTANT — uniforma Politiei Romane (asa arata real, 2026):
+- bleumarin foarte inchis, aproape negru
+- accente albastru-deschis + benzi reflectorizante argintii
+- mic steag TRICOLOR romanesc (albastru-galben-rosu) ca ecuson pe umar/brat
+  (asta da autenticitate romaneasca fara text)
+- sapca de serviciu bleumarin (tip baseball sau cu cozoroc) cu emblema
+- (rutiera) vesta reflectorizanta galben-verde peste uniforma
+NU pune text/litere lizibile ("POLITIA") ca iese gibberish. Lasa steagul
+tricolor + culorile + croiala sa transmita ca e politist roman.
+Daca ai poze de referinta cu Politia Romana, foloseste-le la generare.
+========================================================================
+
+
+------------------------------------------------------------------------
+1. HERO 16:9  ->  salariu-politist-uniforma-strada
+------------------------------------------------------------------------
+Photorealistic editorial photograph, 35mm lens, f/2.8, full-frame camera,
+natural documentary style. A Romanian Police officer (Politia Romana) wearing
+the modern duty uniform: very dark navy-blue, almost black, with light-blue
+and reflective silver accents, a small Romanian tricolor flag patch (blue,
+yellow, red) on the shoulder, and a dark navy baseball-style duty cap. The
+officer stands on a city street during the day, calm and professional, looking
+slightly off-camera. Modern Romanian city background softly out of focus,
+natural daylight. Realistic skin texture, correct hands, confident approachable
+expression. Wide 16:9 framing with headroom, shallow depth of field. Realistic
+human anatomy, correct hands with five fingers, correctly shaped uniform and
+cap, no readable text, no letters, no legible logos, no gibberish text (the
+tricolor shoulder patch is allowed as colored shapes only). No extra fingers,
+no fused hands, no floating objects, avoid plastic over-smoothed skin, avoid
+perfect symmetry, natural imperfect lighting, true-to-life colors.
+
+------------------------------------------------------------------------
+2. INLINE 3:2  ->  politist-rutier-control-trafic
+------------------------------------------------------------------------
+Photorealistic editorial photograph, 50mm lens, f/2.5, natural documentary
+style. A Romanian traffic police officer (Politia Rutiera) in the dark navy
+Romanian Police uniform with a high-visibility yellow-green reflective vest
+over it and a small Romanian tricolor flag patch on the shoulder, signaling a
+car to stop on a city road, hand raised in a clear stop gesture. Daytime,
+natural light, cars softly blurred in the background. Focused professional
+expression, correct hand anatomy on the raised hand. 3:2 horizontal framing,
+shallow depth of field. Realistic human anatomy, correct hands with five
+fingers, correctly shaped reflective vest and uniform, no readable text, no
+letters, no legible logos, no gibberish text (tricolor patch allowed as colored
+shapes only). No extra fingers, no fused hands, no floating objects, no warped
+vehicles, avoid plastic skin, avoid AI gloss, natural realistic lighting and
+true-to-life colors.
+
+------------------------------------------------------------------------
+3. INLINE 3:2  ->  politist-patrula-oras
+------------------------------------------------------------------------
+Photorealistic editorial photograph, 50mm lens, f/2.2, candid documentary
+style. Two Romanian Police officers (Politia Romana) in modern dark navy-blue
+duty uniforms with light-blue reflective accents, small Romanian tricolor flag
+patches on the shoulders, and dark navy duty caps, walking on foot patrol along
+a city sidewalk, seen from a slight side angle, in mid-conversation. Daytime,
+warm natural light, Romanian urban background softly blurred. Realistic posture
+and correct hand anatomy on both, plain uniforms without readable text. 3:2
+horizontal framing, shallow depth of field, natural candid feel. Realistic
+human anatomy, correct hands with five fingers on both officers, correctly
+shaped uniforms and caps, no readable text, no letters, no legible logos, no
+gibberish text (tricolor patches allowed as colored shapes only). No extra
+fingers, no fused or duplicated limbs, no floating objects, avoid plastic
+over-smoothed skin, avoid artificial AI look, natural realistic skin texture,
+true-to-life colors and soft natural shadows.
+========================================================================

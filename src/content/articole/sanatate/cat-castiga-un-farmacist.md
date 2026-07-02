@@ -1,7 +1,7 @@
 ---
 title: "Cât câștigă un farmacist în România și de ce farmacia privată plătește mai bine ca spitalul"
 description: "Un farmacist câștigă de la 3.400 lei net la stat până la peste 8.000 în privat ca diriginte. Vezi salariul pe rol, oraș și în străinătate în 2026."
-pubDate: 2026-07-02
+pubDate: 2026-07-02T09:00:00Z
 relatedMeserii: ["farmacist", "asistent-farmacie", "medic-generalist"]
 heroImage: "sanatate/cat-castiga-un-farmacist/salariu-farmacist-farmacie-comunitara.webp"
 heroAlt: "Farmacistă în halat alb consiliind un pacient la ghișeul unei farmacii comunitare"
