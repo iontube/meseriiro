@@ -57,8 +57,14 @@ const pages = walk(articoleDir).map((file) => {
 // pt hub/index (fără article:modified_time) folosim cea mai recentă dată de articol
 const newest = pages.map((p) => p.lastmod).filter(Boolean).sort().pop() || now;
 
-// ordonează: articolele (cu imagini) primele, apoi hub/index/paginare
-pages.sort((a, b) => b.imgs.length - a.imgs.length || a.loc.localeCompare(b.loc));
+// ordonează: articolele (cu imagini) primele, cel mai NOU articol primul (lastmod desc),
+// apoi hub/index/paginare (fără lastmod propriu) la final, alfabetic.
+pages.sort(
+  (a, b) =>
+    (b.imgs.length > 0 ? 1 : 0) - (a.imgs.length > 0 ? 1 : 0) ||
+    (b.lastmod || '').localeCompare(a.lastmod || '') ||
+    a.loc.localeCompare(b.loc),
+);
 
 const chunks = [];
 for (let i = 0; i < pages.length; i += PER_FILE) chunks.push(pages.slice(i, i + PER_FILE));
