@@ -34,6 +34,7 @@ const topSalarii =
         .sort((a, b) => b.salpiuNational.mediu - a.salpiuNational.mediu)
         .slice(0, 6)
     : [];
+const maxTopSal = topSalarii[0]?.salpiuNational.mediu ?? 1;
 
 const baseTitle = `Articole despre ${cat.nume}`;
 const title = page.currentPage > 1 ? `${baseTitle} · Pagina ${page.currentPage}` : baseTitle;
@@ -127,18 +128,31 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
     {topSalarii.length > 0 && (
       <aside class="lg:col-span-1">
-        <div class="card p-6 sticky top-24">
-          <h2 class="font-heading font-bold text-base text-surface-900 mb-4">Cele mai plătite din {cat.nume}</h2>
-          <ul class="space-y-2">
-            {topSalarii.map((m) => (
+        <div class="card p-5 sm:p-6 sticky top-24">
+          <h2 class="font-heading font-bold text-base text-surface-900">Cele mai plătite din {cat.nume}</h2>
+          <p class="text-xs text-surface-500 mb-4">Salariu mediu net pe lună, din directorul Meseriile.ro</p>
+          <ol class="divide-y divide-surface-100">
+            {topSalarii.map((m, i) => (
               <li>
-                <a href={`/salariu/${m.slug}/`} class="flex items-center justify-between gap-2 text-sm no-underline group">
-                  <span class="text-surface-700 group-hover:text-brand-600 transition-colors">{m.nume}</span>
-                  <span class="text-brand-600 font-semibold whitespace-nowrap">{formatSalariu(m.salpiuNational.mediu)}</span>
+                <a href={`/salariu/${m.slug}/`} class="block py-3 no-underline group">
+                  <div class="flex items-center gap-3">
+                    <span class={`shrink-0 grid place-items-center w-6 h-6 rounded-full text-xs font-bold ${i === 0 ? 'bg-brand-600 text-white' : 'bg-surface-100 text-surface-500'}`}>{i + 1}</span>
+                    <span class="flex-1 text-sm font-medium text-surface-800 group-hover:text-brand-600 transition-colors leading-tight">{m.nume}</span>
+                    <span class="text-sm font-bold text-surface-900 tabular-nums whitespace-nowrap">{formatSalariu(m.salpiuNational.mediu)}</span>
+                  </div>
+                  <div class="mt-2 ml-9 h-1.5 rounded-full bg-surface-100 overflow-hidden">
+                    <div class={`h-full rounded-full ${i === 0 ? 'bg-brand-500' : 'bg-brand-300'}`} style={`width:${Math.round((m.salpiuNational.mediu / maxTopSal) * 100)}%`}></div>
+                  </div>
                 </a>
               </li>
             ))}
-          </ul>
+          </ol>
+          {cat.directorHref && (
+            <a href={cat.directorHref} class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand-600 hover:text-brand-800 no-underline">
+              Vezi toate meseriile din {cat.nume}
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
         </div>
       </aside>
     )}

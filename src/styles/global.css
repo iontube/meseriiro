@@ -207,6 +207,12 @@
 .article-content ol { @apply list-decimal pl-6 space-y-2 marker:text-surface-500; }
 .article-content li { @apply pl-1; }
 .article-content strong { @apply text-surface-900 font-semibold; }
+/* Secțiune Surse: mică și discretă, ca nota de metodologie */
+.article-content .article-sources { @apply mt-10 border-t border-surface-200 pt-4 text-sm text-surface-500; }
+.article-content .article-sources h2 { @apply text-xs font-semibold uppercase tracking-wide text-surface-500 mt-0 mb-2; }
+.article-content .article-sources ul { @apply list-disc pl-5 space-y-1 marker:text-surface-300; }
+.article-content .article-sources li { @apply text-sm text-surface-500 leading-relaxed; }
+.article-content .article-sources a { @apply text-surface-600 underline decoration-surface-300 hover:text-brand-600 hover:decoration-brand-400; }
 .article-content blockquote {
   @apply border-l-4 border-brand-300 bg-brand-50/60 pl-4 pr-3 py-2 rounded-r-button text-surface-700 italic;
 }

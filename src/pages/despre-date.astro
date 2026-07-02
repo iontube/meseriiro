@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+
+const breadcrumbs = [{ label: 'Cum estimăm salariile' }];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Cum estimăm salariile și ce surse folosim"
+    description="Metodologia din spatele datelor salariale de pe Meseriile.ro. Cum calculăm salariile nete, ce surse folosim și cum interpretezi cifrele minim, mediu și maxim."
+    canonical="/despre-date/"
+  />
+
+  <div class="container-narrow py-8">
+    <Breadcrumb items={breadcrumbs} />
+
+    <h1 class="text-3xl font-heading font-bold text-surface-900 mb-6">Cum estimăm salariile și ce surse folosim</h1>
+
+    <div class="prose-custom">
+      <p>Ne dorim ca cifrele de pe Meseriile.ro să fie utile și oneste. Pe această pagină explicăm de unde vin datele salariale, cum le calculăm și ce limite au, ca să le poți interpreta corect.</p>
+
+      <h2>Salariile sunt estimări, nu garanții</h2>
+      <p>Cifrele salariale de pe site sunt estimări orientative, nu oferte concrete de angajare. Salariul real al unei persoane depinde de experiență, angajator, oraș, program și de negocierea individuală, iar variația poate fi mare.</p>
+      <p>Recomandăm folosirea datelor ca punct de plecare pentru o discuție de salariu, nu ca sumă exactă la care te poți aștepta.</p>
+
+      <h2>Cum sunt calculate</h2>
+      <p>Fiecare meserie este legată de un cod din Clasificarea Ocupațiilor din România (COR). Pornind de la acesta, estimările sunt calibrate pe baza informațiilor publice despre nivelul de salarizare din domeniul respectiv și ajustate pe orașe în funcție de diferențele cunoscute dintre marile centre și restul țării.</p>
+      <p>Nu extragem salariile persoanelor individuale. Lucrăm cu medii și intervale, nu cu date personale.</p>
+
+      <h2>Ce înseamnă minim, mediu și maxim</h2>
+      <p>Pentru fiecare meserie afișăm trei valori. Minimul reflectă în general nivelul de intrare, fără experiență. Media este reperul central, tipic pentru cineva cu câțiva ani de experiență. Maximul indică ce câștigă cei cu experiență mare, specializare sau roluri de coordonare.</p>
+
+      <h2>Net sau brut</h2>
+      <p>Cifrele afișate sunt sume nete, adică banii care ajung efectiv la angajat. În România, din salariul brut se rețin contribuția la pensie de 25 la sută, contribuția la sănătate de 10 la sută și impozitul pe venit de 10 la sută.</p>
+      <p>În practică, un salariat păstrează în jur de 58 până la 59 la sută din brut, o dată ce venitul depășește pragul la care se mai aplică deducerea personală. Aplicăm parametrii fiscali în vigoare în 2026 și îi actualizăm când legislația se schimbă.</p>
+
+      <h2>Sursele pe care ne bazăm</h2>
+      <p>Pentru estimările salariale folosim informații publice, printre care date de la Institutul Național de Statistică, comparații europene, sondaje salariale publice și grilele de salarizare din sectorul bugetar prevăzute de lege.</p>
+      <p>Pentru articolele editoriale mergem mai departe și verificăm fiecare cifră importantă în surse de referință: legislația aplicabilă, colegiile și organizațiile profesionale, publicații economice și date oficiale de piață. Când o informație vine dintr-o estimare de presă, nu dintr-o sursă primară, o prezentăm ca atare.</p>
+
+      <h2>Cât de des actualizăm</h2>
+      <p>Revizuim datele periodic și la fiecare schimbare importantă de legislație, cum sunt modificările salariului minim sau ale regulilor fiscale. Articolele poartă data publicării și, unde e cazul, data ultimei actualizări.</p>
+
+      <h2>Ai găsit o greșeală</h2>
+      <p>Dacă observi o cifră care nu se potrivește cu realitatea din domeniul tău, scrie-ne. Corectăm cu plăcere și apreciem semnalările. Ne poți contacta la <strong>contact@meseriile.ro</strong>.</p>
+    </div>
+  </div>
+</Layout>

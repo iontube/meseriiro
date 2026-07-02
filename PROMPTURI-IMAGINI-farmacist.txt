@@ -1,0 +1,72 @@
+========================================================================
+PROMPTURI IMAGINI — articol "Cât câștigă un farmacist" (sanatate)
+========================================================================
+3 imagini. Fotorealiste, editorial, sa NU para generate cu AI.
+Fluxul: generezi -> pui PNG/JPG in /sites/meseriile-img-work/_incoming/
+-> eu comprim WebP + urc pe img.meseriile.ro.
+
+Denumeste fisierele EXACT cu numele-cheie de mai jos (ca sa le potrivesc):
+  1. salariu-farmacist-farmacie-comunitara   (HERO, 16:9)
+  2. farmacist-diriginte-receptura-medicamente  (inline, 3:2)
+  3. farmacist-consiliere-pacient-ghiseu         (inline, 3:2)
+
+Engleza da imagini mai realiste. Cheia anti-AI = randul de negative de la
+finalul fiecarui prompt (pastreaza-l).
+========================================================================
+
+
+------------------------------------------------------------------------
+1. HERO 16:9  ->  salariu-farmacist-farmacie-comunitara
+------------------------------------------------------------------------
+Photorealistic editorial photograph, 35mm lens, f/2.8, shot on a full-frame
+camera, natural documentary style. A female pharmacist in her 30s wearing a
+clean white pharmacy coat stands behind the counter of a modern Romanian
+community pharmacy, handing a small white medicine box to a customer whose
+back is to the camera. Warm natural daylight from a shopfront window mixes
+with soft ceiling light. Behind her, orderly shelves with neutral, unbranded
+medicine boxes and a green cross sign softly out of focus. Realistic skin with
+natural texture and pores, relaxed genuine expression, both hands correctly
+shaped holding the box naturally. Slight depth of field, background gently
+blurred. Candid, warm, trustworthy mood, wide 16:9 framing with headroom.
+Realistic human anatomy, correct hands with five fingers, correctly shaped
+medicine boxes and shelves, no readable text, no letters, no logos, no brand
+names, no watermarks. No extra fingers, no fused or distorted hands, no
+floating objects, no warped shelving, no gibberish text, avoid plastic
+over-smoothed skin, avoid perfect symmetry, natural imperfect lighting.
+
+
+------------------------------------------------------------------------
+2. INLINE 3:2  ->  farmacist-diriginte-receptura-medicamente
+------------------------------------------------------------------------
+Photorealistic editorial photograph, 50mm lens, f/2.5, natural documentary
+style. A pharmacist in a white coat stands in the back dispensing area of a
+pharmacy, focused and professional, checking a medicine box against a small
+handheld tablet while restocking a shelf of neatly arranged unbranded boxes
+and bottles. Cool, even clinical lighting. The person looks in their 40s, calm
+and responsible, wearing the demeanor of a manager. Hands correctly shaped,
+one holding the box, one holding the tablet. Shallow depth of field on the
+shelves behind. Vertical drawers and organized storage visible. 3:2 horizontal
+framing. Realistic human anatomy, correct hands with five fingers, correctly
+shaped tablet and boxes, no readable text, no letters, no logos, no
+watermarks, no gibberish text. No extra fingers, no fused hands, no floating
+objects, no warped devices, avoid plastic skin, avoid AI gloss, natural
+realistic lighting and true-to-life colors.
+
+
+------------------------------------------------------------------------
+3. INLINE 3:2  ->  farmacist-consiliere-pacient-ghiseu
+------------------------------------------------------------------------
+Photorealistic editorial photograph, 50mm lens, f/2.0, close candid
+documentary style. Over-the-counter view focusing on the hands of a pharmacist
+in a white coat pointing to the dosage area of a plain white medicine box
+while explaining it to an elderly customer across the counter, whose hands are
+also visible receiving guidance. Warm natural light. Emphasis on the two pairs
+of hands and the medicine box, faces partly out of frame or softly blurred.
+Shallow depth of field, intimate and helpful mood. 3:2 framing. Realistic
+human anatomy, correct hands with five fingers on every hand, correctly shaped
+medicine box, no readable text, no letters, no logos, no watermarks, no
+gibberish text. No extra fingers, no fused or duplicated hands, no floating
+objects, avoid plastic over-smoothed skin, avoid artificial AI look, natural
+realistic skin texture including on elderly hands, true-to-life colors and
+soft natural shadows.
+========================================================================

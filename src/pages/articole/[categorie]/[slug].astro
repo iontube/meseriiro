@@ -29,6 +29,8 @@ const { Content } = await render(post);
 
 const fmtDate = (d: Date) =>
   d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+const salaryDate = post.data.updatedDate ?? post.data.pubDate;
+const salaryMonthYear = salaryDate.toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
 
 const related = post.data.relatedMeserii
   .map((s) => getMeserieBySlug(s))
@@ -47,7 +49,11 @@ const jsonLd = JSON.stringify({
   datePublished: post.data.pubDate.toISOString(),
   dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
   ...(hero ? { image: [hero] } : {}),
-  author: { '@type': 'Organization', name: 'Meseriile.ro' },
+  author: {
+    '@type': 'Organization',
+    name: 'Redacția Meseriile.ro',
+    url: 'https://meseriile.ro/redactia/',
+  },
   publisher: {
     '@type': 'Organization',
     name: 'Meseriile.ro',
@@ -88,6 +94,8 @@ const schemas = [jsonLd, faqJsonLd, breadcrumbSchema].filter((s): s is string =>
     canonical={canonical}
     ogType="article"
     ogImage={hero}
+    ogImageWidth={post.data.heroImage ? 1600 : 1200}
+    ogImageHeight={post.data.heroImage ? 900 : 630}
     appendSite={false}
     publishedTime={post.data.pubDate.toISOString()}
     modifiedTime={(post.data.updatedDate ?? post.data.pubDate).toISOString()}
@@ -106,12 +114,12 @@ const schemas = [jsonLd, faqJsonLd, breadcrumbSchema].filter((s): s is string =>
 
   <article class="mx-auto w-full max-w-[46rem] px-4 sm:px-6 lg:px-8 pb-16">
     <header class="mb-8">
-      <div class="flex items-center gap-2 mb-4 text-sm text-surface-500">
-        {cat && <a href={`/articole/${cat.slug}/`} class="badge badge-brand no-underline">{cat.nume}</a>}
-        <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
-        {post.data.updatedDate && (
-          <span class="text-surface-400">· actualizat {fmtDate(post.data.updatedDate)}</span>
-        )}
+      <div class="flex flex-col gap-1 mb-4 text-sm text-surface-500">
+        <div class="flex flex-wrap items-center gap-2">
+          {cat && <a href={`/articole/${cat.slug}/`} class="badge badge-brand no-underline">{cat.nume}</a>}
+          <time datetime={salaryDate.toISOString()}>Salarii actualizate în {salaryMonthYear}</time>
+        </div>
+        <div>Scris de <a href="/redactia/" class="text-surface-700 font-medium hover:text-brand-600">Redacția Meseriile.ro</a></div>
       </div>
       <h1 class="text-3xl sm:text-4xl font-heading font-bold text-surface-900 leading-tight mb-4">
         {post.data.title}
@@ -133,6 +141,21 @@ const schemas = [jsonLd, faqJsonLd, breadcrumbSchema].filter((s): s is string =>
 
     <div class="article-content">
       <Content />
+    </div>
+
+    <p class="mt-8 text-sm text-surface-500 border-t border-surface-200 pt-4">
+      Cifrele salariale sunt estimări nete, orientative, bazate pe date publice și pe legislația în vigoare. Vezi <a href="/despre-date/" class="text-brand-600 font-medium hover:underline">cum estimăm salariile</a> și ce surse folosim.
+    </p>
+
+    <div class="mt-8 card p-5 sm:p-6 bg-surface-50/60 flex items-start gap-4">
+      <div class="shrink-0 w-14 h-14 rounded-full bg-brand-600 text-white flex items-center justify-center font-heading font-bold text-2xl select-none">M</div>
+      <div>
+        <p class="text-xs uppercase tracking-wide text-surface-500 mb-0.5">Scris de</p>
+        <a href="/redactia/" class="font-heading font-bold text-lg text-surface-900 hover:text-brand-600 no-underline">Redacția Meseriile.ro</a>
+        <p class="mt-1.5 text-sm text-surface-600 leading-relaxed">
+          Echipa care documentează piața muncii din România. Scriem despre salarii și cariere pornind de la datele reale ale directorului, verificate în surse oficiale înainte de publicare. <a href="/redactia/" class="text-brand-600 font-medium hover:underline">Despre redacție</a>
+        </p>
+      </div>
     </div>
 
     {related.length > 0 && (

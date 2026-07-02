@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { buildBreadcrumbSchema } from '../helpers/structured-data';
+
+const breadcrumbs = [{ label: 'Redacția' }];
+
+// schema: entitatea editoriala + breadcrumb
+const orgSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Redacția Meseriile.ro',
+  url: 'https://meseriile.ro/redactia/',
+  parentOrganization: { '@type': 'Organization', name: 'Meseriile.ro', url: 'https://meseriile.ro/' },
+  description:
+    'Echipa editorială care documentează piața muncii din România și scrie despre salarii și cariere pe Meseriile.ro.',
+  email: 'contact@meseriile.ro',
+  knowsAbout: ['salarii', 'piața muncii', 'cariere', 'meserii', 'salarizare în România'],
+});
+const bc = buildBreadcrumbSchema([
+  { label: 'Acasă', href: '/' },
+  { label: 'Redacția' },
+]);
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title="Redacția Meseriile.ro"
+    description="Cine scrie articolele de pe Meseriile.ro, cum documentăm salariile și meseriile și ce reguli de acuratețe respectăm înainte de publicare."
+    canonical="/redactia/"
+    jsonLd={[orgSchema, bc]}
+  />
+
+  <div class="container-narrow py-8">
+    <Breadcrumb items={breadcrumbs} />
+
+    <h1 class="text-3xl font-heading font-bold text-surface-900 mb-6">Redacția Meseriile.ro</h1>
+
+    <div class="prose-custom">
+      <p>Articolele de pe Meseriile.ro sunt scrise de redacția Meseriile.ro, o echipă care documentează piața muncii din România și explică salariile și carierele pe înțelesul oricui. Aici găsești cine suntem, cum lucrăm și pe ce ne bazăm.</p>
+
+      <h2>Ce facem</h2>
+      <p>Ținem un director cu peste 400 de meserii și date salariale pentru 41 de orașe, iar în <a href="/articole/">secțiunea de articole</a> mergem dincolo de cifra seacă. Explicăm cât câștigă efectiv un profesionist, cum crește venitul cu experiența, ce diferențe există între orașe și angajatori, ce studii și autorizări sunt necesare și cum arată meseria în practică.</p>
+
+      <h2>Cum documentăm un articol</h2>
+      <p>Fiecare articol pleacă de la o întrebare reală pe care oamenii o caută și răspunde la ea complet, nu pe jumătate. Procesul nostru este simplu și constant:</p>
+      <ul>
+        <li>Pornim de la datele reale ale directorului, calibrate pe coduri COR și pe orașe.</li>
+        <li>Completăm cu cercetare în surse primare: legislație, colegii și organizații profesionale, date oficiale de piață și publicații de specialitate.</li>
+        <li>Verificăm fiecare cifră importantă înainte de publicare și separăm clar datele sigure de estimări.</li>
+        <li>Actualizăm articolele când se schimbă legislația, salariul minim sau regulile fiscale.</li>
+      </ul>
+
+      <h2>Regulile noastre de acuratețe</h2>
+      <p>Nu inventăm date și nu facem afirmații pe care nu le putem susține. Când o cifră este o estimare, spunem că este o estimare. Când o informație vine dintr-o singură sursă de presă, nu dintr-o sursă oficială, o prezentăm ca atare.</p>
+      <p>Salariile pe care le publicăm sunt sume nete, orientative, gândite ca punct de plecare pentru o discuție de salariu, nu ca oferte exacte. Metoda completă este explicată în pagina <a href="/despre-date/">Cum estimăm salariile</a>.</p>
+
+      <h2>Scrie-ne</h2>
+      <p>Primim cu plăcere corecții, întrebări și propuneri de subiecte. Dacă o cifră nu se potrivește cu realitatea din domeniul tău, spune-ne la <strong>contact@meseriile.ro</strong> și o verificăm.</p>
+    </div>
+  </div>
+</Layout>

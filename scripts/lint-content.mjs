@@ -134,7 +134,7 @@ for (const f of files) {
   // lungime (corp + FAQ)
   const wc = wordCount(scanText);
   if (wc < 1500) problems.push({ sev: 'HARD', line: 0, msg: `prea scurt: ${wc} cuvinte (min 1500)` });
-  else if (wc > 3000) problems.push({ sev: 'WARN', line: 0, msg: `peste țintă: ${wc} cuvinte (max ~3000)` });
+  else if (wc > 6500) problems.push({ sev: 'WARN', line: 0, msg: `foarte lung: ${wc} cuvinte (verifică umplutura, țintă ~4000-5000)` });
 
   scanLines(scanText, WARN_BODY).forEach((h) =>
     problems.push({ sev: 'WARN', line: h.line, msg: `de verificat: "${h.term.trim()}"` }));
