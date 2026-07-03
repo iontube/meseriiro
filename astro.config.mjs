@@ -42,7 +42,7 @@ export default defineConfig({
       // lastmod DETERMINIST = când s-a schimbat ultima dată conținutul directorului.
       // NU new Date() (altfel sitemap-urile nemodificate primesc data build-ului la fiecare rulare).
       // Bump-uiește DOAR când chiar actualizezi datele meseriilor.
-      lastmod: new Date('2026-05-30T08:19:37.021Z'),
+      lastmod: new Date('2026-07-03T13:00:00.000Z'),
       // /articole/* au sitemap dedicat (cu imagini) generat de scripts/sitemap-articole.mjs
       filter: (page) => !page.includes('/articole/'),
       serialize(item) {

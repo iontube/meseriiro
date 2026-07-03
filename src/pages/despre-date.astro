@@ -27,11 +27,16 @@ const breadcrumbs = [{ label: 'Cum estimăm salariile' }];
       <p>Recomandăm folosirea datelor ca punct de plecare pentru o discuție de salariu, nu ca sumă exactă la care te poți aștepta.</p>
 
       <h2>Cum sunt calculate</h2>
-      <p>Fiecare meserie este legată de un cod din Clasificarea Ocupațiilor din România (COR). Pornind de la acesta, estimările sunt calibrate pe baza informațiilor publice despre nivelul de salarizare din domeniul respectiv și ajustate pe orașe în funcție de diferențele cunoscute dintre marile centre și restul țării.</p>
+      <p>Fiecare meserie este legată de un cod din Clasificarea Ocupațiilor din România (COR) și de un domeniu de activitate. Media salarială pornește de la datele oficiale ale Institutului Național de Statistică (INS): câștigul salarial mediu net pe activități ale economiei (secțiuni CAEN) și pe județe.</p>
+      <p>Pe scurt, pentru fiecare meserie luăm nivelul real al domeniului ei din datele INS și îl ajustăm în sus sau în jos în funcție de poziția meseriei față de media domeniului. Pentru fiecare oraș aplicăm apoi coeficientul real al județului respectiv, tot din datele INS.</p>
       <p>Nu extragem salariile persoanelor individuale. Lucrăm cu medii și intervale, nu cu date personale.</p>
 
       <h2>Ce înseamnă minim, mediu și maxim</h2>
-      <p>Pentru fiecare meserie afișăm trei valori. Minimul reflectă în general nivelul de intrare, fără experiență. Media este reperul central, tipic pentru cineva cu câțiva ani de experiență. Maximul indică ce câștigă cei cu experiență mare, specializare sau roluri de coordonare.</p>
+      <p>Pentru fiecare meserie afișăm trei valori. Minimul reflectă în general nivelul de intrare, fără experiență. Media este reperul central, ancorat în datele INS, tipic pentru cineva cu câțiva ani de experiență. Maximul indică ce câștigă cei cu experiență mare, specializare sau roluri de coordonare.</p>
+      <p>Intervalul dintre minim și maxim nu este fix, ci diferă de la o meserie la alta. La meseriile de intrare, unde salariile sunt apropiate, intervalul este strâns. La meseriile cu specializare mare, unde diferența dintre un începător și un senior e uriașă, intervalul este mult mai larg.</p>
+
+      <h2>Sursele datelor</h2>
+      <p>Reperul principal este Institutul Național de Statistică, prin comunicatele lunare despre câștigul salarial mediu net și prin datele pe județe și pe activități ale economiei. Pentru unele meserii folosim în plus repere publice din piață și, la profesiile din sectorul public, grilele stabilite prin lege.</p>
 
       <h2>Net sau brut</h2>
       <p>Cifrele afișate sunt sume nete, adică banii care ajung efectiv la angajat. În România, din salariul brut se rețin contribuția la pensie de 25 la sută, contribuția la sănătate de 10 la sută și impozitul pe venit de 10 la sută.</p>
