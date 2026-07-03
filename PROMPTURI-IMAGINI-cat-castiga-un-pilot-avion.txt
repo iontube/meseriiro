@@ -1,0 +1,47 @@
+PROMPTURI IMAGINI — articol "Cât câștigă un pilot de avion" (transport-logistica)
+================================================================================
+Generează 3 imagini FOTOREALISTE. Pune-le apoi în:
+  /sites/meseriile-img-work/_incoming/
+și spune-mi. Le comprim WebP + urc eu (nu schimba numele).
+
+Nume finale (ce reprezintă fiecare):
+  1. HERO  16:9 -> salariu-pilot-avion-cockpit.webp
+  2. INLINE 3:2 -> pilot-scoala-zbor-cessna.webp
+  3. INLINE 3:2 -> pilot-comandant-cabina-airliner.webp
+
+FORMAT (IMPORTANT — selectează raportul în tool ÎNAINTE de generare):
+  - HERO   = 16:9 WIDESCREEN, orizontal lat (ex. 1792x1024). Cere explicit "16:9".
+  - INLINE = 3:2 orizontal (ex. 1536x1024).
+
+Reguli comune (anti-eroare AI), la FIECARE prompt:
+  - fotografie realistă, mirrorless, 35-50mm, lumină naturală / lumină de carlingă reală
+  - piele cu textură reală, materiale reale, umbre naturale
+  - fără fețe deformate, fără mâini cu degete în plus
+  - fără text/sigle/logo inventate pe uniforme, avioane sau instrumente (fără scris ilizibil)
+  - fără branduri reale identificabile (fără livrea Wizz/Tarom etc.)
+  - EVITĂ aspectul de plastic / luciu AI / redare de reclamă
+
+--------------------------------------------------------------------------
+1. HERO (16:9 WIDESCREEN, ex. 1792x1024) — pilot în carlingă
+--------------------------------------------------------------------------
+Un pilot de avion de linie, bărbat sau femeie la ~35 de ani, în cămașă albă de
+uniformă cu epoleți (fără logo), stând în scaunul din stânga în carlinga unui
+avion de pasageri. Mâinile pe manete, privire concentrată înainte, panouri de
+instrumente iluminate în jur. Lumină caldă de cabină la apus prin parbriz.
+Realist, documentar, nu pozat. Profunzime de câmp mică.
+
+--------------------------------------------------------------------------
+2. INLINE (3:2, ex. 1536x1024) — elev pilot la școala de zbor
+--------------------------------------------------------------------------
+Un elev pilot tânăr, cu cască de aviație pe cap, lângă un avion mic monomotor
+de școală (tip Cessna, alb, fără însemne comerciale) pe pista unui aerodrom
+mic. Ține în mână documentele de zbor, verifică aripa înainte de decolare.
+Lumină de dimineață, cer senin. Aspect real de instruire, nu reclamă.
+
+--------------------------------------------------------------------------
+3. INLINE (3:2, ex. 1536x1024) — comandant în cabina unui avion de linie
+--------------------------------------------------------------------------
+Un comandant de aeronavă, cu patru trese pe epoleți (fără logo), în cabina de
+pilotaj a unui avion de linie modern, verificând instrumentele înainte de
+decolare. Se văd panourile cu ecrane și manetele de gaze. Coleg prim ofițer
+ușor neclar în dreapta. Lumină de cabină realistă, atmosferă profesională.
