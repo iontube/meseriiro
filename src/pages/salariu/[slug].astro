@@ -5,6 +5,8 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import SalaryTable from '../../components/SalaryTable.astro';
 import FAQSection from '../../components/FAQSection.astro';
 import SalaryCalculator from '../../components/SalaryCalculator.astro';
+import ArticolCard from '../../components/ArticolCard.astro';
+import { getArticolePtMeserie } from '../../helpers/articole';
 import { meserii, getDomeniuForMeserie, formatSalariu, getNivelCerereLabel, getOraseWithSalariu } from '../../helpers/data';
 import { buildBreadcrumbSchema, buildSalaryPageSchema, buildFAQSchema } from '../../helpers/structured-data';
 import { getDomeniuAverageSalary } from '../../helpers/interlinking';
@@ -23,6 +25,7 @@ interface Props {
 
 const { meserie } = Astro.props;
 const domeniu = getDomeniuForMeserie(meserie);
+const articoleMeserie = await getArticolePtMeserie(meserie.slug, 2);
 const oraseData = getOraseWithSalariu(meserie);
 const domeniuAvg = domeniu ? getDomeniuAverageSalary(domeniu.id) : 0;
 const oraseSorted = [...oraseData].sort((a, b) => b.salariu.mediu - a.salariu.mediu);
@@ -160,6 +163,16 @@ const salariuFaq = [
               </span>
             </a>
           ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Articol despre această meserie (exact-match spre cluster editorial) -->
+    {articoleMeserie.length > 0 && (
+      <section class="mb-10">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">Articole relevante</h2>
+        <div class="grid gap-5 sm:grid-cols-2">
+          {articoleMeserie.map(post => <ArticolCard post={post} />)}
         </div>
       </section>
     )}

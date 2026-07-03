@@ -1,0 +1,26 @@
+---
+import { imgUrl, type ArticolEntry } from '../helpers/articole';
+
+interface Props {
+  post: ArticolEntry;
+}
+const { post } = Astro.props;
+const img = imgUrl(post.data.heroImage);
+const fmtData = (d: Date) => d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<article class="card overflow-hidden flex flex-col">
+  <a href={`/articole/${post.id}/`} class="block no-underline" aria-hidden="true" tabindex="-1">
+    {img
+      ? <img src={img} alt={post.data.heroAlt ?? post.data.title} width="1200" height="675" loading="lazy" class="aspect-video w-full object-cover bg-surface-100" />
+      : <div class="aspect-video w-full bg-gradient-to-br from-surface-100 to-surface-200"></div>}
+  </a>
+  <div class="p-5 flex flex-col flex-1">
+    <time class="text-xs text-surface-500 mb-2" datetime={post.data.pubDate.toISOString()}>{fmtData(post.data.pubDate)}</time>
+    <h3 class="font-heading font-bold text-base text-surface-900 mb-2 leading-snug">
+      <a href={`/articole/${post.id}/`} class="no-underline hover:text-brand-600 transition-colors">{post.data.title}</a>
+    </h3>
+    <p class="text-surface-600 text-sm leading-relaxed flex-1">{post.data.description}</p>
+    <a href={`/articole/${post.id}/`} class="text-brand-600 hover:text-brand-800 text-sm font-medium mt-4 no-underline">Citește articolul →</a>
+  </div>
+</article>

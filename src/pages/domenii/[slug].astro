@@ -3,9 +3,11 @@ import Layout from '../../layouts/Layout.astro';
 import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import MeserieCard from '../../components/MeserieCard.astro';
+import ArticolCard from '../../components/ArticolCard.astro';
 import { domenii, getMeseriiByDomeniu } from '../../helpers/data';
 import { buildBreadcrumbSchema, buildWebPageSchema } from '../../helpers/structured-data';
 import { getRelatedDomenii, getTopSalaryInDomeniu, getCompetenteInDomeniu } from '../../helpers/interlinking';
+import { getArticoleByCategorie } from '../../helpers/articole';
 import type { Domeniu } from '../../helpers/types';
 
 export function getStaticPaths() {
@@ -24,6 +26,10 @@ const meseriiDomeniu = getMeseriiByDomeniu(domeniu.id);
 const relatedDomenii = getRelatedDomenii(domeniu.id, 4);
 const topSalarii = getTopSalaryInDomeniu(domeniu.id, 5);
 const competenteDomeniu = getCompetenteInDomeniu(domeniu.id);
+
+// Articole din acest domeniu (categoria articolelor = slug-ul domeniului). Teaser + link spre hub.
+const articoleDomeniu = await getArticoleByCategorie(domeniu.slug);
+const articoleTeaser = articoleDomeniu.slice(0, 6);
 
 const breadcrumbs = [
   { label: 'Domenii', href: '/domenii/' },
@@ -98,6 +104,21 @@ const breadcrumbs = [
             {link.text}
           </a>
         ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Articole din domeniu (cluster editorial -> întărește topical authority) -->
+  {articoleTeaser.length > 0 && (
+    <section class="container-custom pb-12">
+      <div class="flex items-end justify-between gap-4 mb-4">
+        <h2 class="text-xl font-heading font-bold text-surface-900">Articole din {domeniu.nume}</h2>
+        <a href={`/articole/${domeniu.slug}/`} class="text-sm font-medium text-brand-600 hover:text-brand-800 no-underline whitespace-nowrap">
+          {articoleDomeniu.length > articoleTeaser.length ? `Toate cele ${articoleDomeniu.length} articole →` : 'Vezi toate →'}
+        </a>
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {articoleTeaser.map(post => <ArticolCard post={post} />)}
       </div>
     </section>
   )}

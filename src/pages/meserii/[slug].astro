@@ -4,9 +4,11 @@ import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import SalaryTable from '../../components/SalaryTable.astro';
 import FAQSection from '../../components/FAQSection.astro';
+import ArticolCard from '../../components/ArticolCard.astro';
 import { meserii, getDomeniuForMeserie, getCompetentePentruMeserie, formatSalariu, getNivelCerereLabel } from '../../helpers/data';
 import { buildBreadcrumbSchema, buildFAQSchema, buildOccupationSchema } from '../../helpers/structured-data';
 import { getMeserieSiloLinks } from '../../helpers/interlinking';
+import { getArticolePtMeserie } from '../../helpers/articole';
 import type { Meserie } from '../../helpers/types';
 
 export function getStaticPaths() {
@@ -24,6 +26,7 @@ const { meserie } = Astro.props;
 const domeniu = getDomeniuForMeserie(meserie);
 const competenteMeserie = getCompetentePentruMeserie(meserie);
 const siloLinks = getMeserieSiloLinks(meserie);
+const articoleMeserie = await getArticolePtMeserie(meserie.slug, 2);
 
 const breadcrumbs = [
   { label: 'Meserii', href: '/meserii/' },
@@ -171,6 +174,16 @@ const jsonLd = [
           * Salariile sunt estimative, exprimate în lei net/lună. Pot varia semnificativ în funcție de experiență, angajator și specificul postului.
         </p>
       </section>
+
+      <!-- Articol despre această meserie (link exact-match spre cluster editorial) -->
+      {articoleMeserie.length > 0 && (
+        <section>
+          <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">Articole relevante</h2>
+          <div class="grid gap-5 sm:grid-cols-2">
+            {articoleMeserie.map(post => <ArticolCard post={post} />)}
+          </div>
+        </section>
+      )}
 
       <!-- Meserii similare -->
       {siloLinks.meseriiSimilare.length > 0 && (

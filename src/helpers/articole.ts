@@ -67,6 +67,12 @@ export async function getArticoleByCategorie(categorie: string): Promise<Articol
   return posts.filter((p) => splitId(p.id).categorie === categorie);
 }
 
+/** Articolele care menționează o meserie (prin relatedMeserii), cele mai noi primele. */
+export async function getArticolePtMeserie(meserieSlug: string, limit = 3): Promise<ArticolEntry[]> {
+  const posts = await getArticolePublicate();
+  return posts.filter((p) => p.data.relatedMeserii.includes(meserieSlug)).slice(0, limit);
+}
+
 /**
  * Articole similare din ACELAȘI cluster (categorie), excluzând articolul curent.
  * Prioritizează cele care împart meserii (relatedMeserii), apoi cele recente.
