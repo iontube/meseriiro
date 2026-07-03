@@ -1,0 +1,306 @@
+---
+/**
+ * Calculator salariu net <-> brut 2026 (client-side, static-safe).
+ * Un singur cod, două plasări: pagina standalone /calculator-salariu/ (gol)
+ * și încorporat pe paginile /salariu/ (pre-completat cu netul meseriei).
+ *
+ * Parametri fiscali 2026 (S2, de la 1 iul 2026) hardcodați în JS-ul de mai jos:
+ * salariu minim 4.325 lei, CAS 25%, CASS 10%, impozit 10%, CAM 2,25%,
+ * deducere personală = procent × brut (prag brut <= minim+2.000), facilitate 200 lei la minim.
+ */
+interface Props {
+  /** valoare pre-completată (lei/lună) */
+  valoare?: number;
+  /** modul inițial: 'brut' = brut->net, 'net' = net->brut */
+  mod?: 'brut' | 'net';
+  /** titlu opțional deasupra calculatorului (ex. pe pagina /salariu/) */
+  titlu?: string;
+  /** context scurt sub titlu (ex. „pentru meseria de sudor") */
+  context?: string;
+  /** id unic dacă apar mai multe pe pagină (rar) */
+  id?: string;
+}
+const { valoare, mod = 'brut', titlu, context, id = 'calc' } = Astro.props;
+---
+
+<div
+  class="salary-calc card p-6 sm:p-7"
+  data-salary-calc
+  data-mod={mod}
+  data-valoare={valoare ? String(valoare) : ''}
+  id={id}
+>
+  {titlu && (
+    <div class="mb-5">
+      <h2 class="text-xl font-heading font-bold text-surface-900">{titlu}</h2>
+      {context && <p class="text-sm text-surface-600 mt-1">{context}</p>}
+    </div>
+  )}
+
+  <!-- Mode toggle -->
+  <div class="sc-toggle grid grid-cols-2 gap-1 p-1 bg-surface-100 rounded-button mb-5" role="tablist">
+    <button type="button" data-mod-btn="brut" class="sc-tab py-2.5 px-3 rounded-md text-sm font-semibold transition-colors" aria-pressed="false">
+      Brut → Net
+    </button>
+    <button type="button" data-mod-btn="net" class="sc-tab py-2.5 px-3 rounded-md text-sm font-semibold transition-colors" aria-pressed="false">
+      Net → Brut
+    </button>
+  </div>
+
+  <!-- Main input -->
+  <label class="block mb-4">
+    <span data-input-label class="block text-sm font-medium text-surface-700 mb-1.5">Salariu brut lunar</span>
+    <div class="relative">
+      <input
+        data-amount
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        class="w-full text-2xl font-heading font-bold text-surface-900 tabular-nums bg-surface-50 border border-surface-300 rounded-button pl-4 pr-16 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+        placeholder="0"
+      />
+      <span class="absolute right-4 top-1/2 -translate-y-1/2 text-surface-500 font-medium pointer-events-none">lei</span>
+    </div>
+  </label>
+
+  <!-- Advanced options -->
+  <details class="sc-adv mb-5 group">
+    <summary class="cursor-pointer text-sm font-medium text-brand-600 hover:text-brand-700 select-none list-none flex items-center gap-1.5">
+      <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      Opțiuni avansate
+    </summary>
+    <div class="mt-4 space-y-4 pl-1">
+      <label class="flex items-center justify-between gap-3">
+        <span class="text-sm text-surface-700">Persoane în întreținere</span>
+        <input data-opt="persoane" type="number" min="0" max="10" value="0" class="w-20 text-sm text-center tabular-nums border border-surface-300 rounded-button py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+      </label>
+      <label class="flex items-center justify-between gap-3">
+        <span class="text-sm text-surface-700">Tichete de masă <span class="text-surface-400">(zile × lei)</span></span>
+        <span class="flex items-center gap-1.5">
+          <input data-opt="ticheteZile" type="number" min="0" max="23" value="0" class="w-16 text-sm text-center tabular-nums border border-surface-300 rounded-button py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+          <span class="text-surface-400">×</span>
+          <input data-opt="ticheteVal" type="number" min="0" max="45" value="40" class="w-16 text-sm text-center tabular-nums border border-surface-300 rounded-button py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+        </span>
+      </label>
+      <label class="flex items-center justify-between gap-3">
+        <span class="text-sm text-surface-700">Am sub 26 de ani</span>
+        <input data-opt="tineri" type="checkbox" class="w-5 h-5 accent-brand-600" />
+      </label>
+    </div>
+  </details>
+
+  <!-- Result: headline -->
+  <div class="rounded-card bg-brand-50 border border-brand-100 p-5 text-center mb-4">
+    <p data-result-label class="text-sm text-brand-700 font-medium mb-1">Salariu net în mână</p>
+    <p class="flex items-baseline justify-center gap-1.5">
+      <span data-result-main class="text-4xl sm:text-5xl font-heading font-extrabold text-brand-700 tabular-nums">0</span>
+      <span class="text-lg text-brand-600 font-semibold">lei/lună</span>
+    </p>
+  </div>
+
+  <!-- Breakdown -->
+  <dl class="text-sm divide-y divide-surface-100">
+    <div class="flex items-center justify-between py-2.5">
+      <dt class="text-surface-600">Salariu brut</dt>
+      <dd data-r="brut" class="font-semibold text-surface-900 tabular-nums">0 lei</dd>
+    </div>
+    <div class="flex items-center justify-between py-2.5">
+      <dt class="text-surface-600">CAS – pensie (25%)</dt>
+      <dd data-r="cas" class="font-medium text-surface-700 tabular-nums">0 lei</dd>
+    </div>
+    <div class="flex items-center justify-between py-2.5">
+      <dt class="text-surface-600">CASS – sănătate (10%)</dt>
+      <dd data-r="cass" class="font-medium text-surface-700 tabular-nums">0 lei</dd>
+    </div>
+    <div data-row="deducere" class="flex items-center justify-between py-2.5">
+      <dt class="text-surface-600">Deducere personală</dt>
+      <dd data-r="deducere" class="font-medium text-emerald-600 tabular-nums">0 lei</dd>
+    </div>
+    <div class="flex items-center justify-between py-2.5">
+      <dt class="text-surface-600">Impozit pe venit (10%)</dt>
+      <dd data-r="impozit" class="font-medium text-surface-700 tabular-nums">0 lei</dd>
+    </div>
+    <div data-row="tichete" class="flex items-center justify-between py-2.5" hidden>
+      <dt class="text-surface-600">Tichete de masă (net)</dt>
+      <dd data-r="tichete" class="font-medium text-surface-700 tabular-nums">0 lei</dd>
+    </div>
+    <div class="flex items-center justify-between py-3 border-t-2 border-surface-200">
+      <dt class="font-semibold text-surface-900">Salariu net total</dt>
+      <dd data-r="net" class="font-bold text-brand-700 tabular-nums">0 lei</dd>
+    </div>
+  </dl>
+
+  <!-- Secondary stats -->
+  <div class="grid grid-cols-2 gap-3 mt-4">
+    <div class="rounded-card bg-surface-50 border border-surface-200 p-3.5 text-center">
+      <p class="text-xs text-surface-500 font-medium mb-0.5">Cost total angajator</p>
+      <p data-r="cost" class="text-lg font-heading font-bold text-surface-800 tabular-nums">0 lei</p>
+    </div>
+    <div class="rounded-card bg-surface-50 border border-surface-200 p-3.5 text-center">
+      <p class="text-xs text-surface-500 font-medium mb-0.5">Brut pe oră</p>
+      <p data-r="ora" class="text-lg font-heading font-bold text-surface-800 tabular-nums">0 lei</p>
+    </div>
+  </div>
+
+  <p class="text-xs text-surface-400 mt-4 leading-relaxed">
+    Estimare pentru cazul standard 2026 (salariu minim 4.325 lei de la 1 iul 2026). Vezi
+    <a href="/despre-date/" class="underline decoration-surface-300 hover:text-brand-600">metodologia</a>.
+  </p>
+</div>
+
+<script>
+  // ==== Parametri fiscali 2026 (S2, de la 1 iulie 2026) ====
+  const P = {
+    minim: 4325,
+    cas: 0.25,
+    cass: 0.10,
+    impozit: 0.10,
+    cam: 0.0225,
+    pragDeducere: 6325, // minim + 2.000 lei
+    facilitate: 200,    // lei neimpozabili la salariul minim (iul-dec 2026)
+    oreLunar: 166.67,
+  };
+
+  const nf = new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 });
+  const lei = (n) => nf.format(Math.round(n)) + ' lei';
+
+  // Deducere personală de bază = procent din grilă × venitul BRUT, rotunjit la 10 lei în sus.
+  function deducereBaza(brut, persoane) {
+    if (brut > P.pragDeducere) return 0;
+    // grila art. 77: 20% la nivelul minimului, -0,5 pp pentru fiecare tranșă de 50 lei peste minim
+    const trepte = Math.ceil(Math.max(0, brut - P.minim) / 50);
+    let pct = Math.max(0, 20 - 0.5 * trepte);
+    const p = Math.max(0, persoane | 0);
+    pct += p === 0 ? 0 : (p >= 4 ? 25 : p * 5);
+    if (pct <= 0) return 0;
+    return Math.ceil((brut * pct / 100) / 10) * 10;
+  }
+
+  function brutToNet(brut, o) {
+    o = o || {};
+    const laMinim = Math.abs(brut - P.minim) < 0.5;
+    const facil = laMinim ? P.facilitate : 0;
+    const baza = brut - facil;
+    const cas = Math.round(baza * P.cas);
+    const cass = Math.round(baza * P.cass);
+    let deducere = deducereBaza(brut, o.persoane || 0);
+    if (o.tineri) deducere += Math.round(0.15 * P.minim); // deducere suplimentară tineri <26
+    const bazaImpozit = Math.max(0, baza - cas - cass - deducere);
+    const impozit = Math.round(bazaImpozit * P.impozit);
+    const netSalariu = brut - cas - cass - impozit;
+
+    // Tichete de masă: intră în baza CASS + impozit, NU în CAS/CAM
+    const tichete = Math.max(0, o.tichete || 0);
+    let cassTichete = 0, impozitTichete = 0, ticheteNet = 0;
+    if (tichete > 0) {
+      cassTichete = Math.round(tichete * P.cass);
+      impozitTichete = Math.round((tichete - cassTichete) * P.impozit);
+      ticheteNet = tichete - cassTichete - impozitTichete;
+    }
+
+    const cam = Math.round(brut * P.cam);
+    return {
+      brut,
+      cas, cass, deducere, impozit,
+      netSalariu,
+      ticheteNet,
+      net: netSalariu + ticheteNet,
+      cost: brut + cam + tichete,
+      ora: brut / P.oreLunar,
+    };
+  }
+
+  // Net -> Brut prin căutare binară pe funcția monotonă brutToNet.
+  function netToBrut(netTinta, o) {
+    let lo = 1, hi = netTinta * 2.2 + 2000;
+    for (let i = 0; i < 60; i++) {
+      const mid = (lo + hi) / 2;
+      if (brutToNet(mid, o).net < netTinta) lo = mid; else hi = mid;
+    }
+    return brutToNet(Math.round((lo + hi) / 2), o);
+  }
+
+  function initCalc(root) {
+    const $ = (sel) => root.querySelector(sel);
+    const amount = $('[data-amount]');
+    const tabs = root.querySelectorAll('[data-mod-btn]');
+    const inputLabel = $('[data-input-label]');
+    const resultLabel = $('[data-result-label]');
+    const resultMain = $('[data-result-main]');
+    const rowDed = $('[data-row="deducere"]');
+    const rowTic = $('[data-row="tichete"]');
+    const setR = (k, v) => { const el = root.querySelector(`[data-r="${k}"]`); if (el) el.textContent = v; };
+
+    let mod = root.dataset.mod === 'net' ? 'net' : 'brut';
+
+    function readOpts() {
+      const persoane = parseInt(root.querySelector('[data-opt="persoane"]').value, 10) || 0;
+      const zile = parseInt(root.querySelector('[data-opt="ticheteZile"]').value, 10) || 0;
+      const val = parseFloat(root.querySelector('[data-opt="ticheteVal"]').value) || 0;
+      const tineri = root.querySelector('[data-opt="tineri"]').checked;
+      return { persoane, tichete: zile * val, tineri };
+    }
+
+    function parseAmount() {
+      const raw = (amount.value || '').replace(/[^\d]/g, '');
+      return parseInt(raw, 10) || 0;
+    }
+
+    function render() {
+      const val = parseAmount();
+      const o = readOpts();
+      const r = val > 0 ? (mod === 'brut' ? brutToNet(val, o) : netToBrut(val, o)) : null;
+
+      if (mod === 'brut') {
+        inputLabel.textContent = 'Salariu brut lunar';
+        resultLabel.textContent = 'Salariu net în mână';
+      } else {
+        inputLabel.textContent = 'Salariu net dorit';
+        resultLabel.textContent = 'Salariu brut echivalent';
+      }
+
+      if (!r) {
+        resultMain.textContent = '0';
+        ['brut','cas','cass','deducere','impozit','net','cost','ora'].forEach(k => setR(k, '0 lei'));
+        rowTic.hidden = true;
+        return;
+      }
+
+      resultMain.textContent = nf.format(Math.round(mod === 'brut' ? r.net : r.brut));
+      setR('brut', lei(r.brut));
+      setR('cas', '− ' + lei(r.cas));
+      setR('cass', '− ' + lei(r.cass));
+      setR('deducere', r.deducere > 0 ? '+ ' + lei(r.deducere) : '—');
+      rowDed.style.opacity = r.deducere > 0 ? '1' : '0.55';
+      setR('impozit', '− ' + lei(r.impozit));
+      setR('net', lei(r.net));
+      setR('cost', lei(r.cost));
+      setR('ora', lei(r.ora));
+      if (r.ticheteNet > 0) { rowTic.hidden = false; setR('tichete', '+ ' + lei(r.ticheteNet)); }
+      else rowTic.hidden = true;
+    }
+
+    function setMode(m) {
+      mod = m;
+      tabs.forEach(t => {
+        const on = t.dataset.modBtn === m;
+        t.setAttribute('aria-pressed', String(on));
+        t.classList.toggle('bg-white', on);
+        t.classList.toggle('text-brand-700', on);
+        t.classList.toggle('shadow-sm', on);
+        t.classList.toggle('text-surface-500', !on);
+      });
+      render();
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => setMode(t.dataset.modBtn)));
+    amount.addEventListener('input', render);
+    root.querySelectorAll('[data-opt]').forEach(el => el.addEventListener('input', render));
+
+    // valoare pre-completată
+    if (root.dataset.valoare) amount.value = nf.format(parseInt(root.dataset.valoare, 10));
+    setMode(mod);
+  }
+
+  document.querySelectorAll('[data-salary-calc]').forEach(initCalc);
+</script>

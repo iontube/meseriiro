@@ -3,6 +3,7 @@ import Layout from '../../../layouts/Layout.astro';
 import SEOHead from '../../../components/SEOHead.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import FAQSection from '../../../components/FAQSection.astro';
+import SalaryCalculator from '../../../components/SalaryCalculator.astro';
 import { meserii, orase, getDomeniuForMeserie, getMeseriiByDomeniu, formatSalariu } from '../../../helpers/data';
 import { buildBreadcrumbSchema, buildSalaryPageSchema } from '../../../helpers/structured-data';
 import { getSiblingCityLinks, getTopCitiesForMeserie, getDomeniuAverageSalary } from '../../../helpers/interlinking';
@@ -174,6 +175,16 @@ const faqItems = [
         </div>
       </div>
     </div>
+
+    <!-- Calculator net<->brut, pre-completat cu netul din oraș -->
+    <section class="mb-8">
+      <SalaryCalculator
+        mod="net"
+        valoare={salariu.mediu}
+        titlu={`Calculator salariu ${meserie.nume.toLowerCase()} în ${oras.nume}`}
+        context={`Ce brut și ce cost pentru angajator înseamnă un net de ${formatSalariu(salariu.mediu)}. Modifică suma pentru scenariul tău.`}
+      />
+    </section>
 
     <!-- Salary by experience level -->
     <div class="card p-5 mb-8">

@@ -50,6 +50,11 @@ export default defineConfig({
         if (url === 'https://meseriile.ro/') {
           item.priority = 1.0;
           item.changefreq = 'daily';
+        } else if (url === 'https://meseriile.ro/calculator-salariu/') {
+          // pagină NOUĂ (tool flagship) — lastmod real fix + prioritate de hub
+          item.priority = 0.9;
+          item.changefreq = 'weekly';
+          item.lastmod = '2026-07-03T09:00:00.000Z';
         } else if (
           url.match(/\/domenii\/$/) ||
           url.match(/\/meserii\/$/) ||

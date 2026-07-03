@@ -4,6 +4,7 @@ import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import SalaryTable from '../../components/SalaryTable.astro';
 import FAQSection from '../../components/FAQSection.astro';
+import SalaryCalculator from '../../components/SalaryCalculator.astro';
 import { meserii, getDomeniuForMeserie, formatSalariu, getNivelCerereLabel, getOraseWithSalariu } from '../../helpers/data';
 import { buildBreadcrumbSchema, buildSalaryPageSchema, buildFAQSchema } from '../../helpers/structured-data';
 import { getDomeniuAverageSalary } from '../../helpers/interlinking';
@@ -117,6 +118,16 @@ const salariuFaq = [
         </div>
       </div>
     </div>
+
+    <!-- Calculator net<->brut, pre-completat cu netul meseriei -->
+    <section class="mb-10">
+      <SalaryCalculator
+        mod="net"
+        valoare={meserie.salpiuNational.mediu}
+        titlu={`Calculator salariu ${meserie.nume.toLowerCase()}`}
+        context={`Vezi ce salariu brut și ce cost pentru angajator înseamnă un net de ${formatSalariu(meserie.salpiuNational.mediu)}. Modifică suma pentru orice scenariu.`}
+      />
+    </section>
 
     <!-- Table -->
     <section class="mb-10">
