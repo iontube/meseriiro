@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SEOHead from '../components/SEOHead.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { formatSalariu } from '../helpers/data';
+import { brutToNet } from '../helpers/salariu-calc';
+import { buildBreadcrumbSchema, buildWebPageSchema } from '../helpers/structured-data';
+
+const set = new Set<number>();
+for (let v = 2000; v <= 8000; v += 250) set.add(v);
+for (let v = 8500; v <= 10000; v += 500) set.add(v);
+for (let v = 11000; v <= 20000; v += 1000) set.add(v);
+[4050, 4325, 25000, 30000].forEach(v => set.add(v));
+const SUME = [...set].sort((a, b) => a - b);
+
+const randuri = SUME.map(v => {
+  const r = brutToNet(v);
+  return { v, net: r.net, cost: r.cost, pct: Math.round((r.net / v) * 1000) / 10 };
+});
+
+const anul = new Date().getFullYear();
+const breadcrumbs = [
+  { label: 'Calculator salariu', href: '/calculator-salariu/' },
+  { label: 'Salariu net din brut' },
+];
+---
+
+<Layout>
+  <SEOHead
+    slot="head"
+    title={`Salariu net din brut ${anul} - tabel complet`}
+    description={`Tabel salariu net din brut ${anul} pentru sume de la 2.000 la 30.000 lei. Vezi netul, procentul și costul angajator pentru fiecare sumă. Calcul cu CAS, CASS, impozit și deducere.`}
+    canonical="/salariu-net/"
+    jsonLd={[
+      buildBreadcrumbSchema(breadcrumbs),
+      buildWebPageSchema(`Salariu net din brut ${anul}`, 'Tabel de conversie salariu brut în net pentru România.', 'https://meseriile.ro/salariu-net/'),
+    ]}
+  />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <div class="container-narrow pb-16 sm:pb-20">
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
+        Salariu net din brut {anul}
+      </h1>
+      <p class="text-lg text-surface-700 leading-relaxed">
+        Cât rămâne net din fiecare salariu brut, cu toate contribuțiile 2026. Apasă pe o sumă pentru defalcarea completă, sau folosește <a href="/calculator-salariu/" class="text-link">calculatorul</a> pentru orice altă valoare.
+      </p>
+    </header>
+
+    <div class="card p-0 overflow-hidden mb-8">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm min-w-[34rem]">
+          <thead>
+            <tr class="border-b-2 border-surface-200 bg-surface-50 text-left">
+              <th class="px-4 py-3 font-semibold text-surface-700">Brut</th>
+              <th class="px-4 py-3 font-semibold text-surface-700 text-right">Net</th>
+              <th class="px-4 py-3 font-semibold text-surface-700 text-right">% net</th>
+              <th class="px-4 py-3 font-semibold text-surface-700 text-right">Cost angajator</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-100">
+            {randuri.map(row => (
+              <tr class="hover:bg-surface-50 transition-colors">
+                <td class="px-4 py-3 font-semibold text-surface-900 tabular-nums">{formatSalariu(row.v)}</td>
+                <td class="px-4 py-3 text-right font-bold text-brand-700 tabular-nums">{formatSalariu(row.net)}</td>
+                <td class="px-4 py-3 text-right text-surface-600 tabular-nums">{row.pct}%</td>
+                <td class="px-4 py-3 text-right text-surface-600 tabular-nums">{formatSalariu(row.cost)}</td>
+                <td class="px-4 py-3 text-right">
+                  <a href={`/salariu-net/${row.v}-lei-brut/`} class="text-brand-600 hover:text-brand-800 font-medium no-underline whitespace-nowrap">detalii →</a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="text-xs text-surface-500">
+      Calcul pentru cazul standard {anul} (salariu minim 4.325 lei de la 1 iulie 2026, fără persoane în întreținere sau tichete). Vezi <a href="/despre-date/" class="text-link">metodologia</a>.
+    </p>
+  </div>
+</Layout>

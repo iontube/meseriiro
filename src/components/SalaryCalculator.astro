@@ -149,76 +149,10 @@ const { valoare, mod = 'brut', titlu, context, id = 'calc' } = Astro.props;
 </div>
 
 <script>
-  // ==== Parametri fiscali 2026 (S2, de la 1 iulie 2026) ====
-  const P = {
-    minim: 4325,
-    cas: 0.25,
-    cass: 0.10,
-    impozit: 0.10,
-    cam: 0.0225,
-    pragDeducere: 6325, // minim + 2.000 lei
-    facilitate: 200,    // lei neimpozabili la salariul minim (iul-dec 2026)
-    oreLunar: 166.67,
-  };
+  import { brutToNet, netToBrut } from '../helpers/salariu-calc';
 
   const nf = new Intl.NumberFormat('ro-RO', { maximumFractionDigits: 0 });
   const lei = (n) => nf.format(Math.round(n)) + ' lei';
-
-  // Deducere personală de bază = procent din grilă × venitul BRUT, rotunjit la 10 lei în sus.
-  function deducereBaza(brut, persoane) {
-    if (brut > P.pragDeducere) return 0;
-    // grila art. 77: 20% la nivelul minimului, -0,5 pp pentru fiecare tranșă de 50 lei peste minim
-    const trepte = Math.ceil(Math.max(0, brut - P.minim) / 50);
-    let pct = Math.max(0, 20 - 0.5 * trepte);
-    const p = Math.max(0, persoane | 0);
-    pct += p === 0 ? 0 : (p >= 4 ? 25 : p * 5);
-    if (pct <= 0) return 0;
-    return Math.ceil((brut * pct / 100) / 10) * 10;
-  }
-
-  function brutToNet(brut, o) {
-    o = o || {};
-    const laMinim = Math.abs(brut - P.minim) < 0.5;
-    const facil = laMinim ? P.facilitate : 0;
-    const baza = brut - facil;
-    const cas = Math.round(baza * P.cas);
-    const cass = Math.round(baza * P.cass);
-    let deducere = deducereBaza(brut, o.persoane || 0);
-    if (o.tineri) deducere += Math.round(0.15 * P.minim); // deducere suplimentară tineri <26
-    const bazaImpozit = Math.max(0, baza - cas - cass - deducere);
-    const impozit = Math.round(bazaImpozit * P.impozit);
-    const netSalariu = brut - cas - cass - impozit;
-
-    // Tichete de masă: intră în baza CASS + impozit, NU în CAS/CAM
-    const tichete = Math.max(0, o.tichete || 0);
-    let cassTichete = 0, impozitTichete = 0, ticheteNet = 0;
-    if (tichete > 0) {
-      cassTichete = Math.round(tichete * P.cass);
-      impozitTichete = Math.round((tichete - cassTichete) * P.impozit);
-      ticheteNet = tichete - cassTichete - impozitTichete;
-    }
-
-    const cam = Math.round(brut * P.cam);
-    return {
-      brut,
-      cas, cass, deducere, impozit,
-      netSalariu,
-      ticheteNet,
-      net: netSalariu + ticheteNet,
-      cost: brut + cam + tichete,
-      ora: brut / P.oreLunar,
-    };
-  }
-
-  // Net -> Brut prin căutare binară pe funcția monotonă brutToNet.
-  function netToBrut(netTinta, o) {
-    let lo = 1, hi = netTinta * 2.2 + 2000;
-    for (let i = 0; i < 60; i++) {
-      const mid = (lo + hi) / 2;
-      if (brutToNet(mid, o).net < netTinta) lo = mid; else hi = mid;
-    }
-    return brutToNet(Math.round((lo + hi) / 2), o);
-  }
 
   function initCalc(root) {
     const $ = (sel) => root.querySelector(sel);

@@ -55,6 +55,11 @@ export default defineConfig({
           item.priority = 0.9;
           item.changefreq = 'weekly';
           item.lastmod = '2026-07-03T09:00:00.000Z';
+        } else if (url.includes('/salariu-net')) {
+          // secțiune NOUĂ programatică (2026-07-03)
+          item.priority = url === 'https://meseriile.ro/salariu-net/' ? 0.7 : 0.6;
+          item.changefreq = 'monthly';
+          item.lastmod = '2026-07-03T09:00:00.000Z';
         } else if (
           url.match(/\/domenii\/$/) ||
           url.match(/\/meserii\/$/) ||
