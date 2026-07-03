@@ -1,0 +1,46 @@
+PROMPTURI IMAGINI — "Cât câștigă un controlor de trafic aerian" (transport-logistica)
+====================================================================================
+Generează 3 imagini FOTOREALISTE. Pune-le apoi în:
+  /sites/meseriile-img-work/_incoming/
+și spune-mi. Le comprim WebP + urc eu (nu schimba numele).
+
+Nume finale (ce reprezintă fiecare):
+  1. HERO  16:9 -> salariu-controlor-trafic-aerian-turn.webp
+  2. INLINE 3:2 -> controlor-trafic-radar-ecrane.webp
+  3. INLINE 3:2 -> controlor-turn-control-aeroport.webp
+
+FORMAT (IMPORTANT — selectează raportul în tool ÎNAINTE de generare):
+  - HERO   = 16:9 WIDESCREEN, orizontal lat (ex. 1792x1024). Cere explicit "16:9".
+  - INLINE = 3:2 orizontal (ex. 1536x1024).
+
+Reguli comune (anti-eroare AI), la FIECARE prompt:
+  - fotografie realistă, mirrorless, 35-50mm, lumină naturală / lumina ecranelor
+  - piele cu textură reală, materiale reale, umbre naturale
+  - fără fețe deformate, fără mâini cu degete în plus
+  - fără text/sigle/logo inventate pe ecrane, uniforme sau clădiri (fără scris ilizibil)
+  - fără branduri reale identificabile
+  - EVITĂ aspect de plastic / luciu AI / redare de reclamă
+
+--------------------------------------------------------------------------
+1. HERO (16:9 WIDESCREEN, ex. 1792x1024) — controlor în turnul de control
+--------------------------------------------------------------------------
+Un controlor de trafic aerian, bărbat sau femeie la ~35 de ani, în cămașă de
+uniformă (fără logo), în vârful unui turn de control cu pereți de sticlă, privind
+spre piste prin geam. Se văd o pistă și avioane mici în depărtare, lumină de zi.
+Poate ține în mână o stație radio. Atmosferă profesională, concentrată. Realist,
+documentar, profunzime de câmp mică pe fundal.
+
+--------------------------------------------------------------------------
+2. INLINE (3:2, ex. 1536x1024) — controlor la ecranele radar
+--------------------------------------------------------------------------
+Un controlor de trafic aerian într-o cameră de control întunecoasă, urmărind mai
+multe ecrane radar verzi cu puncte și trasee de avioane. Poartă cască cu microfon.
+Fața luminată de ecrane, expresie concentrată. Mediu tehnic real, fără text
+lizibil inventat pe monitoare. Atmosferă serioasă, de sală operațională.
+
+--------------------------------------------------------------------------
+3. INLINE (3:2, ex. 1536x1024) — turnul de control al aeroportului
+--------------------------------------------------------------------------
+Turnul de control al unui aeroport, văzut de jos în sus, cu structura de sticlă
+în vârf pe cer senin. Arhitectură modernă de aeroport. Fără branduri sau text.
+Lumină naturală de zi, câteva nori. Cadru curat, documentar, realist.
