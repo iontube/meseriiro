@@ -1,0 +1,50 @@
+PROMPTURI IMAGINI — articol "Cât câștigă un curier" (transport-logistica)
+==========================================================================
+Generează 3 imagini FOTOREALISTE. După ce le ai, pune-le în:
+  /sites/meseriile-img-work/_incoming/
+și spune-mi. Le comprim WebP + urc pe img.meseriile.ro (nu schimba tu numele).
+
+Nume finale (le pun eu, doar ca să știi ce reprezintă fiecare):
+  1. HERO  16:9 -> salariu-curier-livrare-colete-oras.webp
+  2. INLINE 3:2 -> curier-mancare-scuter-oras.webp
+  3. INLINE 3:2 -> curier-colete-duba-livrare.webp
+
+FORMAT (IMPORTANT, altfel trebuie cropat și se pierde din cadru):
+  - HERO   = 16:9 ORIZONTAL LAT (widescreen, ex. 1792x1024). Cere explicit "16:9".
+  - INLINE = 3:2 orizontal (ex. 1536x1024 sau 1200x800).
+  Selectează raportul în tool ÎNAINTE de generare, nu lăsa pătrat/3:2 la hero.
+
+Reguli comune (anti-eroare AI), pune-le la FIECARE prompt:
+  - fotografie realistă, aparat mirrorless, obiectiv 35-50mm, lumină naturală de zi
+  - piele cu textură reală, materiale reale, umbre naturale
+  - România, oraș european est, mașini/străzi obișnuite, NU American suburb
+  - EVITĂ: aspect de plastic, luciu AI, fețe deformate, mâini cu degete în plus,
+    text/sigle/logo inventate pe haine sau dube (fără scris ilizibil), watermark
+  - fără branduri reale vizibile (fără logo Glovo/Fan Courier etc., ca să nu avem probleme)
+
+--------------------------------------------------------------------------
+1. HERO (16:9 WIDESCREEN, orizontal lat, ex. 1792x1024 — NU 3:2, NU pătrat)
+--------------------------------------------------------------------------
+[Selectează raportul 16:9 în tool înainte de a genera.]
+
+Un curier român, bărbat la ~30 de ani, în geacă de lucru simplă (culoare neutră,
+fără logo), predă un colet de carton unui client în fața unei case sau a unui
+bloc dintr-un oraș din România. În plan îndepărtat, ușor neclară, o dubă albă de
+livrare parcată pe stradă. Expresie prietenoasă, lumină de dimineață caldă,
+profunzime de câmp mică (fundal ușor blurat). Ton realist, documentar, nu reclamă.
+
+--------------------------------------------------------------------------
+2. INLINE (3:2, orizontal, ~1200x800) — curier de mâncare pe scuter
+--------------------------------------------------------------------------
+Un curier de livrare mâncare pe un scuter, cu o geantă termoizolantă pătrată
+neutră (fără logo) în spate, oprit la o intersecție dintr-un oraș românesc.
+Casca pe cap, telefon montat pe ghidon. Trafic urban obișnuit în fundal, blocuri
+și magazine. Lumină naturală de după-amiază. Realist, surprins din mers, nu pozat.
+
+--------------------------------------------------------------------------
+3. INLINE (3:2, orizontal, ~1200x800) — curier de colete la dubă
+--------------------------------------------------------------------------
+Un curier descarcă mai multe colete de carton dintr-o dubă albă de livrare
+(fără logo) parcată pe o stradă de oraș. Ține două cutii în brațe, interiorul
+dubei plin cu pachete. Îmbrăcăminte de lucru neutră. Lumină de zi, aspect
+documentar, muncă reală. Fără text inventat pe cutii.
