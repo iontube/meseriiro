@@ -1,0 +1,77 @@
+{
+  "sudor": {
+    "descriere": "Sudorul îmbină piese metalice prin topirea și fuziunea materialului, folosind procedee precum MIG/MAG, TIG sau sudura cu electrod învelit. Lucrează cu oțel, inox și aluminiu în construcții metalice, hale industriale, șantiere navale sau instalații petrochimice, unde calitatea cordonului decide siguranța întregii structuri.",
+    "ceFaceConcret": "Citește planul de execuție, pregătește și fixează piesele, alege parametrii de sudare și execută cordoane conform procedurii. Verifică penetrarea și aspectul sudurii, corectează defectele prin polizare și resudare și respectă normele de protecție împotriva arcului electric, fumului și scânteilor.",
+    "responsabilitati": [
+      "Interpretarea desenelor tehnice și a fișelor de sudare",
+      "Pregătirea rosturilor și fixarea pieselor înainte de sudare",
+      "Execuția cordoanelor prin MIG/MAG, TIG sau electrod învelit",
+      "Verificarea calității sudurii și remedierea defectelor",
+      "Respectarea autorizațiilor ISCIR și a procedurilor aprobate",
+      "Întreținerea aparatului de sudură și a echipamentului de protecție"
+    ],
+    "studiiNecesare": "Nu e nevoie de facultate. Se cere o calificare de sudor printr-un curs autorizat, iar pentru lucrări la presiune sau structuri critice, autorizație ISCIR pe procedeul respectiv, reînnoită periodic.",
+    "conditiiMunca": "Program de tură în hală sau pe șantier, adesea în picioare, în spații înguste sau la înălțime. Expunere la căldură, fum de sudură, scântei și zgomot, cu echipament de protecție obligatoriu: mască, mănuși și șorț.",
+    "evolutieCariera": "Pornești ca sudor calificat pe un singur procedeu, apoi acumulezi autorizații pentru mai multe procedee și materiale, ceea ce crește direct salariul. Poți ajunge sudor autorizat pe structuri critice, șef de echipă, controlor de calitate a sudurilor sau maistru."
+  },
+  "dezvoltator-software": {
+    "descriere": "Dezvoltatorul software proiectează, scrie și întreține codul aplicațiilor și al sistemelor informatice. Lucrează cu limbaje de programare, framework-uri și baze de date pentru a transforma cerințele în funcționalități, de la site-uri și aplicații mobile până la platforme complexe folosite de mii de utilizatori.",
+    "ceFaceConcret": "Scrie cod nou și modifică cod existent, rezolvă erori și scrie teste automate. Participă la analiza cerințelor, la code review și la ședințele de planificare. Folosește sisteme de versionare precum Git și colaborează cu designeri, testeri și alți programatori într-o echipă.",
+    "responsabilitati": [
+      "Scrierea și întreținerea codului conform cerințelor",
+      "Identificarea și rezolvarea erorilor din aplicații",
+      "Scrierea de teste automate pentru codul livrat",
+      "Participarea la code review și la ședințele echipei",
+      "Folosirea sistemelor de versionare a codului",
+      "Documentarea soluțiilor și colaborarea cu echipa"
+    ],
+    "studiiNecesare": "Facultatea de informatică sau automatică ajută, dar nu e obligatorie. Mulți dezvoltatori intră în meserie prin cursuri intensive, cursuri online și proiecte proprii. La angajare contează portofoliul de cod și interviul tehnic, nu neapărat diploma.",
+    "conditiiMunca": "Muncă de birou sau de acasă, majoritatea timpului la calculator. Program de obicei flexibil, cu multe companii care oferă remote sau hibrid. Presiunea vine din termene și din depanarea problemelor, nu din efort fizic.",
+    "evolutieCariera": "Începi ca junior, treci la mid și senior pe măsură ce câștigi experiență, iar saltul de salariu între niveluri este mare. De aici poți merge spre tech lead, arhitect software sau management, ori te poți specializa adânc pe o tehnologie căutată."
+  },
+  "ospatar": {
+    "descriere": "Ospătarul preia comenzile clienților, servește mâncarea și băutura și se asigură că experiența din restaurant este plăcută. Este legătura directă dintre bucătărie și client, iar de amabilitatea și rapiditatea lui depind în mare parte impresia lăsată de local și bacșișul primit.",
+    "ceFaceConcret": "Întâmpină clienții, recomandă preparate, preia comenzile și le introduce în sistemul de casă. Aduce mâncarea și băutura, debarasează mesele, încasează plata și menține curățenia în sală. Comunică permanent cu bucătăria și cu barul pentru ca fiecare comandă să iasă corect și la timp.",
+    "responsabilitati": [
+      "Întâmpinarea clienților și prezentarea meniului",
+      "Preluarea comenzilor și introducerea lor în sistemul de casă",
+      "Servirea preparatelor și a băuturilor",
+      "Debarasarea și pregătirea meselor",
+      "Încasarea plății și gestionarea bonului",
+      "Menținerea curățeniei și a ordinii în sală"
+    ],
+    "studiiNecesare": "Nu se cere facultate. Mulți încep fără experiență și învață la locul de muncă. Un curs de calificare în ospitalitate și cunoașterea unei limbi străine ajută, mai ales în restaurantele și hotelurile care lucrează cu turiști.",
+    "conditiiMunca": "Muncă în picioare, în ture care includ seri, weekenduri și sărbători, când localul este cel mai aglomerat. Ritm alert în orele de vârf și contact permanent cu publicul. La salariu se adaugă bacșișul, care într-un local bun poate depăși salariul de bază.",
+    "evolutieCariera": "De la ospătar debutant ajungi ospătar cu experiență, apoi șef de rang sau ospătar-șef. De aici poți urca spre supervizor sau manager de restaurant, ori te poți muta spre partea de evenimente și catering."
+  },
+  "farmacist": {
+    "descriere": "Farmacistul eliberează medicamente pe bază de rețetă și fără rețetă și consiliază pacienții cum să le folosească în siguranță. Verifică dozele, interacțiunile și contraindicațiile, fiind ultima verigă între prescripția medicului și pacient. Lucrează în farmacii comunitare, de spital sau în industrie.",
+    "ceFaceConcret": "Preia rețetele, verifică corectitudinea dozelor și posibilele interacțiuni, eliberează medicamentele și explică pacientului cum se administrează. Gestionează stocul și termenele de valabilitate, prepară anumite formule și recomandă produse fără prescripție pentru afecțiuni ușoare.",
+    "responsabilitati": [
+      "Eliberarea medicamentelor pe bază de rețetă și fără rețetă",
+      "Verificarea dozelor, a interacțiunilor și a contraindicațiilor",
+      "Consilierea pacienților privind administrarea corectă",
+      "Gestionarea stocului și a termenelor de valabilitate",
+      "Prepararea formulelor magistrale, unde este cazul",
+      "Respectarea legislației farmaceutice și a normelor Colegiului"
+    ],
+    "studiiNecesare": "Este obligatorie facultatea de farmacie, o licență de cinci ani, urmată de înscrierea în Colegiul Farmaciștilor din România pentru dreptul de liberă practică. Formarea continuă este obligatorie pe tot parcursul carierei.",
+    "conditiiMunca": "Muncă în picioare, la ghișeu, în ture care pot include seri și weekenduri, iar farmaciile non-stop presupun și tură de noapte. Responsabilitate mare, fiindcă o eroare de eliberare poate afecta sănătatea pacientului. Mediu curat, cu contact permanent cu publicul.",
+    "evolutieCariera": "Începi ca farmacist, poți deveni farmacist-diriginte, cel care conduce farmacia, apoi poți coordona mai multe unități sau deschide propria farmacie. Alte direcții sunt farmacia de spital, industria farmaceutică sau partea de studii clinice."
+  },
+  "sofer-tir": {
+    "descriere": "Șoferul de TIR transportă mărfuri pe distanțe lungi, în țară sau în străinătate, cu autocamioane de mare tonaj. Răspunde de marfă, de respectarea rutei și a timpilor de condus și odihnă și petrece zile întregi pe drum, departe de casă, ceea ce explică și diferența de câștig față de transportul local.",
+    "ceFaceConcret": "Verifică starea camionului și a încărcăturii, planifică ruta și respectă timpii legali de condus și pauză înregistrați de tahograf. Conduce în trafic intern și internațional, se ocupă de documentele de transport și de formalitățile de la punctele de încărcare, descărcare și vamă.",
+    "responsabilitati": [
+      "Transportul mărfii în siguranță, intern și internațional",
+      "Respectarea timpilor de condus și odihnă înregistrați de tahograf",
+      "Verificarea stării tehnice a camionului înainte de plecare",
+      "Gestionarea documentelor de transport",
+      "Supravegherea încărcării, descărcării și fixării mărfii",
+      "Respectarea rutei, a termenelor și a normelor vamale"
+    ],
+    "studiiNecesare": "Nu se cere facultate. Ai nevoie de permis categoria C sau CE, de atestatul profesional de transport marfă și de cardul de tahograf. Pentru mărfuri periculoase este nevoie de atestat ADR suplimentar, care crește salariul.",
+    "conditiiMunca": "Multe ore la volan, program neregulat și zile sau săptămâni petrecute pe drum, cu somnul în cabină. Efort de atenție susținut și responsabilitate mare pentru marfă și siguranța rutieră. La cursele externe se adaugă diurna, care ridică mult venitul total.",
+    "evolutieCariera": "De la șofer de distribuție internă poți trece la curse externe, mai bine plătite, apoi la mărfuri speciale sau ADR, cu atestate suplimentare. Cu experiență, poți deveni dispecer, formator sau îți poți cumpăra propriul camion."
+  }
+}

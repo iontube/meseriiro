@@ -122,6 +122,17 @@ const salariuFaq = [
       </div>
     </div>
 
+    <!-- Despre meserie: conținut unic per meserie (evită thin content pe pagina națională) -->
+    <section class="mb-10">
+      <h2 class="text-xl font-heading font-bold text-surface-900 mb-4">
+        Ce face un {meserie.nume.toLowerCase()}
+      </h2>
+      <div class="space-y-4">
+        <p class="text-surface-700 leading-relaxed">{meserie.descriere}</p>
+        <p class="text-surface-700 leading-relaxed">{meserie.ceFaceConcret}</p>
+      </div>
+    </section>
+
     <!-- Calculator net<->brut, pre-completat cu netul meseriei -->
     <section class="mb-10">
       <SalaryCalculator
