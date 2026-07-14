@@ -1,0 +1,35 @@
+PROMPTURI IMAGINI — articol "Cât câștigă un analist financiar"
+6 imagini: 1 HERO (16:9) + 5 INLINE (3:2). Generează în GPT/DALL-E.
+SELECTEAZĂ raportul ÎNAINTE de generare (HERO=16:9 widescreen, INLINE=3:2).
+Pune fișierele în /sites/meseriile-img-work/_incoming/ → le comprim WebP + urc pe img.meseriile.ro.
+Reguli comune realism: 35-50mm, lumină naturală, texturi reale de piele, mâini corecte, umbre soft, FĂRĂ plastic/AI gloss.
+NEGATIVE comun: mâini deformate, degete în plus, text/cifre gibberish pe ecrane, logo-uri sau branduri reale, suprasaturare, aspect de desen, watermark.
+
+============================================================
+1) HERO (16:9) — salariu-analist-financiar-birou.webp
+Photorealistic wide shot (16:9). Un analist financiar de ~30 de ani lucrează la un birou modern cu două monitoare: pe un ecran un tabel financiar cu cifre și un grafic liniar, pe celălalt un dashboard curat cu bare. Lumină naturală laterală de la fereastră, profunzime de câmp mică, atmosferă corporate caldă și calmă. Ținută business-casual (cămașă deschisă, fără cravată). Caiet și cană de cafea pe birou, birou modern cu bokeh moale în fundal.
+
+============================================================
+2) INLINE (3:2) — analist-financiar-banca-investitii-ecrane.webp
+[secțiunea despre sector / bănci de investiții]
+Photorealistic (3:2). Interiorul unui birou modern de investiții/banking. Doi-trei profesioniști la birouri cu mai multe monitoare pe care se văd grafice de piață și tabele financiare (cifre generice, nu text lizibil). Atmosferă dinamică dar elegantă, lumină naturală, ținute business. Focus pe un analist tânăr care privește atent ecranele.
+
+============================================================
+3) INLINE (3:2) — analist-financiar-pregatire-cfa-studiu.webp
+[secțiunea despre certificarea CFA]
+Photorealistic (3:2). Un tânăr studiază pentru un examen financiar la o masă, cu un laptop deschis, câteva manuale groase, un calculator financiar și notițe scrise de mână. Cană de cafea, lumină caldă de seară, expresie concentrată. Atmosferă de studiu serios acasă sau într-o bibliotecă modernă.
+
+============================================================
+4) INLINE (3:2) — analist-financiar-lucru-remote-acasa.webp
+[secțiunea despre lucrul remote pentru firme străine]
+Photorealistic (3:2). Un analist financiar lucrează de acasă la un birou ordonat, cu un laptop și un monitor extern pe care se văd grafice financiare. Cameră luminoasă de living modern, plante în fundal, ținută relaxată dar îngrijită, apel video pe ecran cu participanți neclari în bokeh. Lumină naturală de zi.
+
+============================================================
+5) INLINE (3:2) — analist-financiar-prezentare-management.webp
+[secțiunea ce face concret / prezentare rezultate]
+Photorealistic (3:2). Un analist financiar prezintă rezultate la doi colegi într-o sală de ședințe luminoasă, arătând spre un ecran mare cu un grafic cu bare și cifre financiare (generice). Lumină naturală, birou modern, ținute business-casual, atmosferă implicată și profesională. Documente și un laptop pe masă.
+
+============================================================
+6) INLINE (3:2) — analist-financiar-interviu-angajare.webp
+[secțiunea despre interviu]
+Photorealistic (3:2). Un interviu de angajare într-un birou modern. Un candidat tânăr, îngrijit, stă de vorbă cu doi recrutori la o masă, cu un CV și un laptop în față. Atmosferă calmă și profesională, lumină naturală, zâmbete discrete, ținute business-casual.
