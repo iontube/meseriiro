@@ -8,6 +8,11 @@ import { meserii, orase, getDomeniuForMeserie, getMeseriiByDomeniu, formatSalari
 import { buildBreadcrumbSchema, buildSalaryPageSchema } from '../../../helpers/structured-data';
 import { getSiblingCityLinks, getTopCitiesForMeserie, getDomeniuAverageSalary } from '../../../helpers/interlinking';
 import type { Meserie, Oras } from '../../../helpers/types';
+import cityIndexed from '../../../data/city-indexed.json';
+
+// Pagini-oraș care primesc TRAFIC din Google (≥1 impresie/90z, sursă GSC) rămân indexate.
+// Restul (~10k pagini care nu aduc nimic) primesc noindex,follow → curăță amprenta „scaled content" pt AdSense.
+const CITY_INDEXED = new Set<string>((cityIndexed as { keys: string[] }).keys);
 
 export function getStaticPaths() {
   const paths: Array<{ params: { slug: string; oras: string }; props: { meserie: Meserie; oras: Oras } }> = [];
@@ -32,6 +37,7 @@ interface Props {
 }
 
 const { meserie, oras } = Astro.props;
+const keepIndexed = CITY_INDEXED.has(`${meserie.slug}/${oras.id}`);
 const domeniu = getDomeniuForMeserie(meserie);
 const salariu = meserie.salpiuOrase[oras.id];
 const siblingCities = getSiblingCityLinks(meserie.slug, oras.id, 6);
@@ -127,6 +133,7 @@ const faqItems = [
     title={`Salariu ${meserie.nume} în ${oras.nume} ${new Date().getFullYear()} - Date Actualizate`}
     description={`Salariu ${meserie.nume} în ${oras.nume}: mediu ${formatSalariu(salariu.mediu)}/lună. Compară cu media națională și alte orașe din România.`}
     canonical={`/salariu/${meserie.slug}/${oras.id}/`}
+    noindexFollow={!keepIndexed}
     ogType="article"
     jsonLd={[
       buildBreadcrumbSchema(breadcrumbs),

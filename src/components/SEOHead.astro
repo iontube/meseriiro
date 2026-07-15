@@ -9,6 +9,8 @@ interface Props {
   ogImageWidth?: number;
   ogImageHeight?: number;
   noindex?: boolean;
+  /** noindex dar cu follow (link equity curge mai departe). Pt pagini thin scoase din index dar utile navigării. */
+  noindexFollow?: boolean;
   jsonLd?: string[];
   /** false => titlul rămâne exact cum e dat (fără sufix de brand). Pt articole. */
   appendSite?: boolean;
@@ -29,6 +31,7 @@ const {
   ogImageWidth = 1200,
   ogImageHeight = 630,
   noindex = false,
+  noindexFollow = false,
   jsonLd = [],
   appendSite = true,
   relPrev,
@@ -57,6 +60,8 @@ const now = new Date().toISOString();
 {relNext && <link rel="next" href={relNext} />}
 {noindex
   ? <meta name="robots" content="noindex, nofollow" />
+  : noindexFollow
+  ? <meta name="robots" content="noindex, follow" />
   : <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />}
 
 <!-- Open Graph -->

@@ -444,7 +444,7 @@ Pentru cifrele exacte pe orașul tău, verifică paginile dedicate.
 - [Salariu analist financiar în București](/salariu/analist-financiar/bucuresti/)
 - [Salariu analist financiar în Cluj-Napoca](/salariu/analist-financiar/cluj-napoca/)
 - [Salariu analist financiar în Timișoara](/salariu/analist-financiar/timisoara/)
-- [Salariu analist financiar în Iași](/salariu/analist-financiar/iasi/)
+- [Salariu analist financiar în Brașov](/salariu/analist-financiar/brasov/)
 
 Diferența dintre un oraș mare și unul mic poate fi de câteva mii de lei pentru același rol, dar și costul vieții e diferit, așa că merită privită împreună. Iar odată cu munca remote, un analist bun dintr-un oraș mic poate câștiga la nivel de București, lucrând pentru o firmă de acolo sau din străinătate.
 

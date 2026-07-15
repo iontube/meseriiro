@@ -2,6 +2,11 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import cityIndexed from './src/data/city-indexed.json' with { type: 'json' };
+
+// Set de pagini-oraș care rămân indexate (≥1 impresie/90z GSC). Restul primesc noindex,follow
+// și trebuie EXCLUSE din sitemap (nu trimitem Google pe pagini noindex).
+const CITY_INDEXED = new Set(cityIndexed.keys);
 
 // Înfășoară fiecare <table> din markdown într-un <div class="table-scroll"> (scroll orizontal pe mobil).
 function rehypeTableWrap() {
@@ -44,7 +49,13 @@ export default defineConfig({
       // Bump-uiește DOAR când chiar actualizezi datele meseriilor.
       lastmod: new Date('2026-07-03T13:00:00.000Z'),
       // /articole/* au sitemap dedicat (cu imagini) generat de scripts/sitemap-articole.mjs
-      filter: (page) => !page.includes('/articole/'),
+      // Paginile-oraș noindex (fără trafic GSC) sunt EXCLUSE — nu trimitem Google pe pagini noindex.
+      filter: (page) => {
+        if (page.includes('/articole/')) return false;
+        const m = page.match(/\/salariu\/([^/]+)\/([^/]+)\/$/);
+        if (m) return CITY_INDEXED.has(`${m[1]}/${m[2]}`);
+        return true;
+      },
       serialize(item) {
         const url = item.url;
         if (url === 'https://meseriile.ro/') {
