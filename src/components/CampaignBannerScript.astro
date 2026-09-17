@@ -1,0 +1,44 @@
+---
+// Logica bannerelor de campanie. Inclus O SINGURA data (in Layout). Scaneaza TOATE sloturile
+// [data-cb] de pe pagina (plasate prin <CampaignBanner> in template-uri sau injectate in-content
+// prin rehype la articole), alege campania valida acum si randeaza bannerul pe marimea potrivita
+// formatului + breakpoint-ului. Better Ads: fara pop-up/sticky/flashing; un-doua sloturi/pagina.
+---
+<script is:inline>
+  (function () {
+    var slots = document.querySelectorAll('[data-cb]');
+    if (!slots.length) return;
+    var toTs = function (s) { return s ? new Date(s.replace(' ', 'T') + '+03:00').getTime() : null; };
+    fetch('https://img.meseriile.ro/banners.json', { cache: 'default' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data || !data.campaigns) return;
+        var now = Date.now();
+        var active = data.campaigns.filter(function (c) {
+          var s = toTs(c.start), e = toTs(c.end);
+          return (!s || s <= now) && (!e || e >= now) && c.banners && Object.keys(c.banners).length;
+        });
+        if (!active.length) return;
+        var c = active[0];
+        var mobile = window.matchMedia('(max-width: 767px)').matches;
+        slots.forEach(function (el) {
+          var fmt = el.getAttribute('data-format') || 'leaderboard';
+          var order = fmt === 'rectangle'
+            ? ['300x250', '336x280', '1080x1080', '300x600', '1200x628']
+            : (mobile ? ['300x250', '336x280', '1080x1080', '1200x628'] : ['728x90', '970x250', '1200x628', '300x250']);
+          var size = order.find(function (s) { return c.banners[s]; }) || Object.keys(c.banners)[0];
+          var b = c.banners[size];
+          if (!b || !b.src) return;
+          var a = el.querySelector('.cb-link'), img = el.querySelector('.cb-img');
+          if (!a || !img) return;
+          a.href = c.link;
+          img.width = b.w; img.height = b.h;
+          img.alt = 'eMAG - ' + (c.name || 'oferta');
+          img.onerror = function () { el.setAttribute('hidden', ''); };
+          el.removeAttribute('hidden');
+          img.src = b.src;
+        });
+      })
+      .catch(function () {});
+  })();
+</script>

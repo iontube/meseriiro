@@ -1,0 +1,231 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import { corPagini, corGrupe, corOrdin, corMonitor, getMeseriiPtCor, getSalariuMediuCor } from '../../helpers/cor';
+import type { CorPagina } from '../../helpers/cor';
+import { formatSalariu } from '../../helpers/data';
+import { buildBreadcrumbSchema, buildFAQSchema, buildCorTermSchema } from '../../helpers/structured-data';
+
+export function getStaticPaths() {
+  return corPagini.map(p => ({ params: { slug: p.slug }, props: { p } }));
+}
+
+interface Props { p: CorPagina }
+const { p } = Astro.props;
+
+const grupa = corGrupe.find(g => g.cifra === p.grupaMajora)!;
+const meseriiCod = getMeseriiPtCor(p);
+const salariu = getSalariuMediuCor(meseriiCod);
+const denAfisat = p.denumire.charAt(0).toUpperCase() + p.denumire.slice(1);
+const url = `/cod-cor/${p.slug}/`;
+
+const breadcrumbs = [
+  { label: 'Cod COR', href: '/cod-cor/' },
+  { label: grupa.nume, href: `/cod-cor/grupa/${grupa.slug}/` },
+  { label: `${p.cod} — ${denAfisat}` },
+];
+
+const intrebari = [
+  { intrebare: `Care este codul COR pentru ${p.denumire}?`,
+    raspuns: `Codul COR pentru ocupația „${p.denumire}" este ${p.cod}. Acesta este codul din Clasificarea Ocupațiilor din România, actualizată prin ${corOrdin}.` },
+  { intrebare: 'Unde se completează codul COR?',
+    raspuns: 'Codul COR se trece în contractul individual de muncă, la rubrica ocupației, și se introduce în REVISAL, registrul general de evidență a salariaților transmis la Inspectoratul Teritorial de Muncă. Apare și în declarația 112 și în adeverințele de vechime.' },
+  { intrebare: 'Ce se întâmplă dacă trec un cod COR greșit?',
+    raspuns: 'REVISAL validează codul față de nomenclator, așa că un cod inexistent este respins la înregistrare. Un cod care există dar nu corespunde ocupației reale trece de validare, însă poate crea probleme la controlul ITM și la stabilirea vechimii în specialitate. Corectarea se face printr-o modificare în registru.' },
+  { intrebare: 'Ce înseamnă cifrele din codul COR?',
+    raspuns: `Codul are șase cifre, iar structura este ierarhică. Prima cifră (${p.grupaMajora}) arată grupa majoră, adică nivelul general de calificare. Primele patru cifre (${p.grupaBaza}) formează grupa de bază, care adună ocupațiile înrudite. Ultimele două cifre identifică ocupația în interiorul grupei.` },
+];
+
+const jsonLd = [
+  buildBreadcrumbSchema(breadcrumbs),
+  buildCorTermSchema({ cod: p.cod, denumire: p.denumire, url, grupaNume: grupa.nume, ordin: corOrdin }),
+  buildFAQSchema(intrebari),
+];
+
+const brand = ' | meseriile.ro';
+const titluBaza = `Cod COR ${p.cod} — ${denAfisat}`;
+const metaTitle = (titluBaza + brand).length <= 60 ? titluBaza + brand : titluBaza;
+const descBaza = `Codul COR pentru ${p.denumire} este ${p.cod}. Unde îl completezi în contract și REVISAL, ce înseamnă cifrele și ocupațiile înrudite.`;
+const metaDesc = descBaza.length <= 158
+  ? descBaza
+  : `Codul COR pentru ${p.denumire} este ${p.cod}. Unde îl completezi în contract și în REVISAL.`;
+---
+
+<Layout>
+  <SEOHead slot="head" title={metaTitle} description={metaDesc} canonical={url} jsonLd={jsonLd} appendSite={false} />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <article class="container-narrow pb-16 sm:pb-20">
+      <header class="mb-6">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <a href={`/cod-cor/grupa/${grupa.slug}/`} class="badge badge-brand no-underline hover:bg-brand-200 transition-colors">
+            Grupa {p.grupaMajora}: {grupa.nume}
+          </a>
+          <span class="badge bg-surface-100 text-surface-700">Grupa de bază {p.grupaBaza}</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-3">
+          Cod COR {p.cod} — {denAfisat}
+        </h1>
+        <p class="text-lg text-surface-700 leading-relaxed">
+          Codul COR pentru ocupația <strong>{p.denumire}</strong> este <strong>{p.cod}</strong>.
+          Se completează în contractul individual de muncă și în REVISAL.
+        </p>
+      </header>
+
+      <!-- cod copiabil -->
+      <div class="card p-5 mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="text-sm text-surface-600 mb-1">Cod COR</div>
+          <div class="text-4xl font-heading font-extrabold text-brand-700 tracking-wider" id="cod-cor">{p.cod}</div>
+        </div>
+        <button type="button" data-copiaza={p.cod}
+          class="btn-primary text-sm px-4 py-2 cursor-pointer" aria-label={`Copiază codul ${p.cod}`}>
+          Copiază codul
+        </button>
+      </div>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Ce înseamnă acest cod</h2>
+        <p class="text-surface-700 leading-relaxed mb-4">
+          Clasificarea Ocupațiilor din România atribuie fiecărei ocupații un cod de șase cifre,
+          construit ierarhic. Iată cum se descompune codul {p.cod}:
+        </p>
+        <div class="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left border-b border-surface-200">
+                <th class="py-2 pr-4 font-semibold text-surface-800">Nivel</th>
+                <th class="py-2 pr-4 font-semibold text-surface-800">Cod</th>
+                <th class="py-2 font-semibold text-surface-800">Înseamnă</th>
+              </tr>
+            </thead>
+            <tbody class="text-surface-700">
+              <tr class="border-b border-surface-100">
+                <td class="py-2 pr-4">Grupa majoră</td>
+                <td class="py-2 pr-4 font-mono font-semibold">{p.grupaMajora}</td>
+                <td class="py-2">{grupa.oficial}</td>
+              </tr>
+              <tr class="border-b border-surface-100">
+                <td class="py-2 pr-4">Grupa de bază</td>
+                <td class="py-2 pr-4 font-mono font-semibold">{p.grupaBaza}</td>
+                <td class="py-2">Ocupații înrudite, cu sarcini și calificare asemănătoare</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-4">Ocupația</td>
+                <td class="py-2 pr-4 font-mono font-semibold">{p.cod}</td>
+                <td class="py-2">{denAfisat}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Unde ai nevoie de codul {p.cod}</h2>
+        <ul class="space-y-2 text-surface-700 leading-relaxed">
+          <li><strong>Contractul individual de muncă</strong> — ocupația se trece obligatoriu conform COR, împreună cu codul ei.</li>
+          <li><strong>REVISAL</strong> — registrul general de evidență a salariaților, transmis la ITM. Codul e câmp obligatoriu, iar aplicația îl validează față de nomenclator.</li>
+          <li><strong>Declarația 112</strong> — declarația privind contribuțiile sociale și impozitul pe venit.</li>
+          <li><strong>Adeverințele de vechime</strong> — pentru dosarul de pensie și pentru dovedirea vechimii în specialitate.</li>
+        </ul>
+      </section>
+
+      {meseriiCod.length > 0 && (
+        <section class="mb-8">
+          <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">
+            {meseriiCod.length === 1 ? 'Meseria care folosește acest cod' : 'Meseriile care folosesc acest cod'}
+          </h2>
+          {meseriiCod.length > 1 && (
+            <p class="text-surface-700 leading-relaxed mb-4">
+              Nomenclatorul folosește o singură denumire oficială acolo unde piața muncii folosește mai multe.
+              Toate cele {meseriiCod.length} de mai jos se înregistrează cu codul {p.cod}.
+            </p>
+          )}
+          <div class="grid gap-3 sm:grid-cols-2">
+            {meseriiCod.map(m => (
+              <div class="card p-4">
+                <h3 class="font-heading font-bold text-surface-900 mb-1">
+                  <a href={`/meserii/${m.slug}/`} class="no-underline hover:text-brand-600 transition-colors">{m.nume}</a>
+                </h3>
+                <p class="text-sm text-surface-600 mb-3">
+                  Salariu mediu net: <strong>{formatSalariu(m.salpiuNational.mediu)} lei</strong>
+                </p>
+                <div class="flex flex-wrap gap-3 text-sm">
+                  <a href={`/meserii/${m.slug}/`} class="text-brand-600 hover:underline">Ce face</a>
+                  <a href={`/salariu/${m.slug}/`} class="text-brand-600 hover:underline">Salarii pe orașe</a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {p.inrudite.length > 0 && (
+        <section class="mb-8">
+          <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">
+            Ocupații înrudite din grupa de bază {p.grupaBaza}
+          </h2>
+          <p class="text-surface-700 leading-relaxed mb-4">
+            Dacă ocupația din contract e formulată altfel, verifică dacă una dintre acestea se potrivește mai bine.
+            Toate fac parte din aceeași grupă de bază, deci presupun un nivel de calificare asemănător.
+          </p>
+          <div class="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left border-b border-surface-200">
+                  <th class="py-2 pr-4 font-semibold text-surface-800">Cod COR</th>
+                  <th class="py-2 font-semibold text-surface-800">Denumirea oficială a ocupației</th>
+                </tr>
+              </thead>
+              <tbody class="text-surface-700">
+                {p.inrudite.map(i => (
+                  <tr class="border-b border-surface-100">
+                    <td class="py-2 pr-4 font-mono">{i.cod}</td>
+                    <td class="py-2">
+                      {i.areaPagina
+                        ? <a href={`/cod-cor/${corPagini.find(x => x.cod === i.cod)!.slug}/`} class="text-brand-600 hover:underline">{i.den}</a>
+                        : i.den}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      <FAQSection items={intrebari} />
+
+      <section class="mt-8 pt-6 border-t border-surface-200 text-sm text-surface-600">
+        <h2 class="text-base font-heading font-bold text-surface-800 mb-2">Sursa</h2>
+        <p class="leading-relaxed">
+          Clasificarea Ocupațiilor din România, actualizată prin {corOrdin}, publicat în {corMonitor}.
+          Denumirile ocupațiilor sunt redate exact ca în nomenclator.
+          Salariile provin din estimările proprii ale meseriile.ro și nu fac parte din actul normativ.
+        </p>
+        <p class="mt-3">
+          <a href="/cod-cor/" class="text-brand-600 hover:underline">Toate codurile COR</a>
+        </p>
+    </section>
+  </article>
+</Layout>
+
+<script is:inline>
+  document.querySelectorAll('[data-copiaza]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var cod = b.getAttribute('data-copiaza');
+      var gata = function () { var t = b.textContent; b.textContent = 'Copiat'; setTimeout(function () { b.textContent = t; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(cod).then(gata, function () {});
+      } else {
+        var i = document.createElement('input'); i.value = cod; document.body.appendChild(i);
+        i.select(); try { document.execCommand('copy'); gata(); } catch (e) {} document.body.removeChild(i);
+      }
+    });
+  });
+</script>

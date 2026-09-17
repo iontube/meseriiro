@@ -1,0 +1,103 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SEOHead from '../../../components/SEOHead.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { corGrupe, corPagini, corOrdin, corMonitor, getPaginiPtGrupa } from '../../../helpers/cor';
+import type { CorGrupa } from '../../../helpers/cor';
+import { buildBreadcrumbSchema, buildCorListSchema } from '../../../helpers/structured-data';
+
+export function getStaticPaths() {
+  return corGrupe.map(g => ({ params: { slug: g.slug }, props: { g } }));
+}
+
+interface Props { g: CorGrupa }
+const { g } = Astro.props;
+
+const pagini = getPaginiPtGrupa(g.cifra);
+const url = `/cod-cor/grupa/${g.slug}/`;
+const breadcrumbs = [{ label: 'Cod COR', href: '/cod-cor/' }, { label: g.nume }];
+
+const jsonLd = [
+  buildBreadcrumbSchema(breadcrumbs),
+  buildCorListSchema({
+    nume: `Coduri COR — grupa majoră ${g.cifra}: ${g.nume}`,
+    descriere: g.descriere,
+    url,
+    elemente: pagini.map(p => ({ cod: p.cod, denumire: p.denumire, url: `/cod-cor/${p.slug}/` })),
+  }),
+];
+---
+
+<Layout>
+  <SEOHead slot="head"
+    title={`Coduri COR grupa ${g.cifra} — ${g.nume}`}
+    description={`Codurile COR din grupa majoră ${g.cifra}: ${g.nume}. ${pagini.length} ocupații cu cod, descriere și salariu mediu în România.`}
+    canonical={url} jsonLd={jsonLd} appendSite={false} />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-10">
+    <div class="max-w-3xl mb-8">
+      <span class="badge badge-brand mb-3">Grupa majoră {g.cifra}</span>
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-3">
+        Coduri COR — {g.nume}
+      </h1>
+      <p class="text-lg text-surface-700 leading-relaxed mb-3">{g.descriere}</p>
+      <p class="text-surface-600 leading-relaxed">
+        Denumirea oficială a grupei în nomenclator este „{g.oficial}".
+        Toate codurile din această grupă încep cu cifra {g.cifra}, iar în COR sunt înregistrate
+        {g.nrOcupatiiOficiale} de ocupații. Mai jos sunt cele {pagini.length} pentru care avem
+        descriere și date de salariu.
+      </p>
+    </div>
+
+    <div class="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 mb-10">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-left border-b border-surface-200">
+            <th class="py-2 pr-4 font-semibold text-surface-800">Cod COR</th>
+            <th class="py-2 pr-4 font-semibold text-surface-800">Ocupația</th>
+            <th class="py-2 font-semibold text-surface-800">Meseria pe meseriile.ro</th>
+          </tr>
+        </thead>
+        <tbody class="text-surface-700">
+          {pagini.map(p => (
+            <tr class="border-b border-surface-100">
+              <td class="py-2 pr-4 font-mono">
+                <a href={`/cod-cor/${p.slug}/`} class="text-brand-600 hover:underline">{p.cod}</a>
+              </td>
+              <td class="py-2 pr-4">
+                <a href={`/cod-cor/${p.slug}/`} class="text-surface-800 hover:text-brand-600 no-underline">{p.denumire}</a>
+              </td>
+              <td class="py-2">
+                {p.meserii.map((m, i) => (
+                  <>
+                    {i > 0 && ', '}
+                    <a href={`/meserii/${m.slug}/`} class="text-brand-600 hover:underline">{m.nume}</a>
+                  </>
+                ))}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <section class="max-w-3xl">
+      <h2 class="text-xl font-heading font-bold text-surface-900 mb-3">Celelalte grupe majore</h2>
+      <div class="grid gap-2 sm:grid-cols-2">
+        {corGrupe.filter(x => x.cifra !== g.cifra).map(x => (
+          <a href={`/cod-cor/grupa/${x.slug}/`} class="card p-3 no-underline hover:border-brand-300 transition-colors">
+            <span class="font-semibold text-surface-900">Grupa {x.cifra}</span>
+            <span class="text-surface-700"> — {x.nume}</span>
+          </a>
+        ))}
+      </div>
+      <p class="mt-6 text-sm text-surface-600">
+        Sursa: Clasificarea Ocupațiilor din România, {corOrdin}, publicat în {corMonitor}.
+      </p>
+    </section>
+  </section>
+</Layout>

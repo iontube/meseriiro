@@ -167,3 +167,53 @@ export function buildWebSiteSchema(): string {
   };
   return JSON.stringify(schema);
 }
+
+/** Nomenclator COR: ocupatia ca termen definit intr-un set de termeni oficial. */
+export function buildCorTermSchema(opts: {
+  cod: string;
+  denumire: string;
+  url: string;
+  grupaNume: string;
+  ordin: string;
+}): string {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTerm',
+    '@id': SITE_URL + opts.url,
+    name: `${opts.cod} — ${opts.denumire}`,
+    termCode: opts.cod,
+    description: `Ocupația „${opts.denumire}" are codul COR ${opts.cod} și face parte din grupa majoră „${opts.grupaNume}" din Clasificarea Ocupațiilor din România.`,
+    url: SITE_URL + opts.url,
+    inDefinedTermSet: {
+      '@type': 'DefinedTermSet',
+      name: 'Clasificarea Ocupațiilor din România (COR)',
+      description: `Nomenclatorul oficial al ocupațiilor din România, actualizat prin ${opts.ordin}.`,
+      url: SITE_URL + '/cod-cor/',
+    },
+  };
+  return JSON.stringify(schema);
+}
+
+/** Lista de ocupatii dintr-o grupa COR (pagina de grupa / index). */
+export function buildCorListSchema(opts: {
+  nume: string;
+  descriere: string;
+  url: string;
+  elemente: Array<{ cod: string; denumire: string; url: string }>;
+}): string {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: opts.nume,
+    description: opts.descriere,
+    url: SITE_URL + opts.url,
+    numberOfItems: opts.elemente.length,
+    itemListElement: opts.elemente.map((e, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: `${e.cod} — ${e.denumire}`,
+      url: SITE_URL + e.url,
+    })),
+  };
+  return JSON.stringify(schema);
+}

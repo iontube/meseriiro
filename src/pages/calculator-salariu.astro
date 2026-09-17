@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CampaignBanner from '../components/CampaignBanner.astro';
 import SEOHead from '../components/SEOHead.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import FAQSection from '../components/FAQSection.astro';
@@ -104,6 +105,7 @@ const faqItems = [
         Transformă salariul brut în net sau invers, cu toate contribuțiile la zi: CAS, CASS, impozit, deducere personală, tichete de masă și costul total pentru angajator.
       </p>
     </header>
+    <CampaignBanner />
 
     <div class="mb-12">
       <SalaryCalculator mod="brut" valoare={5000} />

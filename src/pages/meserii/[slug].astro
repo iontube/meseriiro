@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import CampaignBanner from '../../components/CampaignBanner.astro';
 import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import SalaryTable from '../../components/SalaryTable.astro';
@@ -8,6 +9,7 @@ import ArticolCard from '../../components/ArticolCard.astro';
 import { meserii, getDomeniuForMeserie, getCompetentePentruMeserie, formatSalariu, getNivelCerereLabel } from '../../helpers/data';
 import { buildBreadcrumbSchema, buildFAQSchema, buildOccupationSchema } from '../../helpers/structured-data';
 import { getMeserieSiloLinks } from '../../helpers/interlinking';
+import { getCorByCod } from '../../helpers/cor';
 import { getArticolePtMeserie } from '../../helpers/articole';
 import type { Meserie } from '../../helpers/types';
 
@@ -26,6 +28,7 @@ const { meserie } = Astro.props;
 const domeniu = getDomeniuForMeserie(meserie);
 const competenteMeserie = getCompetentePentruMeserie(meserie);
 const siloLinks = getMeserieSiloLinks(meserie);
+const corPagina = meserie.codCOR ? getCorByCod(meserie.codCOR) : undefined;
 const articoleMeserie = await getArticolePtMeserie(meserie.slug, 2);
 
 const breadcrumbs = [
@@ -70,9 +73,12 @@ const jsonLd = [
             {domeniu.nume}
           </a>
         )}
-        <span class="badge bg-surface-100 text-surface-700">
-          COR: {meserie.codCOR}
-        </span>
+        {meserie.codCOR && (corPagina
+          ? <a href={`/cod-cor/${corPagina.slug}/`} class="badge bg-surface-100 text-surface-700 no-underline hover:bg-surface-200 transition-colors">
+              COR: {meserie.codCOR}
+            </a>
+          : <span class="badge bg-surface-100 text-surface-700">COR: {meserie.codCOR}</span>
+        )}
         <span class:list={['badge', cerereColors[meserie.nivelCerere]]}>
           Cerere: {getNivelCerereLabel(meserie.nivelCerere)}
         </span>
@@ -82,6 +88,7 @@ const jsonLd = [
       </h1>
       <p class="text-lg text-surface-700 leading-relaxed">{meserie.descriere}</p>
     </header>
+    <CampaignBanner />
 
     <!-- Quick salary card -->
     <div class="card p-6 mb-10 bg-gradient-to-br from-brand-50 via-white to-surface-50 border-brand-100">

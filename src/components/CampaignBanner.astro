@@ -1,0 +1,19 @@
+---
+// Slot de banner de campanie afiliata (Profitshare). Doar markup — stilul e in global.css, iar
+// logica (fetch banners.json + alegere marime + dezvaluire) e in CampaignBannerScript.astro,
+// inclus O SINGURA data in Layout si care scaneaza TOATE sloturile [data-cb] de pe pagina.
+// format: "leaderboard" (desktop 728x90 / mobil 300x250) sau "rectangle" (300x250, pt in-content articol).
+// ⛔ DEZACTIVAT 2026-08-03: bannerele generice de campanie eMAG au dat 0 clicuri in 13 zile
+// (relevanta zero fata de intentia paginii + trafic prea mic ca sa fie masurabil). Pune ADS=true
+// ca sa le reactivezi; restul sistemului (ps-banners.mjs, cron, banners.json) e intact.
+const ADS = false;
+const { format = 'leaderboard', class: className = '' } = Astro.props;
+---
+{ADS && (
+<aside class={`cb ${className}`} data-cb data-format={format} aria-label="Publicitate" hidden>
+  <span class="cb-label">Publicitate</span>
+  <a class="cb-link" target="_blank" rel="sponsored noopener nofollow">
+    <img class="cb-img" alt="" decoding="async" />
+  </a>
+</aside>
+)}

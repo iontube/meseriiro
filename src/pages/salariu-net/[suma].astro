@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import CampaignBanner from '../../components/CampaignBanner.astro';
 import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import FAQSection from '../../components/FAQSection.astro';
@@ -104,6 +105,7 @@ const linii = [
         Un salariu de {formatSalariu(val)} brut înseamnă {formatSalariu(r.net)} net pe lună în {anul}, adică {procentNet}% din brut. Mai jos ai defalcarea completă și calculatorul, dacă vrei să schimbi suma.
       </p>
     </header>
+    <CampaignBanner />
 
     <!-- Defalcare statică (server-rendered, pentru SEO) -->
     <div class="card p-6 mb-8">

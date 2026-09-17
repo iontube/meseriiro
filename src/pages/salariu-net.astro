@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CampaignBanner from '../components/CampaignBanner.astro';
 import SEOHead from '../components/SEOHead.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { formatSalariu } from '../helpers/data';
@@ -50,6 +51,7 @@ const breadcrumbs = [
         Cât rămâne net din fiecare salariu brut, cu toate contribuțiile 2026. Apasă pe o sumă pentru defalcarea completă, sau folosește <a href="/calculator-salariu/" class="text-link">calculatorul</a> pentru orice altă valoare.
       </p>
     </header>
+    <CampaignBanner />
 
     <div class="card p-0 overflow-hidden mb-8">
       <div class="overflow-x-auto">

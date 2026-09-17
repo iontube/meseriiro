@@ -1,0 +1,216 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import { corGrupe, corPagini, corOrdin, corMonitor, corTotalOficial, corActualizat } from '../../helpers/cor';
+
+const LUNI = ['ianuarie','februarie','martie','aprilie','mai','iunie','iulie','august','septembrie','octombrie','noiembrie','decembrie'];
+const [an, luna, zi] = corActualizat.split('-');
+const dataLizibila = `${Number(zi)} ${LUNI[Number(luna) - 1]} ${an}`;
+import { buildBreadcrumbSchema, buildFAQSchema, buildCorListSchema } from '../../helpers/structured-data';
+
+// ocupatii cu cerere dovedita in Google autosuggest (`cod cor X`)
+const POPULARE = ['contabil', 'vanzator', 'bucatar', 'ospatar (chelner)', 'electrician in constructii',
+  'asistent medical generalist', 'agent de vanzari', 'sofer de autoturisme si camionete',
+  'conducator auto transport rutier de marfuri', 'zugrav', 'tamplar universal', 'sudor',
+  'macaragiu', 'mecanic auto', 'agent de securitate', 'ingrijitor batrani la domiciliu',
+  'cofetar', 'brutar', 'frizer', 'casier trezorier'];
+const populare = POPULARE
+  .map(d => corPagini.find(p => p.denumire === d))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+const breadcrumbs = [{ label: 'Cod COR' }];
+
+const intrebari = [
+  { intrebare: 'Ce este codul COR?',
+    raspuns: 'COR înseamnă Clasificarea Ocupațiilor din România. Este nomenclatorul oficial care atribuie fiecărei ocupații un cod unic de șase cifre. Se actualizează prin ordin comun al Ministerului Muncii și al Institutului Național de Statistică, publicat în Monitorul Oficial.' },
+  { intrebare: 'Unde se completează codul COR?',
+    raspuns: 'În contractul individual de muncă, unde ocupația se trece conform COR, și în REVISAL, registrul general de evidență a salariaților transmis la Inspectoratul Teritorial de Muncă. Mai apare în declarația 112 și în adeverințele de vechime.' },
+  { intrebare: 'Cum caut un cod COR după denumire?',
+    raspuns: 'Folosește câmpul de căutare de mai sus. Scrie denumirea ocupației și primești codul, sau scrie cele șase cifre și primești denumirea. Căutarea acoperă toate cele ' + corTotalOficial + ' de ocupații din nomenclator.' },
+  { intrebare: 'Ce fac dacă ocupația mea nu apare în COR?',
+    raspuns: 'Nomenclatorul nu conține toate denumirile folosite pe piața muncii, mai ales cele recente din IT și marketing. În contract trebuie trecută ocupația din COR cea mai apropiată de activitatea reală, nu denumirea comercială a postului. Angajatorul poate solicita introducerea unei ocupații noi în COR, printr-o procedură la Ministerul Muncii.' },
+  { intrebare: 'Ce înseamnă cifrele codului?',
+    raspuns: 'Structura este ierarhică. Prima cifră arată grupa majoră, adică nivelul general de calificare, de la 1 pentru funcții de conducere la 9 pentru muncitori necalificați. Primele patru cifre formează grupa de bază, care adună ocupații înrudite. Ultimele două identifică ocupația în interiorul grupei.' },
+];
+
+const jsonLd = [
+  buildBreadcrumbSchema(breadcrumbs),
+  buildFAQSchema(intrebari),
+  buildCorListSchema({
+    nume: 'Grupele majore din Clasificarea Ocupațiilor din România',
+    descriere: 'Cele nouă grupe majore ale nomenclatorului COR.',
+    url: '/cod-cor/',
+    elemente: corGrupe.map(g => ({ cod: g.cifra, denumire: g.nume, url: `/cod-cor/grupa/${g.slug}/` })),
+  }),
+];
+---
+
+<Layout>
+  <SEOHead slot="head"
+    title="Cod COR 2026 — caută codul oricărei ocupații | meseriile.ro"
+    description={`Caută codul COR după denumire sau după cifre, în toate cele ${corTotalOficial} de ocupații din nomenclatorul oficial. Unde se completează în contract și în REVISAL.`}
+    canonical="/cod-cor/" jsonLd={jsonLd} appendSite={false} />
+
+  <div class="container-custom">
+    <Breadcrumb items={breadcrumbs} />
+  </div>
+
+  <section class="container-custom pb-16 sm:pb-20">
+    <div class="max-w-3xl mb-8">
+      <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-3">
+        Cod COR — Clasificarea Ocupațiilor din România
+      </h1>
+      <p class="text-lg text-surface-700 leading-relaxed">
+        Caută codul de șase cifre al oricărei ocupații, sau află ce ocupație se ascunde în spatele
+        unui cod pe care îl ai deja în contract. Căutarea acoperă toate cele {corTotalOficial} de
+        ocupații din nomenclatorul oficial, actualizat la {dataLizibila}.
+      </p>
+    </div>
+
+    <!-- cautare bidirectionala -->
+    <div class="card p-5 mb-10 max-w-3xl">
+      <label for="cauta-cor" class="block font-semibold text-surface-900 mb-2">
+        Caută după denumire sau după cod
+      </label>
+      <input type="search" id="cauta-cor" autocomplete="off"
+        placeholder="ex: contabil, sudor, sau 331302"
+        class="w-full px-4 py-3 rounded-button border border-surface-300 focus:border-brand-500 focus:outline-none" />
+      <p id="cor-stare" class="text-sm text-surface-600 mt-2">Scrie cel puțin două caractere.</p>
+      <div id="cor-rezultate" class="mt-3 divide-y divide-surface-100 max-h-96 overflow-y-auto"></div>
+    </div>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-heading font-bold text-surface-900 mb-4">Grupele majore</h2>
+      <p class="text-surface-700 leading-relaxed mb-4 max-w-3xl">
+        Prima cifră a codului arată grupa majoră, adică nivelul general de calificare cerut de ocupație.
+      </p>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {corGrupe.map(g => (
+          <a href={`/cod-cor/grupa/${g.slug}/`} class="card p-4 no-underline hover:border-brand-300 transition-colors">
+            <div class="flex items-baseline gap-2 mb-1">
+              <span class="text-2xl font-heading font-extrabold text-brand-600">{g.cifra}</span>
+              <span class="font-heading font-bold text-surface-900">{g.nume}</span>
+            </div>
+            <p class="text-sm text-surface-600 leading-snug">{g.descriere}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    {populare.length > 0 && (
+      <section class="mb-10">
+        <h2 class="text-2xl font-heading font-bold text-surface-900 mb-4">Cele mai căutate coduri COR</h2>
+        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {populare.map(p => (
+            <a href={`/cod-cor/${p.slug}/`} class="card p-3 no-underline hover:border-brand-300 transition-colors flex items-center gap-3">
+              <span class="font-mono font-bold text-brand-700">{p.cod}</span>
+              <span class="text-surface-800 text-sm">{p.denumire}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="max-w-3xl mb-10">
+      <h2 class="text-2xl font-heading font-bold text-surface-900 mb-3">Unde ai nevoie de codul COR</h2>
+      <p class="text-surface-700 leading-relaxed mb-3">
+        Codul nu e o formalitate statistică. Îl cere legea în patru locuri, iar într-unul dintre ele
+        e validat automat:
+      </p>
+      <ul class="space-y-2 text-surface-700 leading-relaxed">
+        <li><strong>Contractul individual de muncă</strong> — ocupația se trece conform COR, cu codul ei.</li>
+        <li><strong>REVISAL</strong> — codul e câmp obligatoriu, iar aplicația îl verifică față de nomenclator. Un cod inexistent e respins la înregistrare.</li>
+        <li><strong>Declarația 112</strong> — pentru contribuții sociale și impozit pe venit.</li>
+        <li><strong>Adeverințele de vechime</strong> — la dosarul de pensie și pentru vechimea în specialitate.</li>
+      </ul>
+    </section>
+
+    <div class="max-w-3xl">
+      <FAQSection items={intrebari} />
+
+      <section class="mt-8 pt-6 border-t border-surface-200 text-sm text-surface-600">
+        <h2 class="text-base font-heading font-bold text-surface-800 mb-2">Sursa</h2>
+        <p class="leading-relaxed">
+          Clasificarea Ocupațiilor din România, actualizată prin {corOrdin}, publicat în {corMonitor}.
+          Denumirile sunt redate exact ca în nomenclator. Datele de salariu sunt estimări proprii
+          meseriile.ro și nu fac parte din actul normativ.
+        </p>
+      </section>
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  (function () {
+    var input = document.getElementById('cauta-cor');
+    var box = document.getElementById('cor-rezultate');
+    var stare = document.getElementById('cor-stare');
+    if (!input) return;
+    var date = null, seIncarca = false;
+
+    function norm(s) {
+      return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+    function incarca() {
+      if (date || seIncarca) return Promise.resolve();
+      seIncarca = true;
+      stare.textContent = 'Se încarcă nomenclatorul...';
+      return fetch('/cor-index.json').then(function (r) { return r.json(); }).then(function (j) {
+        date = j.map(function (x) { return { cod: x[0], den: x[1], slug: x[2], n: norm(x[1]) }; });
+        seIncarca = false;
+        stare.textContent = date.length + ' de ocupații încărcate. Scrie ca să cauți.';
+      }).catch(function () {
+        seIncarca = false;
+        stare.textContent = 'Nu am putut încărca lista. Reîncarcă pagina.';
+      });
+    }
+    input.addEventListener('focus', incarca, { once: true });
+
+    function randeaza(q) {
+      if (!date) return;
+      box.innerHTML = '';
+      if (q.length < 2) { stare.textContent = 'Scrie cel puțin două caractere.'; return; }
+      var nq = norm(q), cifre = /^\d+$/.test(q);
+      var hit = [];
+      for (var i = 0; i < date.length && hit.length < 300; i++) {
+        var d = date[i];
+        if (cifre ? d.cod.indexOf(q) === 0 : d.n.indexOf(nq) !== -1) hit.push(d);
+      }
+      hit.sort(function (a, b) {
+        if (cifre) return a.cod.localeCompare(b.cod);
+        var ai = a.n.indexOf(nq), bi = b.n.indexOf(nq);
+        return ai !== bi ? ai - bi : a.den.length - b.den.length;
+      });
+      if (!hit.length) {
+        stare.textContent = 'Niciun rezultat pentru „' + q + '".';
+      } else if (hit.length === 300) {
+        stare.textContent = 'Peste 300 de rezultate. Scrie mai multe litere ca să restrângi.';
+      } else {
+        stare.textContent = hit.length === 1 ? '1 rezultat' : hit.length + ' rezultate';
+      }
+      var frag = document.createDocumentFragment();
+      hit.slice(0, 60).forEach(function (d) {
+        var row = document.createElement(d.slug ? 'a' : 'div');
+        row.className = 'flex items-center gap-3 py-2 no-underline';
+        if (d.slug) { row.href = '/cod-cor/' + d.slug + '/'; row.className += ' hover:bg-surface-50'; }
+        var c = document.createElement('span');
+        c.className = 'font-mono font-semibold text-brand-700 shrink-0';
+        c.textContent = d.cod;
+        var n = document.createElement('span');
+        n.className = 'text-surface-800 text-sm';
+        n.textContent = d.den;
+        row.appendChild(c); row.appendChild(n);
+        frag.appendChild(row);
+      });
+      box.appendChild(frag);
+    }
+    var t;
+    input.addEventListener('input', function () {
+      clearTimeout(t);
+      var q = input.value.trim();
+      t = setTimeout(function () { incarca().then(function () { randeaza(q); }); }, 120);
+    });
+  })();
+</script>

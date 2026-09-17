@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import CampaignBanner from '../../components/CampaignBanner.astro';
 import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Pagination from '../../components/Pagination.astro';
@@ -62,6 +63,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <h1 class="text-3xl sm:text-4xl font-heading font-bold text-surface-900 mb-3">Articole</h1>
     <p class="section-subtitle">{description}</p>
   </header>
+  <CampaignBanner />
 
   <div class="container-custom pb-16">
     {page.data.length === 0 ? (

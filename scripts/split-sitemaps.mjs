@@ -4,7 +4,7 @@
  * Generates: dist/sitemap-index.xml referencing ALL chunks.
  * A separate script (drip-sitemap-index.mjs) controls how many are visible.
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -26,6 +26,15 @@ const xml = readFileSync(sitemapPath, 'utf-8');
 // Extract all <url>...</url> blocks
 const urlBlocks = [...xml.matchAll(/<url>[\s\S]*?<\/url>/g)].map(m => m[0]);
 console.log(`Found ${urlBlocks.length} URLs in sitemap-0.xml`);
+
+// GARDA: sitemap-0.xml e golit la finalul acestui script, deci o a doua rulare fara
+// `astro build` inainte ar gasi 0 URL si ar rescrie indexul cu zero sitemap-uri, adica
+// i-ar retrage lui Google tot site-ul. Iesim inainte sa atingem ceva.
+if (urlBlocks.length === 0) {
+  console.error('EROARE: 0 URL in sitemap-0.xml. Ruleaza `astro build` inainte de split-sitemaps.');
+  console.error('Nu am modificat niciun sitemap.');
+  process.exit(1);
+}
 
 // Split into chunks
 const chunks = [];
@@ -62,6 +71,11 @@ const fullIndex = `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="ht
 
 writeFileSync(resolve(distDir, 'sitemap-index-full.xml'), fullIndex);
 
+// sitemap-index.xml = indexul pe care il vede Google (robots.txt trimite catre el).
+// Il scriem COMPLET aici, ca un `npm run build` simplu sa produca un index valid.
+// `npm run build:drip` il rescrie dupa aceea cu subsetul zilei, deci dripul ramane intact.
+writeFileSync(resolve(distDir, 'sitemap-index.xml'), fullIndex);
+
 // Write metadata for drip script
 const meta = {
   totalSitemaps: chunks.length,
@@ -71,8 +85,9 @@ const meta = {
 };
 writeFileSync(resolve(distDir, 'sitemaps/meta.json'), JSON.stringify(meta, null, 2));
 
-// Remove original large sitemap
-writeFileSync(resolve(distDir, 'sitemap-0.xml'), '');
+// Sitemapul mare generat de Astro nu mai e referit de nimeni dupa split. Il STERGEM,
+// ca sa nu ramana un fisier gol servit cu 200 pe care Google l-ar putea reciti.
+unlinkSync(resolve(distDir, 'sitemap-0.xml'));
 
 console.log(`\nDone! ${chunks.length} sitemaps in dist/sitemaps/`);
 console.log('Run: node scripts/drip-sitemap-index.mjs [day_number]');

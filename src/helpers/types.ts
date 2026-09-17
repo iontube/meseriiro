@@ -31,7 +31,7 @@ export interface Meserie {
   id: string;
   slug: string;
   nume: string;
-  codCOR: string;
+  codCOR: string | null;
   dompiuId: string;
   descriere: string;
   ceFaceConcret: string;

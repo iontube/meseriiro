@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CampaignBanner from '../components/CampaignBanner.astro';
 import SEOHead from '../components/SEOHead.astro';
 import DomeniuCard from '../components/DomeniuCard.astro';
 import MeserieCard from '../components/MeserieCard.astro';
@@ -81,6 +82,8 @@ const stats = [
       ))}
     </div>
   </section>
+
+  <div class="container-custom"><CampaignBanner /></div>
 
   <!-- Articole -->
   {ultimeleArticole.length > 0 && (

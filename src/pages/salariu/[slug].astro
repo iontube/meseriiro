@@ -5,9 +5,11 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import SalaryTable from '../../components/SalaryTable.astro';
 import FAQSection from '../../components/FAQSection.astro';
 import SalaryCalculator from '../../components/SalaryCalculator.astro';
+import CampaignBanner from '../../components/CampaignBanner.astro';
 import ArticolCard from '../../components/ArticolCard.astro';
 import { getArticolePtMeserie } from '../../helpers/articole';
 import { meserii, getDomeniuForMeserie, formatSalariu, getNivelCerereLabel, getOraseWithSalariu } from '../../helpers/data';
+import { getCorByCod } from '../../helpers/cor';
 import { buildBreadcrumbSchema, buildSalaryPageSchema, buildFAQSchema } from '../../helpers/structured-data';
 import { getDomeniuAverageSalary } from '../../helpers/interlinking';
 import type { Meserie } from '../../helpers/types';
@@ -24,6 +26,7 @@ interface Props {
 }
 
 const { meserie } = Astro.props;
+const corPagina = meserie.codCOR ? getCorByCod(meserie.codCOR) : undefined;
 const domeniu = getDomeniuForMeserie(meserie);
 const articoleMeserie = await getArticolePtMeserie(meserie.slug, 2);
 const oraseData = getOraseWithSalariu(meserie);
@@ -93,7 +96,9 @@ const salariuFaq = [
         {domeniu && (
           <a href={`/domenii/${domeniu.slug}/`} class="badge badge-brand no-underline hover:bg-brand-200 transition-colors">{domeniu.nume}</a>
         )}
-        <span class="badge bg-surface-100 text-surface-700">COR: {meserie.codCOR}</span>
+        {meserie.codCOR && (corPagina
+          ? <a href={`/cod-cor/${corPagina.slug}/`} class="badge bg-surface-100 text-surface-700 no-underline hover:bg-surface-200 transition-colors">COR: {meserie.codCOR}</a>
+          : <span class="badge bg-surface-100 text-surface-700">COR: {meserie.codCOR}</span>)}
       </div>
       <h1 class="text-3xl sm:text-4xl font-heading font-extrabold text-surface-900 mb-4">
         Salariu {meserie.nume} în România
@@ -121,6 +126,8 @@ const salariuFaq = [
         </div>
       </div>
     </div>
+
+    <CampaignBanner />
 
     <!-- Despre meserie: conținut unic per meserie (evită thin content pe pagina națională) -->
     <section class="mb-10">

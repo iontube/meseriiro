@@ -1,11 +1,8 @@
 name: Deploy to Cloudflare Pages
 
+# ⛔ Doar manual. Deploy-ul real se face de pe server (wrangler, direct-upload), cu datele
+# generate acolo. Un push nu are voie sa redeployeze site-ul din ce e in repo.
 on:
-  push:
-    branches: [main]
-  schedule:
-    # Every day at 06:00 UTC — adds one more sitemap and redeploys
-    - cron: '0 6 * * *'
   workflow_dispatch:
 
 jobs:

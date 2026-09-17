@@ -23,3 +23,7 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 _chart-preview/
+deploy.sh
+.wrangler/
+*.log
+scripts/.ps-api-key

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import CampaignBanner from '../../components/CampaignBanner.astro';
 import SEOHead from '../../components/SEOHead.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { orase, formatSalariu } from '../../helpers/data';
@@ -58,6 +59,7 @@ const schemaTop = topMeserii.slice(0, 5).map(t => ({ nume: t.meserie.nume, salar
         Top {topMeserii.length} meserii plătite în {oras.nume}, cu salarii nete actualizate. Compară cu alte orașe din România.
       </p>
     </header>
+    <CampaignBanner />
 
     <!-- Top meserii table -->
     <section class="mb-10">
